@@ -1,0 +1,14 @@
+- lib STL non esiste (copiare da OpenSCAD, import_stl.cc)
+- visualizzazione/input
+    - definire volume di lavoro
+    - posizionare oggetto relativamente al volume di lavoro (rototralazione)
+    - definire dimensioni utensile (larghezza e altezza)
+    - definire orientamento passate (lungo x o y, dipende da orientamento utensile)
+    - definire passo di discretizzazione orizzontale (<= larghezza utensile, default =)
+    - definire passo di discretizzazione verticale (<= altezza strumento, calculato in automatico, passate di altezze uniformi)
+    - velocità di lavorazione
+    - (dopo) passate di finitura (con diversa discretizzazione orizzontale e velocità, senza discretizzazione verticale), genera altri gcode
+- algoritmo di generazione del gcode
+    - libreria matriciale Eigen
+    - (dopo) libreria per geometria computazionale (CGAL)
+
