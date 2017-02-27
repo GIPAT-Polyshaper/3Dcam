@@ -2,6 +2,10 @@
 #include <iostream>
 #include <QFile>
 #include <QDataStream>
+#include <QVector>
+#include <typeinfo>
+
+
 
 GCodeGenerator::GCodeGenerator()
 {
@@ -33,12 +37,30 @@ void GCodeGenerator::readAndGenerate()
     uint32_t tri_count;
     data >> tri_count;
 
-    std::cout << tri_count << std::endl;
+    //std::cout << typeid(data).name() << std::endl;
 
     // Extract vertices into an array of xyz, unsigned pairs
-    //QVector<Vec3i> verts(tri_count*3);
+    QVector<uint> verts(1000*3);  //al posto di 1000 ci dovrebbe essere tri_count e al posto di unit Vec3i che è definita dopo la struttura comenatta sotto
 
+    /*struct Vec3
+{
+    GLfloat x, y, z;
+    bool operator!=(const Vec3& rhs) const
+    {
+        return x != rhs.x || y != rhs.y || z != rhs.z;
+    }
+    bool operator<(const Vec3& rhs) const
+    {
+        if      (x != rhs.x)    return x < rhs.x;
+        else if (y != rhs.y)    return y < rhs.y;
+        else if (z != rhs.z)    return z < rhs.z;
+        else                    return false;
+    }
+};
 
+typedef std::pair<Vec3, GLuint> Vec3i;
+
+*/
 
 
 
