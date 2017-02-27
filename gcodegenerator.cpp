@@ -4,8 +4,14 @@
 #include <QDataStream>
 #include <QVector>
 #include <typeinfo>
+//#include <algorithm> per la funzione sort
 
+struct Vec3
+{
+    float x, y, z;
+};
 
+typedef std::pair<Vec3, uint> Vec3i;
 
 GCodeGenerator::GCodeGenerator()
 {
@@ -26,8 +32,8 @@ void GCodeGenerator::readAndGenerate()
         std::cout << "Il file non c'è" << std::endl;
       }
 
-    // Skip the rest of the header material
-    file.read(75);
+    // Skip the header material
+    file.read(80);
 
     QDataStream data(&file);
     data.setByteOrder(QDataStream::LittleEndian);
@@ -40,27 +46,64 @@ void GCodeGenerator::readAndGenerate()
     //std::cout << typeid(data).name() << std::endl;
 
     // Extract vertices into an array of xyz, unsigned pairs
-    QVector<uint> verts(1000*3);  //al posto di 1000 ci dovrebbe essere tri_count e al posto di unit Vec3i che è definita dopo la struttura comenatta sotto
+    QVector<Vec3i> verts(tri_count*3);
 
-    /*struct Vec3
-{
-    GLfloat x, y, z;
-    bool operator!=(const Vec3& rhs) const
+    // Dummy array, because readRawData is faster than skipRawData
+    char buffer[sizeof(float)*3];
+
+    // Store vertices in the array, processing one triangle at a time.
+    for (auto v=verts.begin(); v != verts.end(); v += 3)
     {
-        return x != rhs.x || y != rhs.y || z != rhs.z;
+        // Skip face's normal vector
+        data.readRawData(buffer, 3*sizeof(float));
+
+        // Load vertex data from .stl file into vertices
+        data >> v[0].first.x >> v[0].first.y >> v[0].first.z;
+        data >> v[1].first.x >> v[1].first.y >> v[1].first.z;
+        data >> v[2].first.x >> v[2].first.y >> v[2].first.z;
+
+        // Skip face attribute
+        data.readRawData(buffer, sizeof(uint16_t));
     }
-    bool operator<(const Vec3& rhs) const
+
+    // Save indicies as the second element in the array
+    // (so that we can reconstruct triangle order after sorting)
+    for (size_t i=0; i < tri_count*3; ++i)
     {
-        if      (x != rhs.x)    return x < rhs.x;
-        else if (y != rhs.y)    return y < rhs.y;
-        else if (z != rhs.z)    return z < rhs.z;
-        else                    return false;
+        verts[i].second = i;
     }
-};
 
-typedef std::pair<Vec3, GLuint> Vec3i;
 
-*/
+    // da qui in poi procedo per la mia strada (finalmente)
+
+   // std::cout << verts.length() << std::endl;
+
+    //std::sort(verts.begin(), verts.end());
+
+    // odio le strutture quindi mi costruisco i tre vettori xx, yy, zz e ind
+
+    float xx[verts.length()][2];
+    float yy[verts.length()];
+    float zz[verts.length()];
+    float ind[verts.length()];
+
+    for (int i=0; i < verts.length(); i++)
+    {
+        //std::cout << verts[i].first.x << std::endl;
+
+        xx[i][1] = verts[i].first.x;
+        xx[i][2] = i;
+        yy[i] = verts[i].first.y;
+        zz[i] = verts[i].first.z;
+        ind[i] = i;
+    }
+
+// problema del sort non ancora risolto
+
+
+
+
+
 
 
 
