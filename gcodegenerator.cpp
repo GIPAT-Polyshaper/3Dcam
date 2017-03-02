@@ -11,7 +11,20 @@ struct Vec3
     float x, y, z;
 };
 
-typedef std::pair<Vec3, uint> Vec3i;
+struct Vec3i {
+    Vec3 first;
+    uint second;
+
+    bool operator<(const Vec3i& other) const {
+        return first.x < other.first.x;
+    }
+
+    //bool operator==(const Vec3i& other) const {
+    //    return first.x == other.first.x;
+    //}
+};
+
+//typedef std::pair<Vec3, uint> Vec3i;
 
 GCodeGenerator::GCodeGenerator()
 {
@@ -76,33 +89,47 @@ void GCodeGenerator::readAndGenerate()
 
     // da qui in poi procedo per la mia strada (finalmente)
 
-   // std::cout << verts.length() << std::endl;
-
-    //std::sort(verts.begin(), verts.end());
+    std::sort(verts.begin(), verts.end());
 
     // odio le strutture quindi mi costruisco i tre vettori xx, yy, zz e ind
 
-    float xx[verts.length()][2];
+    float xx[verts.length()];
     float yy[verts.length()];
     float zz[verts.length()];
     float ind[verts.length()];
 
     for (int i=0; i < verts.length(); i++)
     {
-        //std::cout << verts[i].first.x << std::endl;
+        //std::cout << verts[i].first.x << " - " << verts[i].first.y << std::endl;
 
-        xx[i][1] = verts[i].first.x;
-        xx[i][2] = i;
+        xx[i] = verts[i].first.x;
         yy[i] = verts[i].first.y;
         zz[i] = verts[i].first.z;
         ind[i] = i;
     }
 
-// problema del sort non ancora risolto
+
+// discretization as a function of the tool dimension
+
+    float toolD = 0.2;
+
+    int xxd[verts.length()];
+
+//    std::cout << *std::min_element(xx,xx+verts.length()) << '\n';
+//    std::cout << *std::max_element(xx,xx+verts.length()) << '\n';
+
+    float x_min = *std::max_element(xx,xx+verts.length());
+    float x_max = *std::max_element(xx,xx+verts.length());
+
+    /*
+    for (int i=0; i < verts.length(); i++)
+    {
+        //std::cout << verts[i].first.x << std::endl;
 
 
 
-
+    }
+*/
 
 
 
