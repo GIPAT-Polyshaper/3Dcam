@@ -43,7 +43,7 @@ class CGAL_Test : public QObject
     Q_OBJECT
 
 private slots:
-    void dummy()
+    void tutorial1()
     {
         Point_2 p(1,1), q(10,10);
         std::cout << "p = " << p << std::endl;
@@ -70,6 +70,11 @@ private slots:
           break;
         }
         std::cout << " midpoint(p,q) = " << CGAL::midpoint(p,q) << std::endl;
+    }
+
+    void mesh3d()
+    {
+        // USE 3D Polyhedral Surface (http://doc.cgal.org/latest/Polyhedron/index.html#Chapter_3D_Polyhedral_Surfaces) OR Surface Mesh (http://doc.cgal.org/latest/Surface_mesh/index.html#Chapter_3D_Surface_mesh)
     }
 };
 
