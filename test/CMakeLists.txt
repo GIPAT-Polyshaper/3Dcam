@@ -16,3 +16,4 @@ endfunction()
 
 # Adding all tests
 addTest(dummy)
+addTest(cgal)
