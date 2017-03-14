@@ -22,7 +22,48 @@
  **************************************************************************/
 
 #include "stlloader.h"
+#include <QFile>
+#include <QDataStream>
 
-StlLoader::StlLoader()
+StlLoader::StlLoader(const QString& filename)
+    : m_triangles()
 {
+    QFile file(filename);
+
+    if (!file.open(QFile::ReadOnly)) {
+        throw StlLoaderExceptions(filename.toLatin1().data(), "could not open file for reading");
+    }
+
+    // Skip the header material
+    file.read(80);
+
+    QDataStream data(&file);
+    data.setByteOrder(QDataStream::LittleEndian);
+    data.setFloatingPointPrecision(QDataStream::SinglePrecision);
+
+    // Load the triangle count from the .stl file
+    uint32_t triCount;
+    data >> triCount;
+
+    // Dummy array, because readRawData is faster than skipRawData
+    char buffer[sizeof(uint16_t)];
+
+    // Store vertices in the array, processing one triangle at a time.
+    for (auto i = 0; i < triCount; i++) {
+        Vec3 n, v1, v2, v3;
+
+        // Load face's normal vector
+        data >> n.x >> n.y >> n.z;
+
+        // Load vertex data
+        data >> v1.x >> v1.y >> v1.z;
+        data >> v2.x >> v2.y >> v2.z;
+        data >> v3.x >> v3.y >> v3.z;
+
+        // Skip face attribute
+        data.readRawData(buffer, sizeof(uint16_t));
+
+        // Add triangle
+        m_triangles.push_back(Triangle(n, v1, v2, v3));
+    }
 }

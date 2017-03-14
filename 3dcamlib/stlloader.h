@@ -26,35 +26,39 @@
 
 #include <exception>
 #include <QObject>
+#include <vector>
 
 /**
- * \brief The exception type thrown by StlLoader
+ * @brief The exception type thrown by StlLoader
  */
 class StlLoaderExceptions : public std::exception
 {
 public:
     /**
-     * \brief Constructor
+     * @brief Constructor
      *
-     * \param reason the exception reason. The buffer for this is at most 256
+     * @param filename the name of the file to load
+     * @param reason the exception reason. The buffer for this is at most 256
      *               characters (including the '\0' terminator)
      */
-    StlLoaderExceptions(const char* reason) noexcept
+    StlLoaderExceptions(const char* filename, const char* reason) noexcept
     {
+        strncpy(m_filename, filename, 256);
+        m_filename[255] = '\0';
         strncpy(m_reason, reason, 256);
         m_reason[255] = '\0';
-        sprintf(m_errorMessage, "Could not load stl file, reason: \"%s\"", m_reason);
+        sprintf(m_errorMessage, "Could not load stl file \"%s\", reason: \"%s\"", m_filename, m_reason);
         m_errorMessage[511] = '\0';
     }
 
     /**
-     * \brief Copy constructor
-     *
-     * \param other the exception to copy
+     * @brief Copy constructor
      */
     StlLoaderExceptions(const StlLoaderExceptions& other) noexcept
         : std::exception(other)
     {
+        strncpy(m_filename, other.m_filename, 256);
+        m_filename[255] = '\0';
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
@@ -62,9 +66,7 @@ public:
     }
 
     /**
-     * \brief Copy operator
-     *
-     * \param other the exception to copy
+     * @brief Copy operator
      */
     StlLoaderExceptions& operator=(const StlLoaderExceptions& other) noexcept
     {
@@ -73,6 +75,8 @@ public:
         }
 
         std::exception::operator=(other);
+        strncpy(m_filename, other.m_filename, 256);
+        m_filename[255] = '\0';
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
@@ -82,9 +86,7 @@ public:
     }
 
     /**
-     * \brief Returns a C string describing the exception
-     *
-     * \return a C string describing the exception
+     * @brief Returns a C string describing the exception
      */
     virtual const char *what() const noexcept
     {
@@ -92,17 +94,74 @@ public:
     }
 
 private:
+    char m_filename[256];
     char m_reason[256];
-    char m_errorMessage[512];
+    char m_errorMessage[768];
 };
 
 /**
- * \brief The class loading an STL file
+ * @brief The class loading an STL file
  */
 class StlLoader
 {
 public:
-    StlLoader();
+    /**
+     * \brief A simple structure representing a point in 3D space
+     */
+    struct Vec3 {
+        Vec3()
+        {
+        }
+
+        Vec3(float xx, float yy, float zz)
+            : x(xx)
+            , y(yy)
+            , z(zz)
+        {
+        }
+
+        float x;
+        float y;
+        float z;
+    };
+
+    /**
+     * \brief A triangle loaded from an stl file, with normal and vertices
+     */
+    struct Triangle {
+        Triangle(Vec3 n, Vec3 vv1, Vec3 vv2, Vec3 vv3)
+            : normal(n)
+            , v1(vv1)
+            , v2(vv2)
+            , v3(vv3)
+        {
+        }
+
+        Vec3 normal;
+        Vec3 v1;
+        Vec3 v2;
+        Vec3 v3;
+    };
+
+public:
+    /**
+     * @brief Constructor
+     *
+     * This throws an exception in case loading fails
+     * @param filename the stl file to load
+     */
+    StlLoader(const QString& filename);
+
+    /**
+     * @brief Returns the list of triangles loaded from the stl file
+     */
+    const std::vector<Triangle>& triangles() const
+    {
+        return m_triangles;
+    }
+
+private:
+    std::vector<Triangle> m_triangles;
 };
 
 #endif // STLLOADER_H

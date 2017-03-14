@@ -1,3 +1,6 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file alias="cube_ascii.stl">stlloader_cube_ascii.stl</file>
+        <file alias="cube_binary.stl">stlloader_cube_binary.stl</file>
+    </qresource>
 </RCC>
