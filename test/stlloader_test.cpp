@@ -71,6 +71,52 @@ private slots:
         QVERIFY(compareTriangles(t[11], Triangle(Vec3(-1, 0, 0), Vec3(0, 1, 1), Vec3(0, 0, 0), Vec3(0, 0, 1))));
     }
 
+    void throw_if_binary_file_has_not_enough_triangles()
+    {
+        QVERIFY_EXCEPTION_THROWN(StlLoader(":/cube_binary_invalid_triangle_num.stl"), StlLoaderExceptions);
+    }
+
+    void throw_if_binary_file_has_invalid_header()
+    {
+        QVERIFY_EXCEPTION_THROWN(StlLoader(":/cube_binary_invalid_header.stl"), StlLoaderExceptions);
+    }
+
+    void throw_if_binary_file_has_data_past_the_end()
+    {
+        QVERIFY_EXCEPTION_THROWN(StlLoader(":/cube_binary_invalid_data_past_end.stl"), StlLoaderExceptions);
+    }
+
+    void throw_if_binary_file_has_last_byte_missing()
+    {
+        QVERIFY_EXCEPTION_THROWN(StlLoader(":/cube_binary_invalid_missing_last_byte.stl"), StlLoaderExceptions);
+    }
+
+    void load_ascii_file()
+    {
+        StlLoader loader(":/cube_ascii.stl");
+
+        const auto& t = loader.triangles();
+        QVERIFY(t.size() == 12);
+        QVERIFY(compareTriangles(t[0], Triangle(Vec3(0, 0, 1), Vec3(0, 1, 1), Vec3(1, 0, 1), Vec3(1, 1, 1))));
+        QVERIFY(compareTriangles(t[1], Triangle(Vec3(0, 0, 1), Vec3(1, 0, 1), Vec3(0, 1, 1), Vec3(0, 0, 1))));
+        QVERIFY(compareTriangles(t[2], Triangle(Vec3(0, 0, -1), Vec3(0, 0, 0), Vec3(1, 1, 0), Vec3(1, 0, 0))));
+        QVERIFY(compareTriangles(t[3], Triangle(Vec3(0, 0, -1), Vec3(1, 1, 0), Vec3(0, 0, 0), Vec3(0, 1, 0))));
+        QVERIFY(compareTriangles(t[4], Triangle(Vec3(0, -1, 0), Vec3(0, 0, 0), Vec3(1, 0, 1), Vec3(0, 0, 1))));
+        QVERIFY(compareTriangles(t[5], Triangle(Vec3(0, -1, 0), Vec3(1, 0, 1), Vec3(0, 0, 0), Vec3(1, 0, 0))));
+        QVERIFY(compareTriangles(t[6], Triangle(Vec3(1, 0, 0), Vec3(1, 0, 1), Vec3(1, 1, 0), Vec3(1, 1, 1))));
+        QVERIFY(compareTriangles(t[7], Triangle(Vec3(1, 0, 0), Vec3(1, 1, 0), Vec3(1, 0, 1), Vec3(1, 0, 0))));
+        QVERIFY(compareTriangles(t[8], Triangle(Vec3(0, 1, 0), Vec3(1, 1, 0), Vec3(0, 1, 1), Vec3(1, 1, 1))));
+        QVERIFY(compareTriangles(t[9], Triangle(Vec3(0, 1, 0), Vec3(0, 1, 1), Vec3(1, 1, 0), Vec3(0, 1, 0))));
+        QVERIFY(compareTriangles(t[10], Triangle(Vec3(-1, 0, 0), Vec3(0, 0, 0), Vec3(0, 1, 1), Vec3(0, 1, 0))));
+        QVERIFY(compareTriangles(t[11], Triangle(Vec3(-1, 0, 0), Vec3(0, 1, 1), Vec3(0, 0, 0), Vec3(0, 0, 1))));
+    }
+
+    // For ascii files we don't check all possible errors (there are too many) even if they are checked in code
+    void throw_it_ascii_file_is_invalid()
+    {
+        QVERIFY_EXCEPTION_THROWN(StlLoader(":/cube_ascii_invalid.stl"), StlLoaderExceptions);
+    }
+
 private:
     bool compareTriangles(const StlLoader::Triangle& t1, const StlLoader::Triangle& t2)
     {

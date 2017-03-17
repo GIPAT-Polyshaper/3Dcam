@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file alias="cube_ascii.stl">stlloader_cube_ascii.stl</file>
         <file alias="cube_binary.stl">stlloader_cube_binary.stl</file>
+        <file alias="cube_binary_invalid_triangle_num.stl">stlloader_cube_binary_invalid_triangle_num.stl</file>
+        <file alias="cube_binary_invalid_header.stl">stlloader_cube_binary_invalid_header.stl</file>
+        <file alias="cube_binary_invalid_data_past_end.stl">stlloader_cube_binary_invalid_data_past_end.stl</file>
+        <file alias="cube_binary_invalid_missing_last_byte.stl">stlloader_cube_binary_invalid_missing_last_byte.stl</file>
+        <file alias="cube_ascii_invalid.stl">stlloader_cube_ascii_invalid.stl</file>
     </qresource>
 </RCC>

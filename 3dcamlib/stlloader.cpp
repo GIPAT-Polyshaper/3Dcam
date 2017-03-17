@@ -24,6 +24,7 @@
 #include "stlloader.h"
 #include <QFile>
 #include <QDataStream>
+#include <QTextStream>
 
 StlLoader::StlLoader(const QString& filename)
     : m_triangles()
@@ -31,11 +32,22 @@ StlLoader::StlLoader(const QString& filename)
     QFile file(filename);
 
     if (!file.open(QFile::ReadOnly)) {
-        throw StlLoaderExceptions(filename.toLatin1().data(), "could not open file for reading");
+        throw StlLoaderExceptions(filename, "could not open file for reading");
     }
 
+    auto fileStart = file.read(5);
+
+    if (fileStart != "solid") {
+        readBinaryFile(file);
+    } else {
+        readAsciiFile(file);
+    }
+}
+
+void StlLoader::readBinaryFile(QFile& file)
+{
     // Skip the header material
-    file.read(80);
+    file.read(75);
 
     QDataStream data(&file);
     data.setByteOrder(QDataStream::LittleEndian);
@@ -44,6 +56,10 @@ StlLoader::StlLoader(const QString& filename)
     // Load the triangle count from the .stl file
     uint32_t triCount;
     data >> triCount;
+
+    if (data.status() != QDataStream::Ok) {
+        throw StlLoaderExceptions(file.fileName(), "invalid header while reading binary stl file");
+    }
 
     // Dummy array, because readRawData is faster than skipRawData
     char buffer[sizeof(uint16_t)];
@@ -60,10 +76,80 @@ StlLoader::StlLoader(const QString& filename)
         data >> v2.x >> v2.y >> v2.z;
         data >> v3.x >> v3.y >> v3.z;
 
+        if (data.status() != QDataStream::Ok) {
+            throw StlLoaderExceptions(file.fileName(), "invalid data while reading binary stl file");
+        }
+
         // Skip face attribute
-        data.readRawData(buffer, sizeof(uint16_t));
+        auto l = data.readRawData(buffer, sizeof(uint16_t));
+        if ((l == -1) || (l != sizeof(uint16_t))) {
+            throw StlLoaderExceptions(file.fileName(), "invalid data while reading face attributes binary stl file");
+        }
 
         // Add triangle
         m_triangles.push_back(Triangle(n, v1, v2, v3));
+    }
+
+    if (!data.atEnd()) {
+        throw StlLoaderExceptions(file.fileName(), "data past expected file end reading binary stl file");
+    }
+}
+
+void StlLoader::readAsciiFile(QFile& file)
+{
+    QTextStream text(&file);
+
+    // Skip the solid name
+    text.readLine();
+
+    QString s;
+
+    // This checks that the content of the s variable is the expected one and that the stream is valid
+    auto checkExpected = [&](QString expected) {
+        if (s != expected) {
+            throw StlLoaderExceptions(file.fileName(), "expected '" + expected + "', found '" + s + "' while reading ascii stl file");
+        }
+        if (text.status() != QTextStream::Ok) {
+            throw StlLoaderExceptions(file.fileName(), "invalid data while reading ascii stl file");
+        }
+    };
+
+    while (true) {
+        text >> s;
+        if (s == "endsolid") {
+            break;
+        }
+        checkExpected("facet");
+
+        Vec3 n, v1, v2, v3;
+
+        // we should have read "facet" now we expect "normal"
+        text >> s >> n.x >> n.y >> n.z;; checkExpected("normal");
+
+        // "outer loop"
+        text >> s; checkExpected("outer");
+        text >> s; checkExpected("loop");
+
+        // three "vertex x y z"
+        text >> s >> v1.x >> v1.y >> v1.z; checkExpected("vertex");
+        text >> s >> v2.x >> v2.y >> v2.z; checkExpected("vertex");
+        text >> s >> v3.x >> v3.y >> v3.z; checkExpected("vertex");
+
+        // "endloop"
+        text >> s; checkExpected("endloop");
+
+        // "endfacet"
+        text >> s; checkExpected("endfacet");
+
+        // Add triangle
+        m_triangles.push_back(Triangle(n, v1, v2, v3));
+    }
+
+    // after "endsolid" there is the solid name
+    text.readLine();
+    text.skipWhiteSpace();
+
+    if (!text.atEnd()) {
+        throw StlLoaderExceptions(file.fileName(), "data past expected file end reading ascii stl file");
     }
 }

@@ -26,6 +26,8 @@
 
 #include <exception>
 #include <QObject>
+#include <QFile>
+#include <QString>
 #include <vector>
 
 /**
@@ -41,11 +43,11 @@ public:
      * @param reason the exception reason. The buffer for this is at most 256
      *               characters (including the '\0' terminator)
      */
-    StlLoaderExceptions(const char* filename, const char* reason) noexcept
+    StlLoaderExceptions(QString filename, QString reason) noexcept
     {
-        strncpy(m_filename, filename, 256);
+        strncpy(m_filename, filename.toLatin1().data(), 256);
         m_filename[255] = '\0';
-        strncpy(m_reason, reason, 256);
+        strncpy(m_reason, reason.toLatin1().data(), 256);
         m_reason[255] = '\0';
         sprintf(m_errorMessage, "Could not load stl file \"%s\", reason: \"%s\"", m_filename, m_reason);
         m_errorMessage[511] = '\0';
@@ -106,7 +108,7 @@ class StlLoader
 {
 public:
     /**
-     * \brief A simple structure representing a point in 3D space
+     * @brief A simple structure representing a point in 3D space
      */
     struct Vec3 {
         Vec3()
@@ -126,7 +128,7 @@ public:
     };
 
     /**
-     * \brief A triangle loaded from an stl file, with normal and vertices
+     * @brief A triangle loaded from an stl file, with normal and vertices
      */
     struct Triangle {
         Triangle(Vec3 n, Vec3 vv1, Vec3 vv2, Vec3 vv3)
@@ -161,6 +163,9 @@ public:
     }
 
 private:
+    void readBinaryFile(QFile& file);
+    void readAsciiFile(QFile& file);
+
     std::vector<Triangle> m_triangles;
 };
 
