@@ -7,9 +7,11 @@ include(${CGAL_USE_FILE})
 find_package(Boost REQUIRED)
 
 set(POLYSHAPER_3DCAM_LIB_SRCS
-	gcodegenerator.cpp)
+        gcodegenerator.cpp
+        stlloader.cpp)
 set(POLYSHAPER_3DCAM_LIB_HDRS
-	gcodegenerator.h)
+        gcodegenerator.h
+        stlloader.h)
 
 add_library(3dcamlib STATIC ${POLYSHAPER_3DCAM_LIB_SRCS} ${POLYSHAPER_3DCAM_LIB_HDRS})
 

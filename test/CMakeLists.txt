@@ -4,16 +4,26 @@
 # with the environmental variable CTEST_OUTPUT_ON_FAILURE set to 1 or call
 # "ctest --output-on-failure" in the build directory (instead of "make test").
 
-# A function to declare a test. The only argument is the name of the test. The
+# A function to declare a test. testName is the name of the test. The
 # source file of the test must have the same name of the test with a "_test.cpp"
-# suffix. "_test" is appended also the the name of the test
+# suffix. "test_" is prepended also the the name of the test. If a file named
+# "${testName}_resources.qrc" exists, it is added (as QT resources) to the test
 function(addTest testName)
-	set(mangledTestName "${testName}_test")
-	add_executable("${mangledTestName}" "${mangledTestName}.cpp")
-	target_link_libraries("${mangledTestName}" 3dcamlib Qt5::Test)
-	add_test(NAME "${mangledTestName}" COMMAND "${mangledTestName}")
+    set(testTargetName "test_${testName}")
+    set(testFileName "${testName}_test.cpp")
+
+    set(resourceSource )
+    set(resourceFile "${CMAKE_CURRENT_SOURCE_DIR}/${testName}_resources.qrc")
+    if (EXISTS "${resourceFile}" AND NOT IS_DIRECTORY "${resourceFile}")
+        qt5_add_resources(resourceSource "${resourceFile}")
+    endif()
+
+    add_executable("${testTargetName}" "${testFileName}" "${resourceSource}")
+    target_link_libraries("${testTargetName}" 3dcamlib Qt5::Test)
+    add_test(NAME "${testTargetName}" COMMAND "${testTargetName}")
 endfunction()
 
 # Adding all tests
 addTest(dummy)
 addTest(cgal)
+addTest(stlloader)

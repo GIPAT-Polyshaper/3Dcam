@@ -22,10 +22,12 @@
  **************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QFile>
+#include <QString>
 
 // NOTES AND TODOS
 //
-// This is just an empty file, created as placeholder for unit tests
+// This is just an empty file, created as template for unit tests
 
 /**
  * \brief The class to perform unit tests
@@ -37,8 +39,15 @@ class Dummy_Test : public QObject
 	Q_OBJECT
 
 private slots:
-	void dummy()
+    void readDummyFile()
 	{
+        QFile f(":/dummy_file.txt");
+
+        QVERIFY(f.open(QIODevice::ReadOnly | QIODevice::Text));
+
+        QString content = f.readAll();
+
+        QVERIFY(content.startsWith("A test file"));
 	}
 };
 
