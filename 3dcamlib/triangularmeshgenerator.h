@@ -21,68 +21,62 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#ifndef STLLOADER_H
-#define STLLOADER_H
+#ifndef TRIANGULARMESHGENERATOR_H
+#define TRIANGULARMESHGENERATOR_H
 
 #include <exception>
 #include <QObject>
 #include <QFile>
 #include <QString>
 #include <vector>
+#include "stlloader.h"
 
 /**
- * @brief The exception thrown by StlLoader
+ * @brief The exception thrown by TriangularMeshGenerator
  */
-class StlLoaderExceptions : public std::exception
+class TriangularMeshGeneratorExceptions : public std::exception
 {
 public:
     /**
      * @brief Constructor
      *
-     * @param filename the name of the file to load
      * @param reason the exception reason. The buffer for this is at most 256
      *               characters (including the '\0' terminator)
      */
-    StlLoaderExceptions(QString filename, QString reason) noexcept
+    TriangularMeshGeneratorExceptions(QString reason) noexcept
     {
-        strncpy(m_filename, filename.toLatin1().data(), 256);
-        m_filename[255] = '\0';
         strncpy(m_reason, reason.toLatin1().data(), 256);
         m_reason[255] = '\0';
-        sprintf(m_errorMessage, "Could not load stl file \"%s\", reason: \"%s\"", m_filename, m_reason);
-        m_errorMessage[767] = '\0';
+        sprintf(m_errorMessage, "Error generating a triangular mesh, reason: \"%s\"", m_reason);
+        m_errorMessage[511] = '\0';
     }
 
     /**
      * @brief Copy constructor
      */
-    StlLoaderExceptions(const StlLoaderExceptions& other) noexcept
+    TriangularMeshGeneratorExceptions(const TriangularMeshGeneratorExceptions& other) noexcept
         : std::exception(other)
     {
-        strncpy(m_filename, other.m_filename, 256);
-        m_filename[255] = '\0';
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[767] = '\0';
+        m_errorMessage[511] = '\0';
     }
 
     /**
      * @brief Copy operator
      */
-    StlLoaderExceptions& operator=(const StlLoaderExceptions& other) noexcept
+    TriangularMeshGeneratorExceptions& operator=(const TriangularMeshGeneratorExceptions& other) noexcept
     {
         if (&other == this) {
             return *this;
         }
 
         std::exception::operator=(other);
-        strncpy(m_filename, other.m_filename, 256);
-        m_filename[255] = '\0';
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[767] = '\0';
+        m_errorMessage[511] = '\0';
 
         return *this;
     }
@@ -96,82 +90,23 @@ public:
     }
 
 private:
-    char m_filename[256];
     char m_reason[256];
-    char m_errorMessage[768];
+    char m_errorMessage[512];
 };
 
 /**
  * @brief The class loading an STL file
  */
-class StlLoader
+class TriangularMeshGenerator
 {
-public:
-    /**
-     * @brief A simple structure representing a point in 3D space
-     */
-    struct Vec3 {
-        Vec3()
-        {
-        }
-
-        Vec3(float xx, float yy, float zz)
-            : x(xx)
-            , y(yy)
-            , z(zz)
-        {
-        }
-
-        float x;
-        float y;
-        float z;
-    };
-
-    /**
-     * @brief A triangle loaded from an stl file, with normal and vertices
-     */
-    struct Triangle {
-        Triangle(Vec3 n, Vec3 vv1, Vec3 vv2, Vec3 vv3)
-            : normal(n)
-            , v1(vv1)
-            , v2(vv2)
-            , v3(vv3)
-        {
-        }
-
-        Vec3 normal;
-        Vec3 v1;
-        Vec3 v2;
-        Vec3 v3;
-    };
-
-    /**
-     * @brief The type of a list of triangles
-     */
-    using Triangles = std::vector<Triangle>;
-
 public:
     /**
      * @brief Constructor
      *
-     * This throws an exception in case loading fails
-     * @param filename the stl file to load
+     * This throws an exception in case generation fails
+     * @param triangles the list of triangles
      */
-    StlLoader(const QString& filename);
-
-    /**
-     * @brief Returns the list of triangles loaded from the stl file
-     */
-    const Triangles& triangles() const
-    {
-        return m_triangles;
-    }
-
-private:
-    void readBinaryFile(QFile& file);
-    void readAsciiFile(QFile& file);
-
-    Triangles m_triangles;
+    TriangularMeshGenerator(const StlLoader::Triangles& triangles);
 };
 
-#endif // STLLOADER_H
+#endif // TRIANGULARMESHGENERATOR_H
