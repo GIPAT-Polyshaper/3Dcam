@@ -1,9 +1,10 @@
 /**************************************************************************
  * PolyShaper 3D Cam                                                      *
  * Copyright (C) 2017                                                     *
- * Flavio Prattico <????>                                                 *
- * Carmine Gianfagna <???>                                                *
  * Tomassino Ferrauto <tomassino.ferrauto@gmail.com>                      *
+ * Flavio Prattico <flavioprattico@gmail.com>                             *
+ * Carmine Gianfagna <carmine.gianfagna@gmail.com>                        *
+ *                                                                        *
  *                                                                        *
  * This program is free software; you can redistribute it and/or modify   *
  * it under the terms of the GNU General Public License as published by   *
