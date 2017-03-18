@@ -25,7 +25,6 @@
 #define STLLOADER_H
 
 #include <exception>
-#include <QObject>
 #include <QFile>
 #include <QString>
 #include <vector>
@@ -122,6 +121,7 @@ public:
         {
         }
 
+        // All floats because in binary STL the size of each value is 32 bits
         float x;
         float y;
         float z;
@@ -168,10 +168,7 @@ public:
     }
 
 private:
-    void readBinaryFile(QFile& file);
-    void readAsciiFile(QFile& file);
-
-    Triangles m_triangles;
+    const Triangles m_triangles;
 };
 
 #endif // STLLOADER_H

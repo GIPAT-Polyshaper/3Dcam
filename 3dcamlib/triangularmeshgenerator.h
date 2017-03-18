@@ -25,10 +25,8 @@
 #define TRIANGULARMESHGENERATOR_H
 
 #include <exception>
-#include <QObject>
-#include <QFile>
-#include <QString>
-#include <vector>
+#include "cgaldefs.h"
+// ---------------------------------------- TOGLIERE QUESTO E INCLUDERE vertexandindexgenerator.h
 #include "stlloader.h"
 
 /**
@@ -107,6 +105,17 @@ public:
      * @param triangles the list of triangles
      */
     TriangularMeshGenerator(const StlLoader::Triangles& triangles);
+
+    /**
+     * @brief Returns the polyhedron built by the constructor
+     */
+    const Polyhedron& polyhedron() const
+    {
+        return m_polyhedron;
+    }
+
+private:
+    Polyhedron m_polyhedron;
 };
 
 #endif // TRIANGULARMESHGENERATOR_H

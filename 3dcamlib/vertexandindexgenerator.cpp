@@ -21,9 +21,30 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#include "triangularmeshgenerator.h"
+#include "vertexandindexgenerator.h"
 
-TriangularMeshGenerator::TriangularMeshGenerator(const StlLoader::Triangles &triangles)
-    : m_polyhedron()
+VertexAndIndexGenerator::VertexAndIndexGenerator(const StlLoader::Triangles& triangles)
+    : m_vertices()
+    , m_faces()
 {
+    for (auto i = 0u; i < triangles.size(); ++i) {
+        const auto& t = triangles[i];
+
+        m_vertices.push_back(vertexFromVec3(t.v1));
+        m_vertices.push_back(vertexFromVec3(t.v2));
+        m_vertices.push_back(vertexFromVec3(t.v3));
+
+        m_faces.push_back(Face(i * 3, i * 3 + 1, i * 3 + 2));
+    }
+}
+
+VertexAndIndexGenerator::Vertex VertexAndIndexGenerator::vertexFromVec3(const StlLoader::Vec3& v) const
+{
+    Vertex vertex;
+
+    vertex.x = v.x;
+    vertex.y = v.y;
+    vertex.z = v.z;
+
+    return vertex;
 }

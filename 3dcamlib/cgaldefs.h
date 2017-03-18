@@ -21,9 +21,18 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#include "triangularmeshgenerator.h"
+#ifndef CGALDEFS_H
+#define CGALDEFS_H
 
-TriangularMeshGenerator::TriangularMeshGenerator(const StlLoader::Triangles &triangles)
-    : m_polyhedron()
-{
-}
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Polyhedron_3.h>
+
+/**
+ * @file This file contains all CGAL-related definitions used in the code
+ */
+
+using Kernel = CGAL::Simple_cartesian<double>;
+using Point3 = Kernel::Point_3;
+using Polyhedron = CGAL::Polyhedron_3<Kernel>;
+
+#endif // CGALDEFS_H

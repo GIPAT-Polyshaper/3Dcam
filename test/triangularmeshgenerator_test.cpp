@@ -26,6 +26,7 @@
 
 // NOTES AND TODOS
 //
+// Wait to have an intermediate representation before writing this (vertex and indices to vertices)
 
 /**
  * \brief The class to perform unit tests
@@ -37,8 +38,11 @@ class TriangularMeshGenerator_Test : public QObject
 	Q_OBJECT
 
 private slots:
-    void dummy()
+    void return_empty_polyhedron_when_initialized_with_empy_triangles()
     {
+        TriangularMeshGenerator t(StlLoader::Triangles{});
+
+        QVERIFY(t.polyhedron().empty());
 	}
 };
 
