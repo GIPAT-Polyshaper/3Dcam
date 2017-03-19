@@ -45,8 +45,8 @@ private slots:
     {
         VerticesAndFacesGenerator v(StlLoader::Triangles{});
 
-        QVERIFY(v.vertices().size() == 0);
-        QVERIFY(v.faces().size() == 0);
+        QCOMPARE(v.vertices().size(), 0ul);
+        QCOMPARE(v.faces().size(), 0ul);
     }
 
     void return_correct_result_for_one_triangle()
@@ -57,7 +57,7 @@ private slots:
 
         VerticesAndFacesGenerator v(t);
 
-        QVERIFY(v.vertices().size() == 3);
+        QCOMPARE(v.vertices().size(), 3ul);
         QVERIFY(verifyAllVertices(t, v));
         QVERIFY(verifyAllFaces(t, v));
     }
@@ -72,7 +72,7 @@ private slots:
 
         VerticesAndFacesGenerator v(t);
 
-        QVERIFY(v.vertices().size() == 9);
+        QCOMPARE(v.vertices().size(), 9ul);
         QVERIFY(verifyAllVertices(t, v));
         QVERIFY(verifyAllFaces(t, v));
     }
@@ -87,8 +87,9 @@ private slots:
 
         VerticesAndFacesGenerator v(t);
 
-        QVERIFY(false);
-        //QUI VERIFICARE CHE VENGANO TOLTI VERTICI DUPLICATI
+        QCOMPARE(v.vertices().size(), 5ul);
+        QVERIFY(verifyAllVertices(t, v));
+        QVERIFY(verifyAllFaces(t, v));
     }
 
 private:

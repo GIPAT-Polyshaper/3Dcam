@@ -56,7 +56,7 @@ private slots:
         StlLoader loader(":/cube_binary.stl");
 
         const auto& t = loader.triangles();
-        QVERIFY(t.size() == 12);
+        QCOMPARE(t.size(), 12ul);
         QVERIFY(compareTriangles(t[0], Triangle(Vec3(0, 0, 1), Vec3(0, 1, 1), Vec3(1, 0, 1), Vec3(1, 1, 1))));
         QVERIFY(compareTriangles(t[1], Triangle(Vec3(0, 0, 1), Vec3(1, 0, 1), Vec3(0, 1, 1), Vec3(0, 0, 1))));
         QVERIFY(compareTriangles(t[2], Triangle(Vec3(0, 0, -1), Vec3(0, 0, 0), Vec3(1, 1, 0), Vec3(1, 0, 0))));
@@ -96,7 +96,7 @@ private slots:
         StlLoader loader(":/cube_ascii.stl");
 
         const auto& t = loader.triangles();
-        QVERIFY(t.size() == 12);
+        QCOMPARE(t.size(), 12ul);
         QVERIFY(compareTriangles(t[0], Triangle(Vec3(0, 0, 1), Vec3(0, 1, 1), Vec3(1, 0, 1), Vec3(1, 1, 1))));
         QVERIFY(compareTriangles(t[1], Triangle(Vec3(0, 0, 1), Vec3(1, 0, 1), Vec3(0, 1, 1), Vec3(0, 0, 1))));
         QVERIFY(compareTriangles(t[2], Triangle(Vec3(0, 0, -1), Vec3(0, 0, 0), Vec3(1, 1, 0), Vec3(1, 0, 0))));

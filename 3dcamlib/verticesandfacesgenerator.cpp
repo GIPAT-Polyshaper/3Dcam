@@ -22,7 +22,7 @@
  **************************************************************************/
 
 #include "verticesandfacesgenerator.h"
-#include <QDebug>
+#include <algorithm>
 
 namespace {
     VerticesAndFacesGenerator::Vertex vertexFromVec3AndFaceIndex(const StlLoader::Vec3& v, unsigned int face, unsigned int positionInFace)
@@ -37,10 +37,42 @@ namespace {
         return vertex;
     }
 
+    // Returns true if two vertex are the same
+    bool equalVertices(const VerticesAndFacesGenerator::Vertex& v1, const VerticesAndFacesGenerator::Vertex& v2)
+    {
+        return (v1.x == v2.x) && (v1.y == v2.y) && (v1.z == v2.z);
+    }
+
+    // Returns true if v1 is less than v2. First x is compared, if equal y is compared and if equal x is compared
+    bool compareVertices(const VerticesAndFacesGenerator::Vertex& v1, const VerticesAndFacesGenerator::Vertex& v2)
+    {
+        if (v1.x < v2.x) {
+            return true;
+        } else if (v1.x > v2.x) {
+            return false;
+        } else {
+            if (v1.y < v2.y) {
+                return true;
+            } else if (v1.y > v2.y) {
+                return false;
+            } else {
+                return (v1.z < v2.z);
+            }
+        }
+    }
+
+    void addFacesFromOtherVertex(VerticesAndFacesGenerator::Vertex& v1, const VerticesAndFacesGenerator::Vertex& v2)
+    {
+        v1.faces[0].insert(v1.faces[0].end(), v2.faces[0].begin(), v2.faces[0].end());
+        v1.faces[1].insert(v1.faces[1].end(), v2.faces[1].begin(), v2.faces[1].end());
+        v1.faces[2].insert(v1.faces[2].end(), v2.faces[2].begin(), v2.faces[2].end());
+    }
+
     VerticesAndFacesGenerator::Vertices extractVertices(const StlLoader::Triangles& triangles)
     {
         VerticesAndFacesGenerator::Vertices vertices;
 
+        // Copying all vertex from triangles into vertices
         for (auto i = 0u; i < triangles.size(); ++i) {
             const auto& t = triangles[i];
 
@@ -49,7 +81,24 @@ namespace {
             vertices.push_back(vertexFromVec3AndFaceIndex(t.v3, i, 2));
         }
 
-        return vertices;
+        // Sorting vertices
+        std::sort(vertices.begin(), vertices.end(), compareVertices);
+
+        // Excluding repeated vertices. They are sorted, so equal vertices will be near to each other
+        VerticesAndFacesGenerator::Vertices uniqueVertices;
+        if (vertices.size() != 0) {
+            uniqueVertices.push_back(vertices.front());
+            for (auto it = vertices.begin() + 1; it != vertices.end(); ++it) {
+                auto& last = uniqueVertices.back();
+                if (equalVertices(last, *it)) {
+                    addFacesFromOtherVertex(last, *it);
+                } else {
+                    uniqueVertices.emplace_back(*it);
+                }
+            }
+        }
+
+        return uniqueVertices;
     }
 
     // The number of faces is equal to the number of triangles in the list passed to VerticesAndFacesGenerator constructor
