@@ -21,10 +21,11 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#ifndef VERTEXANDINDEXGENERATOR_H
-#define VERTEXANDINDEXGENERATOR_H
+#ifndef VERTICESANDFACESGENERATOR_H
+#define VERTICESANDFACESGENERATOR_H
 
 #include <vector>
+#include <array>
 #include "stlloader.h"
 
 /**
@@ -35,7 +36,7 @@
  * vertices and a list of faces in which each face is defined by the index
  * of its vertices in the list of all vertices
  */
-class VertexAndIndexGenerator
+class VerticesAndFacesGenerator
 {
 public:
     /**
@@ -45,6 +46,11 @@ public:
         double x;
         double y;
         double z;
+
+        // faces[i] is the list of faces for which this vertex is the i-th vertex.
+        // This is needed to keep the same vertex order for faces as in the original
+        // structure
+        std::array<std::vector<unsigned int>, 3> faces;
     };
 
     /**
@@ -52,13 +58,6 @@ public:
      *        vector of vertices
      */
     struct Face {
-        Face(unsigned int vv1, unsigned int vv2, unsigned int vv3)
-            : v1(vv1)
-            , v2(vv2)
-            , v3(vv3)
-        {
-        }
-
         unsigned int v1;
         unsigned int v2;
         unsigned int v3;
@@ -80,7 +79,7 @@ public:
      *
      * @param triangles the list of triangles
      */
-    VertexAndIndexGenerator(const StlLoader::Triangles& triangles);
+    VerticesAndFacesGenerator(const StlLoader::Triangles& triangles);
 
     /**
      * @brief Returns the list of vertices
@@ -99,10 +98,8 @@ public:
     }
 
 private:
-    Vertex vertexFromVec3(const StlLoader::Vec3& v) const;
-
-    Vertices m_vertices;
-    Faces m_faces;
+    const Vertices m_vertices;
+    const Faces m_faces;
 };
 
-#endif // VERTEXANDINDEXGENERATOR_H
+#endif // VERTICESANDFACESGENERATOR_H
