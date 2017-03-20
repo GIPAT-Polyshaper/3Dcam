@@ -26,8 +26,7 @@
 
 #include <exception>
 #include "cgaldefs.h"
-// ---------------------------------------- TOGLIERE QUESTO E INCLUDERE vertexandindexgenerator.h
-#include "stlloader.h"
+#include "verticesandfacesgenerator.h"
 
 /**
  * @brief The exception thrown by TriangularMeshGenerator
@@ -104,7 +103,7 @@ public:
      * This throws an exception in case generation fails
      * @param triangles the list of triangles
      */
-    TriangularMeshGenerator(const StlLoader::Triangles& triangles);
+    TriangularMeshGenerator(const VerticesAndFacesGenerator::Vertices& vertices, const VerticesAndFacesGenerator::Faces& faces);
 
     /**
      * @brief Returns the polyhedron built by the constructor
@@ -115,7 +114,7 @@ public:
     }
 
 private:
-    Polyhedron m_polyhedron;
+    const Polyhedron m_polyhedron;
 };
 
 #endif // TRIANGULARMESHGENERATOR_H

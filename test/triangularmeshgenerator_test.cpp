@@ -26,7 +26,6 @@
 
 // NOTES AND TODOS
 //
-// Wait to have an intermediate representation before writing this (vertex and indices to vertices)
 
 /**
  * \brief The class to perform unit tests
@@ -40,10 +39,117 @@ class TriangularMeshGenerator_Test : public QObject
 private slots:
     void return_empty_polyhedron_when_initialized_with_empy_triangles()
     {
-        TriangularMeshGenerator t(StlLoader::Triangles{});
+        TriangularMeshGenerator t(VerticesAndFacesGenerator::Vertices{}, VerticesAndFacesGenerator::Faces{});
 
         QVERIFY(t.polyhedron().empty());
 	}
+
+    void return_polyhedron_with_one_triangle()
+    {
+        VerticesAndFacesGenerator::Vertices v{
+            V(0, 0, 0, Fi{0}, Fi{}, Fi{}),
+            V(0, 1, 0, Fi{}, Fi{0}, Fi{}),
+            V(0, 0, 1, Fi{}, Fi{}, Fi{0}),
+        };
+        VerticesAndFacesGenerator::Faces f{
+            F(0, 1, 2)
+        };
+
+        TriangularMeshGenerator t(v, f);
+
+        QVERIFY(t.polyhedron().is_pure_triangle());
+        QCOMPARE(t.polyhedron().size_of_vertices(), 3ul);
+        QCOMPARE(t.polyhedron().size_of_facets(), 1ul);
+        QVERIFY(t.polyhedron().is_valid(true, 0));
+    }
+
+    void return_polyhedron_with_a_tetrahedron()
+    {
+        VerticesAndFacesGenerator::Vertices v{
+            V(0, 0, 0, Fi{0, 1, 2}, Fi{}, Fi{}),
+            V(0, 1, 0, Fi{3}, Fi{0}, Fi{1}),
+            V(0, 0, 1, Fi{}, Fi{2}, Fi{0, 3}),
+            V(1, 0, 0, Fi{}, Fi{1, 3}, Fi{2})
+        };
+        VerticesAndFacesGenerator::Faces f{
+            F(0, 1, 2),
+            F(0, 3, 1),
+            F(0, 2, 3),
+            F(1, 3, 2)
+        };
+
+        TriangularMeshGenerator t(v, f);
+
+        QVERIFY(t.polyhedron().is_pure_triangle());
+        QCOMPARE(t.polyhedron().size_of_vertices(), 4ul);
+        QCOMPARE(t.polyhedron().size_of_facets(), 4ul);
+        QVERIFY(t.polyhedron().is_valid(true, 0));
+    }
+
+    void return_polyhedron_with_two_separated_tetrahedrons()
+    {
+        VerticesAndFacesGenerator::Vertices v{
+            // first tetrahedron
+            V(0, 0, 0, Fi{0, 1, 2}, Fi{}, Fi{}),
+            V(0, 1, 0, Fi{3}, Fi{0}, Fi{1}),
+            V(0, 0, 1, Fi{}, Fi{2}, Fi{0, 3}),
+            V(1, 0, 0, Fi{}, Fi{1, 3}, Fi{2}),
+
+            // second tetrahedron
+            V(10, 0, 0, Fi{4, 5, 6}, Fi{}, Fi{}),
+            V(10, 1, 0, Fi{3}, Fi{4}, Fi{5}),
+            V(10, 0, 1, Fi{}, Fi{6}, Fi{4, 7}),
+            V(11, 0, 0, Fi{}, Fi{5, 7}, Fi{6})
+        };
+        VerticesAndFacesGenerator::Faces f{
+            // first tetrahedron
+            F(0, 1, 2),
+            F(0, 3, 1),
+            F(0, 2, 3),
+            F(1, 3, 2),
+
+            // second tetrahedron
+            F(4, 5, 6),
+            F(4, 7, 5),
+            F(4, 6, 7),
+            F(5, 7, 6)
+        };
+
+        TriangularMeshGenerator t(v, f);
+
+        QVERIFY(t.polyhedron().is_pure_triangle());
+        QCOMPARE(t.polyhedron().size_of_vertices(), 8ul);
+        QCOMPARE(t.polyhedron().size_of_facets(), 8ul);
+        QVERIFY(t.polyhedron().is_valid(true, 0));
+    }
+
+private:
+    using Fi = std::vector<unsigned int>;
+
+    VerticesAndFacesGenerator::Vertex V(double x, double y, double z, Fi&& f1, Fi&& f2, Fi&& f3) const
+    {
+        VerticesAndFacesGenerator::Vertex v;
+
+        v.x = x;
+        v.y = y;
+        v.z = z;
+        v.faces[0] = std::move(f1);
+        v.faces[1] = std::move(f2);
+        v.faces[2] = std::move(f3);
+
+        return v;
+    }
+
+    VerticesAndFacesGenerator::Face F(unsigned int v1, unsigned int v2, unsigned int v3) const
+    {
+        VerticesAndFacesGenerator::Face f;
+
+        f.v1 = v1;
+        f.v2 = v2;
+        f.v3 = v3;
+
+        return f;
+    }
 };
 
 QTEST_MAIN(TriangularMeshGenerator_Test)
