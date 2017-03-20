@@ -29,69 +29,6 @@
 #include "verticesandfacesgenerator.h"
 
 /**
- * @brief The exception thrown by TriangularMeshGenerator
- */
-class TriangularMeshGeneratorExceptions : public std::exception
-{
-public:
-    /**
-     * @brief Constructor
-     *
-     * @param reason the exception reason. The buffer for this is at most 256
-     *               characters (including the '\0' terminator)
-     */
-    TriangularMeshGeneratorExceptions(QString reason) noexcept
-    {
-        strncpy(m_reason, reason.toLatin1().data(), 256);
-        m_reason[255] = '\0';
-        sprintf(m_errorMessage, "Error generating a triangular mesh, reason: \"%s\"", m_reason);
-        m_errorMessage[511] = '\0';
-    }
-
-    /**
-     * @brief Copy constructor
-     */
-    TriangularMeshGeneratorExceptions(const TriangularMeshGeneratorExceptions& other) noexcept
-        : std::exception(other)
-    {
-        strncpy(m_reason, other.m_reason, 256);
-        m_reason[255] = '\0';
-        strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[511] = '\0';
-    }
-
-    /**
-     * @brief Copy operator
-     */
-    TriangularMeshGeneratorExceptions& operator=(const TriangularMeshGeneratorExceptions& other) noexcept
-    {
-        if (&other == this) {
-            return *this;
-        }
-
-        std::exception::operator=(other);
-        strncpy(m_reason, other.m_reason, 256);
-        m_reason[255] = '\0';
-        strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[511] = '\0';
-
-        return *this;
-    }
-
-    /**
-     * @brief Returns a C string describing the exception
-     */
-    virtual const char *what() const noexcept
-    {
-        return m_errorMessage;
-    }
-
-private:
-    char m_reason[256];
-    char m_errorMessage[512];
-};
-
-/**
  * @brief The class loading an STL file
  */
 class TriangularMeshGenerator
@@ -100,7 +37,6 @@ public:
     /**
      * @brief Constructor
      *
-     * This throws an exception in case generation fails
      * @param triangles the list of triangles
      */
     TriangularMeshGenerator(const VerticesAndFacesGenerator::Vertices& vertices, const VerticesAndFacesGenerator::Faces& faces);
