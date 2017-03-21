@@ -25,13 +25,12 @@
 #define STLLOADER_H
 
 #include <exception>
-#include <QObject>
 #include <QFile>
 #include <QString>
 #include <vector>
 
 /**
- * @brief The exception type thrown by StlLoader
+ * @brief The exception thrown by StlLoader
  */
 class StlLoaderExceptions : public std::exception
 {
@@ -50,7 +49,7 @@ public:
         strncpy(m_reason, reason.toLatin1().data(), 256);
         m_reason[255] = '\0';
         sprintf(m_errorMessage, "Could not load stl file \"%s\", reason: \"%s\"", m_filename, m_reason);
-        m_errorMessage[511] = '\0';
+        m_errorMessage[767] = '\0';
     }
 
     /**
@@ -64,7 +63,7 @@ public:
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[511] = '\0';
+        m_errorMessage[767] = '\0';
     }
 
     /**
@@ -82,7 +81,7 @@ public:
         strncpy(m_reason, other.m_reason, 256);
         m_reason[255] = '\0';
         strncpy(m_errorMessage, other.m_errorMessage, 512);
-        m_errorMessage[511] = '\0';
+        m_errorMessage[767] = '\0';
 
         return *this;
     }
@@ -122,6 +121,7 @@ public:
         {
         }
 
+        // All floats because in binary STL the size of each value is 32 bits
         float x;
         float y;
         float z;
@@ -145,6 +145,11 @@ public:
         Vec3 v3;
     };
 
+    /**
+     * @brief The type of a list of triangles
+     */
+    using Triangles = std::vector<Triangle>;
+
 public:
     /**
      * @brief Constructor
@@ -157,16 +162,13 @@ public:
     /**
      * @brief Returns the list of triangles loaded from the stl file
      */
-    const std::vector<Triangle>& triangles() const
+    const Triangles& triangles() const
     {
         return m_triangles;
     }
 
 private:
-    void readBinaryFile(QFile& file);
-    void readAsciiFile(QFile& file);
-
-    std::vector<Triangle> m_triangles;
+    const Triangles m_triangles;
 };
 
 #endif // STLLOADER_H
