@@ -58,18 +58,21 @@ void GCodeGenerator::readAndGenerate()
 {
     //std::cout << "a soreta" << std::endl;
 
-    float indi [11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-    float yi [11]   = {10, 5, 3, 1, 2, 4, 6, 8, 9, 7, 10};
-    float zi [11]   = {1, 1, 2, 2, 4, 6, 7, 5, 3, 2, 2};
-
+    float indi [11] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    float yi [11]   = {10, 5, 3, 1, 2, 4, 6, 8, 9,  7, 10};
+    float zi [11]   = { 1, 1, 2, 2, 4, 6, 7, 5, 3,  2, 2};
 
     QVector<Vec3i> verts(11);
 
+    /*
+    const auto start = 4;
 
+    for (auto i = 0; i < verts.size(); ++i) {
+        const auto j = (i + start) % verts.size();
 
-    // da qui in poi procedo per la mia strada (finalmente)
-
-
+        verts[j]
+    }
+    */
 
     for (int i=0; i < verts.length(); i++)
     {
@@ -83,7 +86,7 @@ void GCodeGenerator::readAndGenerate()
 
     std::sort(verts.begin(), verts.end());
 
-/*
+
 //show ordered struct
 
     for (int i=0; i < verts.length(); i++)
@@ -93,7 +96,7 @@ void GCodeGenerator::readAndGenerate()
     }
 
 
-*/
+
 
 
 
@@ -108,6 +111,10 @@ void GCodeGenerator::readAndGenerate()
 
     for (int i=1; i < verts.length(); i++)
     {
+
+        //std::cout << verts[i-1].first.y  << " - " << verts[i].first.y  << std::endl;
+        //std::cout << (verts[i-1].first.y > verts[i].first.y) << std::endl;
+
         if (tmp+1==verts[i].first.ind || verts[i].first.ind==1){
 
             if (verts[i-1].first.y <= verts[i].first.y){
@@ -116,20 +123,33 @@ void GCodeGenerator::readAndGenerate()
                 surfz.push_back(verts[i].first.z);
                 surfind.push_back(verts[i].first.ind);
                 tmp = verts[i].first.ind;
+
+            }
+            else if (verts[i-1].first.y > verts[i].first.y){ //non entra qui col punto 10
+
+                surfy.push_back(verts[i-1].first.y);
+                surfz.push_back(verts[i].first.z);
+                surfind.push_back(verts[i].first.ind);
+                tmp = verts[i].first.ind;
             }
 
 
         }
-        //std::cout << surfy[i] << " - " << surfind[i] << std::endl;
+
     }
 
+    surfy.insert (surfy.begin(), verts[0].first.y);
+    surfz.insert (surfz.begin(), verts[0].first.z);
+    surfind.insert (surfind.begin(), verts[0].first.ind);
 
-    for (int i=0; i < 7; i++)
+
+
+    for (int i=0; i < verts.length(); i++)
     {
+        //std::cout << verts[i].first.y << std::endl;
 
-        std::cout << surfy[i] << " - " << surfind[i] << std::endl;
+        std::cout << verts[i].first.y << " - " << verts[i].first.ind << std::endl;
     }
-
 
 
 

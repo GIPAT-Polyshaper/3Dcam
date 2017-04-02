@@ -8,6 +8,7 @@ find_package(Boost REQUIRED)
 
 set(POLYSHAPER_3DCAM_LIB_SRCS
         gcodegenerator.cpp
+<<<<<<< HEAD
         stlloader.cpp
         triangularmeshgenerator.cpp
         verticesandfacesgenerator.cpp)
@@ -17,6 +18,12 @@ set(POLYSHAPER_3DCAM_LIB_HDRS
         stlloader.h
         triangularmeshgenerator.h
         verticesandfacesgenerator.h)
+=======
+        undersquare.cpp)
+set(POLYSHAPER_3DCAM_LIB_HDRS
+        gcodegenerator.h
+        undersquare.h)
+>>>>>>> Implemented the algorith to start from any index of the path (i.e. not
 
 add_library(3dcamlib STATIC ${POLYSHAPER_3DCAM_LIB_SRCS} ${POLYSHAPER_3DCAM_LIB_HDRS})
 

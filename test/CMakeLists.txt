@@ -26,6 +26,10 @@ endfunction()
 # Adding all tests
 addTest(dummy)
 addTest(cgal)
+<<<<<<< HEAD
 addTest(stlloader)
 addTest(triangularmeshgenerator)
 addTest(verticesandfacesgenerator)
+=======
+addTest(undersquare)
+>>>>>>> Implemented the algorith to start from any index of the path (i.e. not
