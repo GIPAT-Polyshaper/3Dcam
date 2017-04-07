@@ -19,8 +19,8 @@ Undersquare::Undersquare(std::vector<double> y, std::vector<double> z)
 
             if(y[j] < min){
 
-                min = y[j];
-                start = j;
+                    min = y[j];
+                    start = j;
                 }
 
             }
@@ -40,13 +40,34 @@ Undersquare::Undersquare(std::vector<double> y, std::vector<double> z)
 
         if (y[j] >= y[j-1])
         {
-            //std::cout << y[j] << " - " << z[j] << std::endl;
+
             ty.push_back(y[j]);
             tz.push_back(z[j]);
+        }
+        else if (y[j] < y[j-1])
+        {
+            if (z[j] < z[j-1])
+            {
+                ty.push_back(y[j-1]);
+                tz.push_back(z[j]);
+            }
+
         }
 
 
     }
+
+    /*
+    for (auto i = 0; i < ty.size(); ++i)
+    {
+
+        std::cout << ty[i] << " - " << tz[i] << std::endl;
+
+    }
+    */
+
+
+
 
 
     }

@@ -78,6 +78,28 @@ private slots:
         QVERIFY(u.toolY() == toolY);
         QVERIFY(u.toolZ() == toolZ);
     }
+    void return_tool_path_with_vertical_path()
+    {
+
+        Undersquare u({1, 2, 2, 3}, {1, 2, 3, 3});
+
+        auto toolY = std::vector<double>{1, 2, 2, 3};
+        auto toolZ = std::vector<double>{1, 2, 3, 3};
+
+        QVERIFY(u.toolY() == toolY);
+        QVERIFY(u.toolZ() == toolZ);
+    }
+    void return_tool_path_with_undersquare()
+    {
+
+        Undersquare u({10, 5, 3, 1, 2, 4, 6, 8, 9,  7, 10}, { 1, 1, 2, 2, 4, 6, 7, 5, 3,  2, 2});
+
+        auto toolY = std::vector<double>{1, 2, 4, 6, 8, 9, 9, 10, 10};
+        auto toolZ = std::vector<double>{2, 4, 6, 7, 5, 3, 2,  2,  1};
+
+        QVERIFY(u.toolY() == toolY);
+        QVERIFY(u.toolZ() == toolZ);
+    }
 
 };
 
