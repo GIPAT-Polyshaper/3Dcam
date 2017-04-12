@@ -67,9 +67,6 @@ Undersquare::Undersquare(std::vector<double> y, std::vector<double> z)
     */
 
 
-
-
-
     }
 
 
