@@ -32,7 +32,10 @@
 #include <QTextStream>
 
 
-GCodeGenerator::GCodeGenerator(const std::vector<double>& a, const std::vector<double>& b,double speed)
+GCodeGenerator::GCodeGenerator(const std::vector<SinglePath>& paths, double speed, double zSafe)
+    : m_paths(path)
+    , m_speed(speed)
+    , m_zSafe(zSafe)
 {
 
 }

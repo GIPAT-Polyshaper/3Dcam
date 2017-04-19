@@ -21,28 +21,41 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#ifndef GCODEGENERATOR_H
-#define GCODEGENERATOR_H
+#include <QtTest/QtTest>
+#include <QFile>
+#include <QString>
+#include "gcodegenerator.h"
 
-#include <QObject>
-#include <QTextStream>
-#include <vector>
+// NOTES AND TODOS
+//
+// This is just an empty file, created as template for unit tests
 
-struct SinglePath {
-    double x;
-    std::vector<double> y;
-    std::vector<double> z;
-};
-
-class GCodeGenerator : public QObject
+/**
+ * \brief The class to perform unit tests
+ *
+ * Each private slot is a test
+ */
+class GCodeGenerator_Test : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-public:
-    GCodeGenerator(const std::vector<SinglePath>& paths, double speed, double zSafe);
+private slots:
 
-public slots:
-    void readAndGenerate(QTextStream& stream);
+    void simple_gcode(){
+
+        GCodeGenerator g ({}, 10, 10);
+
+        QString buffer;
+        QTextStream stream(&buffer);
+
+        g.readAndGenerate(stream);
+
+        const QString expected = "G00 Z10\nG00 X0 Y0 Z0";
+
+        QCOMPARE(buffer, expected);
+    }
+
 };
 
-#endif // GCODEGENERATOR_H
+QTEST_MAIN(GCodeGenerator_Test)
+#include "gcodegenerator_test.moc"
