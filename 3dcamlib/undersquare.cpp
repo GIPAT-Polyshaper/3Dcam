@@ -13,7 +13,7 @@ Undersquare::Undersquare(std::vector<double> y, std::vector<double> z)
         double min = y[start];
 
         // find the minimun value in y
-        for(int j=1; j<y.size();j++)
+        for(auto j=1u; j<y.size();j++)
             {
 
 
@@ -34,7 +34,7 @@ Undersquare::Undersquare(std::vector<double> y, std::vector<double> z)
         //std::cout << start << std::endl;
         //std::cout << y[start] << " - " << z[start] << std::endl;
 
-    for (auto i = 1; i < y.size(); ++i) {
+    for (auto i = 1u; i < y.size(); ++i) {
         const auto j = (i + start) % y.size();
 
 
