@@ -30,14 +30,15 @@
 #include <algorithm>
 #include <vector>
 #include <fstream>
+#include <QTextStream>
 
 
-GCodeGenerator::GCodeGenerator()
+GCodeGenerator::GCodeGenerator(const std::vector<double>& a, const std::vector<double>& b,double speed)
 {
 
 }
 
-void GCodeGenerator::readAndGenerate()
+void GCodeGenerator::readAndGenerate(QTextStream& stream)
 {
 
 //std::cout << "we bello" << std::endl;
@@ -47,6 +48,14 @@ float b[10]={4, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 float c[10]={7, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 float F = 800;
 
+/* uso qtextstream per scrivere il gcode su una stringa e poi faccio il test tra stringhe
+stream << p1 << " " << p2;
+
+*/
+
+stream << a[0] << " " << b[0];
+
+/*
 FILE * pFileTXT;
 
 pFileTXT = fopen ("gcode.txt","a");
@@ -62,7 +71,7 @@ fclose (pFileTXT);
 
 }
 
-
+*/
 
 
 }
