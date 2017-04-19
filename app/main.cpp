@@ -33,11 +33,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    GCodeGenerator gcodeGenerator;
+    //GCodeGenerator gcodeGenerator;
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
-    engine.rootContext()->setContextProperty("gcodeGenerator", &gcodeGenerator);
+    //engine.rootContext()->setContextProperty("gcodeGenerator", &gcodeGenerator);
 
     return app.exec();
 }

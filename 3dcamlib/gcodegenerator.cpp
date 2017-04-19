@@ -28,7 +28,6 @@
 #include <QVector>
 #include <typeinfo>
 #include <algorithm>
-#include <vector>
 #include <fstream>
 #include <QTextStream>
 

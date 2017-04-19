@@ -25,16 +25,18 @@
 #define GCODEGENERATOR_H
 
 #include <QObject>
+#include <QTextStream>
+#include <vector>
 
 class GCodeGenerator : public QObject
 {
     Q_OBJECT
 
 public:
-    GCodeGenerator();
+    GCodeGenerator(const std::vector<double>& a, const std::vector<double>& b,double speed);
 
 public slots:
-    void readAndGenerate();
+    void readAndGenerate(QTextStream& stream);
 };
 
 #endif // GCODEGENERATOR_H
