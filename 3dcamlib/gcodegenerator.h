@@ -43,6 +43,11 @@ public:
 
 public slots:
     void readAndGenerate(QTextStream& stream);
+
+private:
+    const std::vector<SinglePath> m_paths;
+    const double m_speed;
+    const double m_zSafe;
 };
 
 #endif // GCODEGENERATOR_H

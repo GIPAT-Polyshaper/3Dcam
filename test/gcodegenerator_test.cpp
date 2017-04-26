@@ -41,7 +41,7 @@ class GCodeGenerator_Test : public QObject
 
 private slots:
 
-    void simple_gcode(){
+    void empty_vector(){
 
         GCodeGenerator g ({}, 10, 10);
 
@@ -50,10 +50,25 @@ private slots:
 
         g.readAndGenerate(stream);
 
-        const QString expected = "G00 Z10\nG00 X0 Y0 Z0";
+        const QString expected = "F10\nG00 Z10\nG00 X0 Y0 Z0";
 
         QCOMPARE(buffer, expected);
     }
+
+    void single_x_gcode(){
+
+        GCodeGenerator g ({{5,{1,2},{1,3}}}, 10, 10);
+
+        QString buffer;
+        QTextStream stream(&buffer);
+
+        g.readAndGenerate(stream);
+
+        const QString expected = "F10\nG01 X5 Y1 Z1\nG01 X5 Y2 Z3\nG00 Z10\nG00 X0 Y0 Z0";
+
+        QCOMPARE(buffer, expected);
+    }
+
 
 };
 

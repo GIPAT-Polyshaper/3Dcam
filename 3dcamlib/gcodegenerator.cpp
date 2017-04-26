@@ -33,7 +33,7 @@
 
 
 GCodeGenerator::GCodeGenerator(const std::vector<SinglePath>& paths, double speed, double zSafe)
-    : m_paths(path)
+    : m_paths(paths)
     , m_speed(speed)
     , m_zSafe(zSafe)
 {
@@ -43,37 +43,30 @@ GCodeGenerator::GCodeGenerator(const std::vector<SinglePath>& paths, double spee
 void GCodeGenerator::readAndGenerate(QTextStream& stream)
 {
 
-//std::cout << "we bello" << std::endl;
 
-float a[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-float b[10]={4, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-float c[10]={7, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-float F = 800;
 
-/* uso qtextstream per scrivere il gcode su una stringa e poi faccio il test tra stringhe
-stream << p1 << " " << p2;
 
-*/
 
-stream << a[0] << " " << b[0];
 
-/*
-FILE * pFileTXT;
+stream << "F" << m_speed << "\n";
 
-pFileTXT = fopen ("gcode.txt","a");
-fprintf (pFileTXT, "F%f\n", F);
-fclose (pFileTXT);
+if (!m_paths.empty())
+{
+    //std::cout << m_paths[0].y[2] << std::endl;
 
- for(auto i=0; i < 10; ++i){
 
-    pFileTXT = fopen ("gcode.txt","a");
-    fprintf (pFileTXT, "G01 X%f Y%f Z%f\n", a[i], b[i], c[i]);
-    fclose (pFileTXT);
+    for (auto j = 0; j < m_paths.size(); ++j){
 
+        for (auto i = 0; i < m_paths[j].y.size(); ++i){
+
+            stream << "G01 X" << m_paths[j].x << " Y" << m_paths[j].y[i] << " Z" << m_paths[j].z[i] <<"\n";
+
+        }
+    }
 
 }
 
-*/
+stream << "G00 Z" << m_zSafe << "\nG00 X0 Y0 Z0";
 
 
 }
