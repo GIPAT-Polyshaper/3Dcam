@@ -29,12 +29,16 @@
 class GCodeGenerator : public QObject
 {
     Q_OBJECT
-
+private:
+    QString filePath;
+    void readAndGenerate();
 public:
     GCodeGenerator();
 
 public slots:
-    void readAndGenerate();
+//    void readAndGenerate();
+    void openFile(QString path);
+
 };
 
 #endif // GCODEGENERATOR_H
