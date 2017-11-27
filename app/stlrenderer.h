@@ -6,6 +6,10 @@
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>
 #include <QtGui/qopenglfunctions.h>
+#include "transform3d.h"
+#include "camera3d.h"
+
+
 
 #include <QTime>
 #include <QVector>
@@ -21,9 +25,6 @@ public:
 
 private:
 
-    qreal   m_fAngle;
-    qreal   m_fScale;
-
     void paintQtLogo();
     void createGeometry();
 //    void quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4);
@@ -34,7 +35,10 @@ private:
     QOpenGLShaderProgram program1;
     int vertexAttr1;
     int normalAttr1;
-    int matrixUniform1;
+    int u_modelToWorld;
+    int u_worldToView;
+    Transform3D modelMatrix;
+    Camera3D viewMatrix;
 };
 
 #endif // STLRENDERER_H
