@@ -29,15 +29,74 @@
 class GCodeGenerator : public QObject
 {
     Q_OBJECT
-private:
-    QString filePath;
-    void readAndGenerate();
+    Q_PROPERTY(QString path READ getPath NOTIFY pathChanged)
+
+    Q_PROPERTY(float altezzaUt READ getAltezzaUtensile NOTIFY altezzaChanged)
+    Q_PROPERTY(float diametroUt READ getDiametroUtensile NOTIFY diametroChanged)
+    Q_PROPERTY(float velocitaUt READ getVelocitaUtensile NOTIFY velocitaChanged)
+    Q_PROPERTY(QString formaUt READ getFormaUtensile  NOTIFY formaChanged)
+    Q_PROPERTY(float overlap READ getOverlapPassate NOTIFY overlapChanged)
+    Q_PROPERTY(float volumeX READ getVolumeX NOTIFY volumeXChanged)
+    Q_PROPERTY(float volumeY READ getVolumeY NOTIFY volumeYChanged)
+    Q_PROPERTY(float volumeZ READ getVolumeZ NOTIFY volumeZChanged)
+
 public:
+    enum Forma
+    {
+        Sferica,
+        Candela
+    };
+
+    float getAltezzaUtensile() const ;
+    float getDiametroUtensile() const;
+    float getVelocitaUtensile() const;
+    QString getFormaUtensile() const;
+    float getOverlapPassate() const;
+    float getVolumeX() const;
+    float getVolumeY() const;
+    float getVolumeZ() const;
+    QString getPath() const;
     GCodeGenerator();
 
+signals:
+    void altezzaChanged(float newAltezza);
+    void diametroChanged(float newDiametro);
+    void velocitaChanged(float newVelocita);
+    void formaChanged(QString newForma);
+    void overlapChanged(float newOverlap);
+    void volumeXChanged(float newVolumeX);
+    void volumeYChanged(float newVolumeY);
+    void volumeZChanged(float newVolumeZ);
+
+    void textRead(QString text);
+    void pathChanged(QString path);
+
 public slots:
-//    void readAndGenerate();
+    void setAltezza(float a);
+    void setDiametro(float d);
+    void setVelocita(float v);
+    void setForma(QString& f);
+    void setOverlap(float o);
+    void setVolumeX(float x);
+    void setVolumeY(float y);
+    void setVolumeZ(float z);
+
+    //    void readAndGenerate();
     void openFile(QString path);
+
+private:
+    QString filePath;
+
+    float altezzaUtensile;
+    float diametroUtensile;
+    float velocitaUtensile;
+    Forma formaUtensile;
+    float overlapPassate;
+    float volumeXAxis;
+    float volumeYAxis;
+    float volumeZAxis;
+
+    void readAndGenerate();
 
 };
 

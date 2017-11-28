@@ -68,6 +68,142 @@ void GCodeGenerator::openFile(QString path)
     readAndGenerate();
 }
 
+
+float GCodeGenerator::getAltezzaUtensile() const
+{
+    return altezzaUtensile;
+}
+
+float GCodeGenerator::getDiametroUtensile() const
+{
+    return diametroUtensile;
+}
+
+float GCodeGenerator::getVelocitaUtensile() const
+{
+    return velocitaUtensile;
+}
+
+QString GCodeGenerator::getFormaUtensile() const
+{
+    QString forma;
+    switch (formaUtensile)
+    {
+    case Sferica:
+        forma = "Sferica";
+        break;
+    case Candela:
+        forma = "Candela";
+    default:
+        break;
+    }
+    return forma;
+}
+
+float GCodeGenerator::getOverlapPassate() const
+{
+    return overlapPassate;
+}
+
+float GCodeGenerator::getVolumeX() const
+{
+    return volumeXAxis;
+}
+
+float GCodeGenerator::getVolumeY() const
+{
+    return volumeYAxis;
+}
+
+float GCodeGenerator::getVolumeZ() const
+{
+    return volumeZAxis;
+}
+
+QString GCodeGenerator::getPath() const
+{
+    return filePath;
+}
+
+void GCodeGenerator::setAltezza(float a)
+{
+    if (altezzaUtensile != a)
+    {
+        altezzaUtensile = a;
+        emit altezzaChanged(a);
+    }
+}
+
+void GCodeGenerator::setDiametro(float d)
+{
+    if (diametroUtensile != d)
+    {
+        diametroUtensile = d;
+        emit diametroChanged(d);
+    }
+}
+
+void GCodeGenerator::setVelocita(float v)
+{
+    if (velocitaUtensile != v)
+    {
+        velocitaUtensile = v;
+        emit velocitaChanged(v);
+    }
+}
+
+void GCodeGenerator::setForma(QString& f)
+{
+    if (getFormaUtensile().compare(f,Qt::CaseInsensitive) != 0)
+    {
+        if (f.toUpper().compare("SFERICA") == 0)
+        {
+            formaUtensile = Sferica;
+        }
+        else if (f.toUpper().compare("CANDELA") == 0)
+        {
+            formaUtensile = Candela;
+        }
+        emit formaChanged(f);
+    }
+}
+
+void GCodeGenerator::setOverlap(float o)
+{
+    if (overlapPassate != o)
+    {
+        overlapPassate = o;
+        emit overlapChanged(o);
+    }
+}
+
+void GCodeGenerator::setVolumeX(float x)
+{
+    if (volumeXAxis != x)
+    {
+        volumeXAxis = x;
+        emit volumeXChanged(x);
+    }
+}
+
+void GCodeGenerator::setVolumeY(float y)
+{
+    if(volumeYAxis != y)
+    {
+        volumeYAxis = y;
+        emit volumeYChanged(y);
+    }
+}
+
+void GCodeGenerator::setVolumeZ(float z)
+{
+    if (volumeZAxis != z)
+    {
+        volumeZAxis = z;
+        emit volumeZChanged(z);
+    }
+}
+
 void GCodeGenerator::readAndGenerate()
 {
     //std::cout << "a soreta" << std::endl;
