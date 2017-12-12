@@ -152,7 +152,7 @@ void GCodeGenerator::setVelocita(float v)
     }
 }
 
-void GCodeGenerator::setForma(QString& f)
+void GCodeGenerator::setForma(QString f)
 {
     if (getFormaUtensile().compare(f,Qt::CaseInsensitive) != 0)
     {

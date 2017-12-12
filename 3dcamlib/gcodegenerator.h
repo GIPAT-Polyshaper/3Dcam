@@ -75,7 +75,7 @@ public slots:
     void setAltezza(float a);
     void setDiametro(float d);
     void setVelocita(float v);
-    void setForma(QString& f);
+    void setForma(QString f);
     void setOverlap(float o);
     void setVolumeX(float x);
     void setVolumeY(float y);
