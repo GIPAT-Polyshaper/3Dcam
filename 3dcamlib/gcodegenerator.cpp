@@ -51,7 +51,14 @@ struct Vec3i {
 
 GCodeGenerator::GCodeGenerator()
 {
-
+    altezzaUtensile = 40;
+    diametroUtensile = 6;
+    velocitaUtensile = 1000;
+    formaUtensile = Sferica;
+    overlapPassate = 50;
+    volumeXAxis = 100;
+    volumeYAxis = 100;
+    volumeZAxis = 100;
 }
 
 void GCodeGenerator::openFile(QString path)
