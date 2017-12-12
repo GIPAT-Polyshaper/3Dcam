@@ -65,7 +65,7 @@ void GCodeGenerator::openFile(QString path)
 {
     if (path.contains("file://"))
     {
-        filePath = QString::fromStdString(path.toStdString().substr(7,path.length()));
+        filePath = path.mid(7,path.length());
     }
     else
     {
