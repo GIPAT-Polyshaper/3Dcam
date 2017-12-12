@@ -25,6 +25,7 @@
 #define GCODEGENERATOR_H
 
 #include <QObject>
+#include "stlloader.h"
 
 class GCodeGenerator : public QObject
 {
@@ -63,6 +64,7 @@ public:
     float getVolumeY() const;
     float getVolumeZ() const;
     QString getPath() const;
+    const StlLoader::Triangles& getTriangles() const;
 
 signals:
     void altezzaChanged(float newAltezza);
@@ -101,6 +103,7 @@ private:
     float volumeXAxis;
     float volumeYAxis;
     float volumeZAxis;
+    StlLoader::Triangles triangles;
     GCodeGenerator(const GCodeGenerator&) = delete;
     void operator= (const GCodeGenerator&) = delete;
     void readAndGenerate();
