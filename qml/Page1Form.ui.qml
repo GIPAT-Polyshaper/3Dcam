@@ -9,6 +9,14 @@ Item
     id: item1
     width: 800
     height: 600
+    property alias textVolumeZ: textVolumeZ
+    property alias textVolumeY: textVolumeY
+    property alias textVolumeX: textVolumeX
+    property alias spinBoxOverlap: spinBoxOverlap
+    property alias comboFormaUtensile: comboFormaUtensile
+    property alias textVelocitaUtensile: textVelocitaUtensile
+    property alias textAltezzaUtensile: textAltezzaUtensile
+    property alias textDiametroUtensile: textDiametroUtensile
 
     property alias viewer3d: viewer3d
     property alias labelXOffset: labelXOffset
@@ -99,12 +107,13 @@ Item
                     id: textDiametroUtensile
                     x: 128
                     height: implicitHeight - 12
-                    text: qsTr("")
+                    text: gcodeGenerator.diametroUt
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
                     anchors.topMargin: 0
                     renderType: Text.NativeRendering
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 TextField
@@ -113,12 +122,13 @@ Item
                     x: 128
                     y: 46
                     height: implicitHeight - 12
-                    text: qsTr("")
+                    text: gcodeGenerator.altezzaUt
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: textDiametroUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
                     renderType: Text.NativeRendering
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 TextField {
@@ -126,7 +136,7 @@ Item
                     x: 128
                     y: 92
                     height: implicitHeight - 12
-                    text: qsTr("")
+                    text: gcodeGenerator.velocitaUt
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     font.pointSize: 9
@@ -135,6 +145,7 @@ Item
                     anchors.topMargin: boxUtensile.topPadding
                     renderType: Text.NativeRendering
                     bottomPadding: 3
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 Label
@@ -183,6 +194,7 @@ Item
                     anchors.top: textVelocitaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
                     model: ["Sferica", "Candela"]
+                    currentIndex: 0
                 }
 
                 SpinBox
@@ -191,7 +203,7 @@ Item
                     x: 41
                     y: 27
                     height: textDiametroUtensile.height
-                    value: 50
+                    value: gcodeGenerator.overlap
                     to: 100
                     anchors.top: comboFormaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
@@ -272,13 +284,14 @@ Item
                 {
                     id: textVolumeX
                     x: 128
-                    text: qsTr("")
+                    text: gcodeGenerator.volumeX
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
                     anchors.topMargin: 0
                     renderType: Text.NativeRendering
                     height: implicitHeight - 12
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 TextField
@@ -286,13 +299,14 @@ Item
                     id: textVolumeY
                     x: 128
                     y: 46
-                    text: qsTr("")
+                    text: gcodeGenerator.volumeY
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     renderType: Text.NativeRendering
                     height: implicitHeight - 12
                     anchors.top: textVolumeX.bottom
                     anchors.topMargin: boxVolumeLavoro.topPadding
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 TextField
@@ -300,7 +314,7 @@ Item
                     id: textVolumeZ
                     x: 128
                     y: 92
-                    text: qsTr("")
+                    text: gcodeGenerator.volumeZ
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     bottomPadding: 3
@@ -310,6 +324,7 @@ Item
                     height: implicitHeight - 12
                     anchors.top: textVolumeY.bottom
                     anchors.topMargin: boxVolumeLavoro.topPadding
+                    validator: DoubleValidator {bottom: 0; top: 31;}
                 }
 
                 Label {
