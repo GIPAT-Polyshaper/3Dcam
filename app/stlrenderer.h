@@ -23,7 +23,8 @@ public:
 private:
 
     void paintQtLogo();
-    void createGeometry();
+//    void createGeometry();
+    float max;
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
     QVector<QVector3D> normals;
@@ -35,6 +36,9 @@ private:
     int u_worldToView;
     Transform3D modelMatrix;
     Camera3D viewMatrix;
+
+public slots:
+    void setGeometry(const StlLoader::Triangles &t);
 };
 
 #endif // STLRENDERER_H

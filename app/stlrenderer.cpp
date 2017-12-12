@@ -124,112 +124,192 @@ void StlRenderer::render()
 //    viewMatrix.rotate(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void StlRenderer::createGeometry()
+void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
 {
     vertices.clear();
     normals.clear();
-    float uno = 0.5f;
-    float zero = -0.5f;
-    float menouno = -0.5f;
-    float menozero = -0.5f;
+    alpha.clear();
+    max = std::numeric_limits<float>::min();
+    float min = std::numeric_limits<float>::max();
 
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(uno,uno,uno);
+//    std::cout << "\nStampa dei triangoli letti in STLRENDERER:\n";
+//    int i = 1;
+    for (StlLoader::Triangles::const_iterator it = tri.begin(); it != tri.end(); ++it)
+    {
+        StlLoader::Triangle tri = *it;
+        if (std::abs(tri.v1.x) > max)
+        {
+            max = std::abs(tri.v1.x);
+        }
 
-    normals << QVector3D(menozero, zero, uno);
-    normals << QVector3D(menozero, zero, uno);
-    normals << QVector3D(menozero, zero, uno);
+        if (std::abs(tri.v1.y) > max)
+        {
+            max = std::abs(tri.v1.y);
+        }
 
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(zero,zero,uno);
+        if (std::abs(tri.v1.z) > max)
+        {
+            max = std::abs(tri.v1.z);
+        }
 
-    normals << QVector3D(zero, zero, uno);
-    normals << QVector3D(zero, zero, uno);
-    normals << QVector3D(zero, zero, uno);
+        if (std::abs(tri.v2.x) > max)
+        {
+            max = std::abs(tri.v2.x);
+        }
 
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(uno, zero, zero);
+        if (std::abs(tri.v2.y) > max)
+        {
+            max = std::abs(tri.v2.y);
+        }
 
-    normals << QVector3D(zero, zero, menouno);
-    normals << QVector3D(zero, zero, menouno);
-    normals << QVector3D(zero, zero, menouno);
+        if (std::abs(tri.v2.z) > max)
+        {
+            max = std::abs(tri.v2.z);
+        }
 
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(zero,uno,zero);
+        if (std::abs(tri.v3.x) > max)
+        {
+            max = std::abs(tri.v3.x);
+        }
 
-    normals << QVector3D(menozero, zero, menouno);
-    normals << QVector3D(menozero, zero, menouno);
-    normals << QVector3D(menozero, zero, menouno);
+        if (std::abs(tri.v3.y) > max)
+        {
+            max = std::abs(tri.v3.y);
+        }
 
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(zero,zero,uno);
+        if (std::abs(tri.v3.z) > max)
+        {
+            max = std::abs(tri.v3.z);
+        }
 
-    normals << QVector3D(zero, menouno, zero);
-    normals << QVector3D(zero, menouno, zero);
-    normals << QVector3D(zero, menouno, zero);
+        vertices << QVector3D(tri.v1.x, tri.v1.y, tri.v1.z);
+        alpha << 1.0f;
+        normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
+        vertices << QVector3D(tri.v2.x, tri.v2.y, tri.v2.z);
+        alpha << 1.0f;
+        normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
+        vertices << QVector3D(tri.v3.x, tri.v3.y, tri.v3.z);
+        alpha << 1.0f;
+        normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
 
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(uno,zero,zero);
+//            std::cout << std::endl << "Triangolo " << i << ":" << std::endl;
+//            std::cout << "Normale.x:   \t" << tri.normal.x << "\t normale.y: \t" << tri.normal.y << "\t normale.z: \t" << tri.normal.z << std::endl;
+//            std::cout << "Vertice 1.x: \t" << tri.v1.x << "\t vertice 1.y: \t" << tri.v1.y << "\t vertice 1.z: \t" << tri.v1.z << std::endl;
+//            std::cout << "Vertice 2.x: \t" << tri.v2.x << "\t vertice 2.y: \t" << tri.v2.y << "\t vertice 2.z: \t" << tri.v2.z << std::endl;
+//            std::cout << "Vertice 3.x: \t" << tri.v3.x << "\t vertice 3.y: \t" << tri.v3.y << "\t vertice 3.z: \t" << tri.v3.z << std::endl;
+//            ++i;
 
-    normals << QVector3D(zero, menouno, menozero);
-    normals << QVector3D(zero, menouno, menozero);
-    normals << QVector3D(zero, menouno, menozero);
+    }
 
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(uno,uno,uno);
-
-    normals << QVector3D(uno, menozero, zero);
-    normals << QVector3D(uno, menozero, zero);
-    normals << QVector3D(uno, menozero, zero);
-
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(uno, zero, uno);
-    vertices << QVector3D(uno,zero,zero);
-
-    normals << QVector3D(uno, zero, zero);
-    normals << QVector3D(uno, zero, zero);
-    normals << QVector3D(uno, zero, zero);
-
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(uno,uno,uno);
-
-    normals << QVector3D(zero, uno, menozero);
-    normals << QVector3D(zero, uno, menozero);
-    normals << QVector3D(zero, uno, menozero);
-
-
-
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(uno, uno, zero);
-    vertices << QVector3D(zero,uno,zero);
-
-    normals << QVector3D(zero, uno, zero);
-    normals << QVector3D(zero, uno, zero);
-    normals << QVector3D(zero, uno, zero);
-
-
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(zero,uno,zero);
-
-    normals << QVector3D(menouno, zero, zero);
-    normals << QVector3D(menouno, zero, zero);
-    normals << QVector3D(menouno, zero, zero);
-
-    vertices << QVector3D(zero, uno, uno);
-    vertices << QVector3D(zero, zero, zero);
-    vertices << QVector3D(zero,zero,uno);
-
-    normals << QVector3D(menouno, menozero, zero);
-    normals << QVector3D(menouno, menozero, zero);
-    normals << QVector3D(menouno, menozero, zero);
+    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
 }
+
+//void StlRenderer::createGeometry()
+//{
+//    vertices.clear();
+//    normals.clear();
+//    float uno = 0.5f;
+//    float zero = -0.5f;
+//    float menouno = -0.5f;
+//    float menozero = -0.5f;
+
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(uno,uno,uno);
+
+//    normals << QVector3D(menozero, zero, uno);
+//    normals << QVector3D(menozero, zero, uno);
+//    normals << QVector3D(menozero, zero, uno);
+
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(zero,zero,uno);
+
+//    normals << QVector3D(zero, zero, uno);
+//    normals << QVector3D(zero, zero, uno);
+//    normals << QVector3D(zero, zero, uno);
+
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(uno, zero, zero);
+
+//    normals << QVector3D(zero, zero, menouno);
+//    normals << QVector3D(zero, zero, menouno);
+//    normals << QVector3D(zero, zero, menouno);
+
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(zero,uno,zero);
+
+//    normals << QVector3D(menozero, zero, menouno);
+//    normals << QVector3D(menozero, zero, menouno);
+//    normals << QVector3D(menozero, zero, menouno);
+
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(zero,zero,uno);
+
+//    normals << QVector3D(zero, menouno, zero);
+//    normals << QVector3D(zero, menouno, zero);
+//    normals << QVector3D(zero, menouno, zero);
+
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(uno,zero,zero);
+
+//    normals << QVector3D(zero, menouno, menozero);
+//    normals << QVector3D(zero, menouno, menozero);
+//    normals << QVector3D(zero, menouno, menozero);
+
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(uno,uno,uno);
+
+//    normals << QVector3D(uno, menozero, zero);
+//    normals << QVector3D(uno, menozero, zero);
+//    normals << QVector3D(uno, menozero, zero);
+
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(uno, zero, uno);
+//    vertices << QVector3D(uno,zero,zero);
+
+//    normals << QVector3D(uno, zero, zero);
+//    normals << QVector3D(uno, zero, zero);
+//    normals << QVector3D(uno, zero, zero);
+
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(uno,uno,uno);
+
+//    normals << QVector3D(zero, uno, menozero);
+//    normals << QVector3D(zero, uno, menozero);
+//    normals << QVector3D(zero, uno, menozero);
+
+
+
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(uno, uno, zero);
+//    vertices << QVector3D(zero,uno,zero);
+
+//    normals << QVector3D(zero, uno, zero);
+//    normals << QVector3D(zero, uno, zero);
+//    normals << QVector3D(zero, uno, zero);
+
+
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(zero,uno,zero);
+
+//    normals << QVector3D(menouno, zero, zero);
+//    normals << QVector3D(menouno, zero, zero);
+//    normals << QVector3D(menouno, zero, zero);
+
+//    vertices << QVector3D(zero, uno, uno);
+//    vertices << QVector3D(zero, zero, zero);
+//    vertices << QVector3D(zero,zero,uno);
+
+//    normals << QVector3D(menouno, menozero, zero);
+//    normals << QVector3D(menouno, menozero, zero);
+//    normals << QVector3D(menouno, menozero, zero);
+//}
 

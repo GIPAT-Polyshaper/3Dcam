@@ -18,6 +18,11 @@ public:
         update();
     }
 
+    void synchronize(QQuickFramebufferObject *item)
+    {
+        obj.setGeometry(GCodeGenerator::get_instance().getTriangles());
+    }
+
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
