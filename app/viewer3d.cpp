@@ -32,6 +32,10 @@ QQuickFramebufferObject::Renderer *Viewer3D::createRenderer() const
     return new Model3DRenderer();
 }
 
+Viewer3D::Viewer3D()
+{
+    setMirrorVertically(true);
+}
   /*
    * here only for reference
    */

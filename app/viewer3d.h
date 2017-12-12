@@ -9,7 +9,7 @@ class Viewer3D : public QQuickFramebufferObject
     Q_OBJECT
 public:
     Renderer *createRenderer() const;
-//    StlRenderer obj;
+    Viewer3D();
 };
 
 #endif // VIEWER3D_H
