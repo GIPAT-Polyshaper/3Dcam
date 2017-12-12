@@ -18,11 +18,14 @@ void StlRenderer::paintQtLogo()
 {
     program1.enableAttributeArray(normalAttr1);
     program1.enableAttributeArray(vertexAttr1);
+    program1.enableAttributeArray(alphaAttr1);
     program1.setAttributeArray(vertexAttr1, vertices.constData());
     program1.setAttributeArray(normalAttr1, normals.constData());
+    program1.setAttributeArray(alphaAttr1, alpha.constData(), 1);
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     program1.disableAttributeArray(normalAttr1);
     program1.disableAttributeArray(vertexAttr1);
+    program1.disableAttributeArray(alphaAttr1);
 }
 
 
@@ -35,6 +38,7 @@ void StlRenderer::initialize()
     const char *vsrc1 =
             "attribute highp vec4 vertex;\n"
             "attribute mediump vec3 normal;\n"
+            "attribute highp float alpha_channel;\n"
             "uniform mediump mat4 worldToView;\n"
             "uniform mediump mat4 modelToWorld;\n"
             "varying mediump vec4 color;\n"
@@ -43,9 +47,12 @@ void StlRenderer::initialize()
             "    vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));\n"
             "    float angle = max(dot(normal, toLight), 0.0);\n"
             "    vec3 col = vec3(0.40, 1.0, 0.0);\n"
-            "    color = vec4(col * 0.2 + col * 0.8 * angle, 1.0);\n"
+            "    color = vec4(col * 0.2 + col * 0.8 * angle, alpha_channel);\n"
             "    color = clamp(color, 0.0, 1.0);\n"
+            "    if (alpha_test == 1.0)\n"
             "    gl_Position = worldToView * modelToWorld * vertex;\n"
+            "    else"
+            "    gl_Position = worldToView * vertex;\n"
             "}\n";
 
     const char *fsrc1 =
@@ -59,7 +66,7 @@ void StlRenderer::initialize()
     program1.addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, fsrc1);
     program1.link();
 
-
+    alphaAttr1 = program1.attributeLocation("alpha_channel");
     vertexAttr1 = program1.attributeLocation("vertex");
     normalAttr1 = program1.attributeLocation("normal");
     u_modelToWorld = program1.uniformLocation("modelToWorld");
@@ -69,16 +76,8 @@ void StlRenderer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-//    modelMatrix.setRotation(90.f, 0.0f, 0.0f, 1.0f);
-//    modelMatrix.rotate(90, 1.0f, 0.0f, 0.0f);
-    viewMatrix.setTranslation(0.0f, 3.0f, 0.0f);
     viewMatrix.setRotation(-90.0f, 1.0f, 0.0f, 0.0f);
-    //    viewMatrix.setRotation(45.0f, 1.0, 0.0, 0.0);
-    createGeometry();
-
-
 }
-
 void StlRenderer::render()
 {
     QOpenGLFunctions *functions = QOpenGLContext::currentContext()->functions();
@@ -86,6 +85,8 @@ void StlRenderer::render()
     glDepthMask(true);
 
     glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
