@@ -50,7 +50,7 @@ Page1Form
         {
             parse = 0
         }
-        gcodeGenerator.setAltezza(parse)
+        gcodeGenerator.setVelocita(parse)
     }
 
     textVolumeX.onTextChanged:
