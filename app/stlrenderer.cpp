@@ -49,7 +49,7 @@ void StlRenderer::initialize()
             "    vec3 col = vec3(0.40, 1.0, 0.0);\n"
             "    color = vec4(col * 0.2 + col * 0.8 * angle, alpha_channel);\n"
             "    color = clamp(color, 0.0, 1.0);\n"
-            "    if (alpha_test == 1.0)\n"
+            "    if (alpha_channel == 1.0)\n"
             "    gl_Position = worldToView * modelToWorld * vertex;\n"
             "    else"
             "    gl_Position = worldToView * vertex;\n"
