@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    GCodeGenerator gcodeGenerator;
-
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("gcodeGenerator", &GCodeGenerator::get_instance());
     qmlRegisterType<Viewer3D>("PolyShaper3Dcam", 1, 0, "Viewer3D");
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
-    engine.rootContext()->setContextProperty("gcodeGenerator", &gcodeGenerator);
+
 
     return app.exec();
+
 }

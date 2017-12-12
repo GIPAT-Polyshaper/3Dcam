@@ -47,6 +47,13 @@ public:
         Candela
     };
 
+    //Assicuriamoci che ci sia una sola istanza di GCodeGenerator
+    static GCodeGenerator& get_instance()
+    {
+        static GCodeGenerator instance;
+        return instance;
+    }
+
     float getAltezzaUtensile() const ;
     float getDiametroUtensile() const;
     float getVelocitaUtensile() const;
@@ -56,7 +63,6 @@ public:
     float getVolumeY() const;
     float getVolumeZ() const;
     QString getPath() const;
-    GCodeGenerator();
 
 signals:
     void altezzaChanged(float newAltezza);
@@ -80,13 +86,13 @@ public slots:
     void setVolumeX(float x);
     void setVolumeY(float y);
     void setVolumeZ(float z);
-
-    //    void readAndGenerate();
     void openFile(QString path);
+
+protected:
+    GCodeGenerator();
 
 private:
     QString filePath;
-
     float altezzaUtensile;
     float diametroUtensile;
     float velocitaUtensile;
@@ -95,7 +101,8 @@ private:
     float volumeXAxis;
     float volumeYAxis;
     float volumeZAxis;
-
+    GCodeGenerator(const GCodeGenerator&) = delete;
+    void operator= (const GCodeGenerator&) = delete;
     void readAndGenerate();
 
 };
