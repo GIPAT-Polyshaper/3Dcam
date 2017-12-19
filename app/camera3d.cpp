@@ -38,8 +38,15 @@ const QMatrix4x4 &Camera3D::toMatrix()
     {
         m_dirty = false;
         m_world.setToIdentity();
-        m_world.rotate(m_rotation.conjugate());
-        m_world.translate(-m_translation);
+        const float azimuthInRadians = qDegreesToRadians(m_azimuth);
+        const float elevationInRadians = qDegreesToRadians(m_elevation);
+        const QVector3D eye(std::cos(elevationInRadians) * std::cos(azimuthInRadians),
+                            std::sin(azimuthInRadians) * std::cos(elevationInRadians),
+                            std::sin(elevationInRadians));
+
+        QVector3D up = QVector3D(-std::cos(azimuthInRadians) * std::sin(elevationInRadians), -std::sin(elevationInRadians)*std::sin(azimuthInRadians), std::cos(elevationInRadians));
+
+        m_world.lookAt(eye * m_distance,QVector3D(0,0,0),up);
     }
     return m_world;
 }
