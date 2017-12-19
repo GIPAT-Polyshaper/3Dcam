@@ -1,4 +1,5 @@
 #include "camera3d.h"
+#include <QtMath>
 
 Camera3D::Camera3D() : m_dirty(true)
 {
