@@ -86,3 +86,36 @@ const QQuaternion& Camera3D::getRotation() const
 {
     return m_rotation;
 }
+
+void Camera3D::setAzimuth(float a)
+{
+    m_dirty = true;
+    m_azimuth = a;
+}
+
+void Camera3D::setDistance(float d)
+{
+    m_dirty = true;
+    m_distance = d;
+}
+
+void Camera3D::setElevation(float e)
+{
+    m_dirty = true;
+    m_elevation = e;
+}
+
+const float Camera3D::azimuth()
+{
+    return m_azimuth;
+}
+
+const float Camera3D::elevation()
+{
+    return m_elevation;
+}
+
+const float Camera3D::distance()
+{
+    return m_distance;
+}

@@ -9,6 +9,14 @@ public:
   // Constructors
   Camera3D();
 
+  void setAzimuth(float a);
+  void setDistance(float d);
+  void setElevation(float e);
+
+  const float azimuth();
+  const float distance();
+  const float elevation();
+
   //transformations
   void translate(const QVector3D &dt);
   void translate(float dx, float dy, float dz);
@@ -34,6 +42,9 @@ private:
   QQuaternion m_rotation;
   QMatrix4x4 m_world;
 
+  float m_azimuth;
+  float m_distance;
+  float m_elevation;
 };
 
 #endif // CAMERA3D_H
