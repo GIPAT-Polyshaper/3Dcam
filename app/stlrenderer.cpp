@@ -76,7 +76,8 @@ void StlRenderer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    viewMatrix.setRotation(-90.0f, 1.0f, 0.0f, 0.0f);
+    viewMatrix.setAzimuth(-90);
+    viewMatrix.setElevation(20);
 }
 void StlRenderer::render()
 {
@@ -114,14 +115,14 @@ void StlRenderer::render()
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
-    modelMatrix.rotate(1.0f, QVector3D(1.0f, 0.0f, 0.0f));
-//    modelMatrix.rotate(1.0f, QVector3D(0.0f, 1.0f, 0.0f));
-//    modelMatrix.rotate(1.0f, QVector3D(0.0f, 0.0f, 1.0f));
-//    modelMatrix.translate(0.01f, 0.0f, 0.0f);
-//    modelMatrix.translate(0.0f, 0.01f, 0.0f);
-//    modelMatrix.translate(0.0f, 0.0f, 0.01f);
-//    viewMatrix.translate(0.0f, 0.0f, 0.0f);
-//    viewMatrix.rotate(1.0f, 0.0f, 0.0f, 1.0f);
+    //    modelMatrix.rotate(1.0f, QVector3D(1.0f, 0.0f, 0.0f));
+    //    modelMatrix.rotate(1.0f, QVector3D(0.0f, 1.0f, 0.0f));
+    //    modelMatrix.rotate(1.0f, QVector3D(0.0f, 0.0f, 1.0f));
+    //    modelMatrix.translate(0.01f, 0.0f, 0.0f);
+    //    modelMatrix.translate(0.0f, 0.01f, 0.0f);
+    //    modelMatrix.translate(0.0f, 0.0f, 0.01f);
+    //    viewMatrix.translate(0.0f, 0.0f, 0.0f);
+    //    viewMatrix.rotate(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
@@ -130,10 +131,10 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     normals.clear();
     alpha.clear();
     max = std::numeric_limits<float>::min();
-    float min = std::numeric_limits<float>::max();
+    //    float min = std::numeric_limits<float>::max();
 
-//    std::cout << "\nStampa dei triangoli letti in STLRENDERER:\n";
-//    int i = 1;
+    //    std::cout << "\nStampa dei triangoli letti in STLRENDERER:\n";
+    //    int i = 1;
     for (StlLoader::Triangles::const_iterator it = tri.begin(); it != tri.end(); ++it)
     {
         StlLoader::Triangle tri = *it;
@@ -192,16 +193,17 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
         alpha << 1.0f;
         normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
 
-//            std::cout << std::endl << "Triangolo " << i << ":" << std::endl;
-//            std::cout << "Normale.x:   \t" << tri.normal.x << "\t normale.y: \t" << tri.normal.y << "\t normale.z: \t" << tri.normal.z << std::endl;
-//            std::cout << "Vertice 1.x: \t" << tri.v1.x << "\t vertice 1.y: \t" << tri.v1.y << "\t vertice 1.z: \t" << tri.v1.z << std::endl;
-//            std::cout << "Vertice 2.x: \t" << tri.v2.x << "\t vertice 2.y: \t" << tri.v2.y << "\t vertice 2.z: \t" << tri.v2.z << std::endl;
-//            std::cout << "Vertice 3.x: \t" << tri.v3.x << "\t vertice 3.y: \t" << tri.v3.y << "\t vertice 3.z: \t" << tri.v3.z << std::endl;
-//            ++i;
+        //            std::cout << std::endl << "Triangolo " << i << ":" << std::endl;
+        //            std::cout << "Normale.x:   \t" << tri.normal.x << "\t normale.y: \t" << tri.normal.y << "\t normale.z: \t" << tri.normal.z << std::endl;
+        //            std::cout << "Vertice 1.x: \t" << tri.v1.x << "\t vertice 1.y: \t" << tri.v1.y << "\t vertice 1.z: \t" << tri.v1.z << std::endl;
+        //            std::cout << "Vertice 2.x: \t" << tri.v2.x << "\t vertice 2.y: \t" << tri.v2.y << "\t vertice 2.z: \t" << tri.v2.z << std::endl;
+        //            std::cout << "Vertice 3.x: \t" << tri.v3.x << "\t vertice 3.y: \t" << tri.v3.y << "\t vertice 3.z: \t" << tri.v3.z << std::endl;
+        //            ++i;
 
     }
 
-    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
+    //    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
+    viewMatrix.setDistance(max * 5);
 }
 
 //void StlRenderer::createGeometry()

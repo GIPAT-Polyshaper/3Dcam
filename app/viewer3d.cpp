@@ -15,7 +15,6 @@ public:
     void render()
     {
         obj.render();
-        update();
     }
 
     void synchronize(QQuickFramebufferObject *item)
