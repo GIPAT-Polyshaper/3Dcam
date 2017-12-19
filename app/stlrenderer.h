@@ -39,6 +39,7 @@ private:
 
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
+    void setCamera(float az, float di, float el);
 };
 
 #endif // STLRENDERER_H

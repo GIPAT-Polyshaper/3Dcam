@@ -76,8 +76,8 @@ void StlRenderer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    viewMatrix.setAzimuth(-90);
-    viewMatrix.setElevation(20);
+//    viewMatrix.setAzimuth(-90);
+//    viewMatrix.setElevation(20);
 }
 void StlRenderer::render()
 {
@@ -118,9 +118,9 @@ void StlRenderer::render()
     //    modelMatrix.rotate(1.0f, QVector3D(1.0f, 0.0f, 0.0f));
     //    modelMatrix.rotate(1.0f, QVector3D(0.0f, 1.0f, 0.0f));
     //    modelMatrix.rotate(1.0f, QVector3D(0.0f, 0.0f, 1.0f));
-    //    modelMatrix.translate(0.01f, 0.0f, 0.0f);
-    //    modelMatrix.translate(0.0f, 0.01f, 0.0f);
-    //    modelMatrix.translate(0.0f, 0.0f, 0.01f);
+//        modelMatrix.translate(0.1f, 0.0f, 0.0f);
+//        modelMatrix.translate(0.0f, 0.1f, 0.0f);
+        modelMatrix.translate(0.0f, 0.0f, 0.1f);
     //    viewMatrix.translate(0.0f, 0.0f, 0.0f);
     //    viewMatrix.rotate(1.0f, 0.0f, 0.0f, 1.0f);
 }
@@ -203,7 +203,14 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     }
 
     //    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
-    viewMatrix.setDistance(max * 5);
+    GCodeGenerator::get_instance().setDistance(max * 5);
+}
+
+void StlRenderer::setCamera(float az, float di, float el)
+{
+    viewMatrix.setAzimuth(az);
+    viewMatrix.setElevation(el);
+    viewMatrix.setDistance(di);
 }
 
 //void StlRenderer::createGeometry()

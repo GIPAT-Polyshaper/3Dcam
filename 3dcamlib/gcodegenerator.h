@@ -40,6 +40,9 @@ class GCodeGenerator : public QObject
     Q_PROPERTY(float volumeX READ getVolumeX NOTIFY volumeXChanged)
     Q_PROPERTY(float volumeY READ getVolumeY NOTIFY volumeYChanged)
     Q_PROPERTY(float volumeZ READ getVolumeZ NOTIFY volumeZChanged)
+    Q_PROPERTY(float azimuthCam READ getAzimuth WRITE setAzimuth NOTIFY azimuthChanged)
+    Q_PROPERTY(float elevationCam READ getElevation WRITE setElevation NOTIFY elevationChanged)
+    Q_PROPERTY(float distanceCam READ getDistance WRITE setDistance NOTIFY distanceChanged)
 
 public:
     enum Forma
@@ -63,6 +66,17 @@ public:
     float getVolumeX() const;
     float getVolumeY() const;
     float getVolumeZ() const;
+    float getAzimuth() const;
+    float getElevation() const;
+    float getDistance() const;
+
+
+    void clean_triangles();
+    void clean_camera();
+
+    bool isTrianglesDirty() const;
+    bool isCameraDirty() const;
+
     QString getPath() const;
     const StlLoader::Triangles& getTriangles() const;
 
@@ -75,6 +89,9 @@ signals:
     void volumeXChanged(float newVolumeX);
     void volumeYChanged(float newVolumeY);
     void volumeZChanged(float newVolumeZ);
+    void azimuthChanged(float newAzimuth);
+    void elevationChanged(float newElevation);
+    void distanceChanged(float newDistance);
 
     void textRead(QString text);
     void pathChanged(QString path);
@@ -88,6 +105,9 @@ public slots:
     void setVolumeX(float x);
     void setVolumeY(float y);
     void setVolumeZ(float z);
+    void setAzimuth(float az);
+    void setElevation(float el);
+    void setDistance(float di);
     void openFile(QString path);
 
 protected:
@@ -103,6 +123,13 @@ private:
     float volumeXAxis;
     float volumeYAxis;
     float volumeZAxis;
+    float azimuth;
+    float distance;
+    float elevation;
+
+    bool triangles_dirty;
+    bool camera_dirty;
+
     StlLoader::Triangles triangles;
     GCodeGenerator(const GCodeGenerator&) = delete;
     void operator= (const GCodeGenerator&) = delete;
