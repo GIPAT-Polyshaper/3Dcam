@@ -9,6 +9,12 @@ Item
     id: item1
     width: 800
     height: 600
+    property alias labelDistanceOffset: labelDistanceOffset
+    property alias sliderDistance: sliderDistance
+    property alias labelElevationOffset: labelElevationOffset
+    property alias labelAzimuthOffset: labelAzimuthOffset
+    property alias sliderElevation: sliderElevation
+    property alias sliderAzimuth: sliderAzimuth
     property alias textVolumeZ: textVolumeZ
     property alias textVolumeY: textVolumeY
     property alias textVolumeX: textVolumeX
@@ -50,11 +56,14 @@ Item
         Rectangle
         {
             id: rectangle
+            y: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
+            height: parent.height - 48 - boxCamera.height
             Layout.minimumWidth: 376
-            Layout.minimumHeight: 276
+
             color: "#eeeeee"
+
             opacity: 1
 
             Viewer3D
@@ -63,13 +72,261 @@ Item
                 height: (parent.height < parent.width) ? (parent.height) : (parent.width)
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: -boxCamera.height/2
                 width: (parent.height < parent.width) ? (parent.height) : (parent.width)
             }
+
+            Frame
+            {
+                id: boxCamera
+                Layout.fillWidth: true
+                height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 24
+                anchors.top: viewer3d.bottom
+                anchors.topMargin: 12
+                width: parent.width
+                Layout.maximumWidth:  376 < parent.width * 0.3 ? parent.width * 0.3 : 376
+
+                Label
+                {
+                    text: "Sposta camera"
+                    horizontalAlignment: Text.AlignHCenter
+                    width: implicitWidth + 4
+                    anchors.top: parent.top
+                    anchors.topMargin: -20
+                    renderType: Text.NativeRendering
+
+                    background: Rectangle
+                    {
+                        color: "#eeeeee"
+                        width: parent.width
+                        height: parent.height
+                    }
+                }
+
+                background: Rectangle
+                {
+                    y: boxCamera.topPadding - boxCamera.padding
+                    width: parent.width
+                    height: parent.height - boxCamera.topPadding + boxCamera.padding
+                    color: "transparent"
+                    border.color: "#bbbbbb"
+                    radius: 2
+                }
+
+                Slider {
+                    id: sliderAzimuth
+                    height: 30
+                    from: -90
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: labelAzimuth.verticalCenter
+                    stepSize: 1
+                    to: 90
+                    anchors.left: labelAzimuth.right
+                    anchors.leftMargin: 6
+                    value: gcodeGenerator.azimuthCam
+                    snapMode: Slider.SnapAlways
+
+                    background: Rectangle
+                    {
+                        x: sliderAzimuth.leftPadding
+                        y: sliderAzimuth.topPadding + sliderAzimuth.availableHeight / 2 - height / 2
+                        implicitWidth: 100
+                        implicitHeight: 4
+                        width: sliderAzimuth.availableWidth
+                        height: implicitHeight
+                        radius: 2
+                        color: "#888888"
+
+                        Rectangle
+                        {
+                            width: sliderAzimuth.visualPosition * parent.width
+                            height: parent.height
+                            color: "#888888"
+                            radius: 2
+                        }
+                    }
+
+                    handle: Rectangle
+                    {
+                        x: sliderAzimuth.leftPadding + sliderAzimuth.visualPosition
+                           * (sliderAzimuth.availableWidth - width)
+                        y: sliderAzimuth.topPadding + sliderAzimuth.availableHeight / 2 - height / 2
+                        implicitWidth: 18
+                        implicitHeight: implicitWidth
+                        radius: implicitHeight / 2
+                        color: sliderAzimuth.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#888888"
+                    }
+                }
+
+                Slider
+                {
+                    height: 30
+                    from: -90
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: labelElevation.verticalCenter
+                    stepSize: 1
+                    to: 90
+                    anchors.left: labelAzimuth.right
+                    anchors.leftMargin: 6
+                    id: sliderElevation
+                    y: 121
+                    value: gcodeGenerator.elevationCam
+                    snapMode: Slider.SnapAlways
+
+                    background: Rectangle
+                    {
+                        x: sliderElevation.leftPadding
+                        y: sliderElevation.topPadding + sliderElevation.availableHeight / 2 - height / 2
+                        implicitWidth: 100
+                        implicitHeight: 4
+                        width: sliderElevation.availableWidth
+                        height: implicitHeight
+                        radius: 2
+                        color: "#888888"
+
+                        Rectangle
+                        {
+                            width: sliderElevation.visualPosition * parent.width
+                            height: parent.height
+                            color: "#888888"
+                            radius: 2
+                        }
+                    }
+
+                    handle: Rectangle
+                    {
+                        x: sliderElevation.leftPadding + sliderElevation.visualPosition
+                           * (sliderElevation.availableWidth - width)
+                        y: sliderElevation.topPadding + sliderElevation.availableHeight / 2 - height / 2
+                        implicitWidth: 18
+                        implicitHeight: implicitWidth
+                        radius: implicitHeight / 2
+                        color: sliderElevation.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#888888"
+                    }
+                }
+
+                Label
+                {
+                    id: labelAzimuth
+                    text: qsTr("Azimuth")
+                    anchors.top: parent.top
+                    anchors.topMargin: 6
+                    renderType: Text.NativeRendering
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                }
+
+                Label
+                {
+                    id: labelElevation
+                    text: qsTr("Elevation")
+                    anchors.right: labelAzimuth.right
+                    anchors.rightMargin: 0
+                    anchors.top: labelAzimuthOffset.bottom
+                    anchors.topMargin: 6
+                    renderType: Text.NativeRendering
+                }
+
+                Label
+                {
+                    id: labelAzimuthOffset
+                    text: qsTr("0°")
+                    anchors.top: sliderAzimuth.bottom
+                    anchors.topMargin: 0
+                    anchors.horizontalCenter: sliderAzimuth.horizontalCenter
+                }
+
+                Label
+                {
+                    id: labelElevationOffset
+                    x: 130
+                    text: qsTr("0°")
+                    anchors.top: sliderElevation.bottom
+                    anchors.topMargin: 0
+                    anchors.horizontalCenter: sliderElevation.horizontalCenter
+                }
+
+                Slider
+                {
+                    height: 30
+                    anchors.left: labelAzimuth.right
+                    anchors.leftMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: labelDistance.verticalCenter
+                    from: 0
+                    stepSize: 0.5
+                    to: 10
+                    id: sliderDistance
+                    y: 121
+                    value: gcodeGenerator.distanceCam
+                    snapMode: Slider.SnapAlways
+
+                    background: Rectangle
+                    {
+                        x: sliderDistance.leftPadding
+                        y: sliderDistance.topPadding + sliderDistance.availableHeight / 2 - height / 2
+                        implicitWidth: 100
+                        implicitHeight: 4
+                        width: sliderDistance.availableWidth
+                        height: implicitHeight
+                        radius: 2
+                        color: "#888888"
+
+                        Rectangle
+                        {
+                            width: sliderDistance.visualPosition * parent.width
+                            height: parent.height
+                            color: "#888888"
+                            radius: 2
+                        }
+                    }
+
+                    handle: Rectangle
+                    {
+                        x: sliderDistance.leftPadding + sliderDistance.visualPosition
+                           * (sliderDistance.availableWidth - width)
+                        y: sliderDistance.topPadding + sliderDistance.availableHeight / 2 - height / 2
+                        implicitWidth: 18
+                        implicitHeight: implicitWidth
+                        radius: implicitHeight / 2
+                        color: sliderDistance.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#888888"
+                    }
+                }
+
+                Label
+                {
+                    id: labelDistance
+                    text: qsTr("Distance")
+                    anchors.right: labelAzimuth.right
+                    anchors.rightMargin: 0
+                    anchors.top: labelElevationOffset.bottom
+                    anchors.topMargin: 6
+                    renderType: Text.NativeRendering
+                }
+
+                Label
+                {
+                    id: labelDistanceOffset
+                    text: qsTr("0")
+                    anchors.top: sliderDistance.bottom
+                    anchors.topMargin: 0
+                    anchors.horizontalCenter: sliderDistance.horizontalCenter
+                }
+
+            }
+
         }
 
         Rectangle
         {
             id: rectangle1
+            y: 0
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumWidth: 376
@@ -358,24 +615,198 @@ Item
                     anchors.rightMargin: 6
                 }
             }
-        }
 
-        Rectangle
-        {
-            id: rectangle2
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.maximumWidth: buttonFileDialog.width + buttonCodeGeneration.width + 16
-            color: "#eeeeee"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Frame
+            {
+                id: boxMovimenti
+                y: 380
+                height: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
+                width: parent.width
+                Layout.minimumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
+                Layout.maximumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
+                Layout.maximumWidth:  376 < parent.width * 0.3 ? parent.width * 0.3 : 376
+
+                Label
+                {
+                    text: "Sposta oggetto"
+                    horizontalAlignment: Text.AlignHCenter
+                    width: implicitWidth + 4
+                    anchors.top: parent.top
+                    anchors.topMargin: -20
+                    renderType: Text.NativeRendering
+
+                    background: Rectangle
+                    {
+                        color: "#eeeeee"
+                        width: parent.width
+                        height: parent.height
+                    }
+                }
+
+                background: Rectangle
+                {
+                    y: boxMovimenti.topPadding - boxMovimenti.padding
+                    width: parent.width
+                    height: parent.height - boxMovimenti.topPadding + boxMovimenti.padding
+                    color: "transparent"
+                    border.color: "#bbbbbb"
+                    radius: 2
+                }
+
+                Slider {
+                    id: sliderYAxis
+                    height: 30
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: labelYAxis.verticalCenter
+                    stepSize: 1
+                    to: 20
+                    anchors.left: labelYAxis.right
+                    anchors.leftMargin: 6
+                    value: 0
+                    snapMode: Slider.SnapAlways
+
+                    background: Rectangle
+                    {
+                        x: sliderYAxis.leftPadding
+                        y: sliderYAxis.topPadding + sliderYAxis.availableHeight / 2 - height / 2
+                        implicitWidth: 100
+                        implicitHeight: 4
+                        width: sliderYAxis.availableWidth
+                        height: implicitHeight
+                        radius: 2
+                        color: "#888888"
+
+                        Rectangle
+                        {
+                            width: sliderYAxis.visualPosition * parent.width
+                            height: parent.height
+                            color: "#888888"
+                            radius: 2
+                        }
+                    }
+
+                    handle: Rectangle
+                    {
+                        x: sliderYAxis.leftPadding + sliderYAxis.visualPosition
+                           * (sliderYAxis.availableWidth - width)
+                        y: sliderYAxis.topPadding + sliderYAxis.availableHeight / 2 - height / 2
+                        implicitWidth: 18
+                        implicitHeight: implicitWidth
+                        radius: implicitHeight / 2
+                        color: sliderYAxis.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#888888"
+                    }
+                }
+
+                Slider
+                {
+                    height: 30
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: labelXAxis.verticalCenter
+                    stepSize: 1
+                    to: 20
+                    anchors.left: labelYAxis.right
+                    anchors.leftMargin: 6
+                    id: sliderXAxis
+                    y: 121
+                    value: 0
+                    snapMode: Slider.SnapAlways
+
+                    background: Rectangle
+                    {
+                        x: sliderXAxis.leftPadding
+                        y: sliderXAxis.topPadding + sliderXAxis.availableHeight / 2 - height / 2
+                        implicitWidth: 100
+                        implicitHeight: 4
+                        width: sliderXAxis.availableWidth
+                        height: implicitHeight
+                        radius: 2
+                        color: "#888888"
+
+                        Rectangle
+                        {
+                            width: sliderXAxis.visualPosition * parent.width
+                            height: parent.height
+                            color: "#888888"
+                            radius: 2
+                        }
+                    }
+
+                    handle: Rectangle
+                    {
+                        x: sliderXAxis.leftPadding + sliderXAxis.visualPosition
+                           * (sliderXAxis.availableWidth - width)
+                        y: sliderXAxis.topPadding + sliderXAxis.availableHeight / 2 - height / 2
+                        implicitWidth: 18
+                        implicitHeight: implicitWidth
+                        radius: implicitHeight / 2
+                        color: sliderXAxis.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#888888"
+                    }
+                }
+
+                Label
+                {
+                    id: labelYAxis
+                    text: qsTr("Asse Y")
+                    anchors.top: parent.top
+                    anchors.topMargin: 6
+                    renderType: Text.NativeRendering
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                }
+
+                Label
+                {
+                    id: labelXAxis
+                    text: qsTr("Asse X")
+                    anchors.top: labelYOffset.bottom
+                    anchors.topMargin: 6
+                    anchors.left: labelYAxis.left
+                    anchors.leftMargin: 0
+                    renderType: Text.NativeRendering
+                }
+
+                Label
+                {
+                    id: labelYOffset
+                    text: qsTr("0mm")
+                    anchors.top: sliderYAxis.bottom
+                    anchors.topMargin: 0
+                    anchors.horizontalCenter: sliderYAxis.horizontalCenter
+                }
+
+                Label
+                {
+                    id: labelXOffset
+                    x: 130
+                    text: qsTr("0mm")
+                    anchors.top: sliderXAxis.bottom
+                    anchors.topMargin: 0
+                    anchors.horizontalCenter: sliderXAxis.horizontalCenter
+                }
+            }
+            Rectangle
+            {
+                id: rectangle2
+                x: 0
+                width: parent.width
+                height: buttonCodeGeneration.height + 24
+                Layout.maximumWidth: buttonFileDialog.width + buttonCodeGeneration.width + 16
+                color: "#eeeeee"
+                anchors.top: boxMovimenti.bottom
+                anchors.topMargin: 12
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Button
             {
                 id: buttonFileDialog
                 text: qsTr("Apri file")
-                anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 0
+                anchors.leftMargin: 48
+                anchors.topMargin: 12
                 padding: 8
                 bottomPadding: 10
                 topPadding: 10
@@ -398,13 +829,14 @@ Item
             Button
             {
                 id: buttonCodeGeneration
+                x: 204
                 text: qsTr("Genera codice")
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: buttonFileDialog.right
+                anchors.right: parent.right
+                anchors.rightMargin: 48
+                anchors.verticalCenter: buttonFileDialog.verticalCenter
                 clip: false
                 anchors.topMargin: 16
 
-                anchors.leftMargin: 16
                 topPadding: 10
                 bottomPadding: 10
                 padding: 8
@@ -425,178 +857,14 @@ Item
                     border.bottom: 4
                 }
             }
-        }
-
-        Frame
-        {
-            id: boxMovimenti
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
-            Layout.maximumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
-            Layout.maximumWidth:  376 < parent.width * 0.3 ? parent.width * 0.3 : 376
-
-            Label
-            {
-                text: "Sposta oggetto"
-                horizontalAlignment: Text.AlignHCenter
-                width: implicitWidth + 4
-                anchors.top: parent.top
-                anchors.topMargin: -20
-                renderType: Text.NativeRendering
-
-                background: Rectangle
-                {
-                    color: "#eeeeee"
-                    width: parent.width
-                    height: parent.height
-                }
-            }
-
-            background: Rectangle
-            {
-                y: boxMovimenti.topPadding - boxMovimenti.padding
-                width: parent.width
-                height: parent.height - boxMovimenti.topPadding + boxMovimenti.padding
-                color: "transparent"
-                border.color: "#bbbbbb"
-                radius: 2
-            }
-
-            Slider {
-                id: sliderYAxis
-                height: 30
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.verticalCenter: labelYAxis.verticalCenter
-                stepSize: 1
-                to: 20
-                anchors.left: labelYAxis.right
-                anchors.leftMargin: 6
-                value: 0
-                snapMode: Slider.SnapAlways
-
-                background: Rectangle
-                {
-                    x: sliderYAxis.leftPadding
-                    y: sliderYAxis.topPadding + sliderYAxis.availableHeight / 2 - height / 2
-                    implicitWidth: 100
-                    implicitHeight: 4
-                    width: sliderYAxis.availableWidth
-                    height: implicitHeight
-                    radius: 2
-                    color: "#888888"
-
-                    Rectangle
-                    {
-                        width: sliderYAxis.visualPosition * parent.width
-                        height: parent.height
-                        color: "#888888"
-                        radius: 2
-                    }
-                }
-
-                handle: Rectangle
-                {
-                    x: sliderYAxis.leftPadding + sliderYAxis.visualPosition
-                       * (sliderYAxis.availableWidth - width)
-                    y: sliderYAxis.topPadding + sliderYAxis.availableHeight / 2 - height / 2
-                    implicitWidth: 18
-                    implicitHeight: implicitWidth
-                    radius: implicitHeight / 2
-                    color: sliderYAxis.pressed ? "#f0f0f0" : "#f6f6f6"
-                    border.color: "#888888"
-                }
-            }
-
-            Slider
-            {
-                height: 30
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.verticalCenter: labelXAxis.verticalCenter
-                stepSize: 1
-                to: 20
-                anchors.left: labelYAxis.right
-                anchors.leftMargin: 6
-                id: sliderXAxis
-                y: 121
-                value: 0
-                snapMode: Slider.SnapAlways
-
-                background: Rectangle
-                {
-                    x: sliderXAxis.leftPadding
-                    y: sliderXAxis.topPadding + sliderXAxis.availableHeight / 2 - height / 2
-                    implicitWidth: 100
-                    implicitHeight: 4
-                    width: sliderXAxis.availableWidth
-                    height: implicitHeight
-                    radius: 2
-                    color: "#888888"
-
-                    Rectangle
-                    {
-                        width: sliderXAxis.visualPosition * parent.width
-                        height: parent.height
-                        color: "#888888"
-                        radius: 2
-                    }
-                }
-
-                handle: Rectangle
-                {
-                    x: sliderXAxis.leftPadding + sliderXAxis.visualPosition
-                       * (sliderXAxis.availableWidth - width)
-                    y: sliderXAxis.topPadding + sliderXAxis.availableHeight / 2 - height / 2
-                    implicitWidth: 18
-                    implicitHeight: implicitWidth
-                    radius: implicitHeight / 2
-                    color: sliderXAxis.pressed ? "#f0f0f0" : "#f6f6f6"
-                    border.color: "#888888"
-                }
-            }
-
-            Label
-            {
-                id: labelYAxis
-                text: qsTr("Asse Y")
-                anchors.top: parent.top
-                anchors.topMargin: 6
-                renderType: Text.NativeRendering
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-            }
-
-            Label
-            {
-                id: labelXAxis
-                text: qsTr("Asse X")
-                anchors.top: labelYOffset.bottom
-                anchors.topMargin: 6
-                anchors.left: labelYAxis.left
-                anchors.leftMargin: 0
-                renderType: Text.NativeRendering
-            }
-
-            Label
-            {
-                id: labelYOffset
-                text: qsTr("0mm")
-                anchors.top: sliderYAxis.bottom
-                anchors.topMargin: 0
-                anchors.horizontalCenter: sliderYAxis.horizontalCenter
-            }
-
-            Label
-            {
-                id: labelXOffset
-                x: 130
-                text: qsTr("0mm")
-                anchors.top: sliderXAxis.bottom
-                anchors.topMargin: 0
-                anchors.horizontalCenter: sliderXAxis.horizontalCenter
             }
         }
+
+
+
+
+
+
+
     }
 }
