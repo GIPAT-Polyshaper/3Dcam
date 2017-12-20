@@ -15,12 +15,25 @@ public:
     void render()
     {
         obj.render();
-        update();
     }
 
     void synchronize(QQuickFramebufferObject *item)
     {
-        obj.setGeometry(GCodeGenerator::get_instance().getTriangles());
+        bool camera_dirty = GCodeGenerator::get_instance().isCameraDirty();
+        bool triangles_dirty = GCodeGenerator::get_instance().isTrianglesDirty();
+        if (camera_dirty)
+        {
+            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
+            GCodeGenerator::get_instance().clean_camera();
+        }
+        if (triangles_dirty)
+        {
+            obj.setGeometry(GCodeGenerator::get_instance().getTriangles());
+            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
+            GCodeGenerator::get_instance().clean_camera();
+            GCodeGenerator::get_instance().clean_triangles();
+        }
+
     }
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {
@@ -41,7 +54,7 @@ Viewer3D::Viewer3D()
 {
     setMirrorVertically(true);
 }
-  /*
+/*
    * here only for reference
    */
 //class FbItemRenderer : public QQuickFramebufferObject::Renderer

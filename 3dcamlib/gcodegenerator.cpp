@@ -59,6 +59,8 @@ GCodeGenerator::GCodeGenerator()
     volumeXAxis = 100;
     volumeYAxis = 100;
     volumeZAxis = 100;
+    setAzimuth(0);
+    setElevation(20);
 }
 
 void GCodeGenerator::openFile(QString path)
@@ -125,6 +127,31 @@ float GCodeGenerator::getVolumeY() const
 float GCodeGenerator::getVolumeZ() const
 {
     return volumeZAxis;
+}
+
+float GCodeGenerator::getAzimuth() const
+{
+    return azimuth;
+}
+
+float GCodeGenerator::getElevation() const
+{
+    return elevation;
+}
+
+float GCodeGenerator::getDistance() const
+{
+    return distance;
+}
+
+bool GCodeGenerator::isTrianglesDirty() const
+{
+    return triangles_dirty;
+}
+
+bool GCodeGenerator::isCameraDirty() const
+{
+    return camera_dirty;
 }
 
 QString GCodeGenerator::getPath() const
@@ -211,6 +238,37 @@ void GCodeGenerator::setVolumeZ(float z)
     }
 }
 
+void GCodeGenerator::setAzimuth(float az)
+{
+    if (azimuth != az)
+    {
+        azimuth = az;
+        emit azimuthChanged(az);
+        camera_dirty = true;
+    }
+}
+
+void GCodeGenerator::setElevation(float el)
+{
+    if (elevation != el)
+    {
+        elevation = el;
+        emit elevationChanged(el);
+        camera_dirty = true;
+    }
+}
+
+void GCodeGenerator::setDistance(float di)
+{
+    if (distance != di)
+    {
+        distance = di;
+        emit distanceChanged(di);
+        camera_dirty = true;
+    }
+}
+
+
 const StlLoader::Triangles& GCodeGenerator::getTriangles() const
 {
     return triangles;
@@ -221,4 +279,15 @@ void GCodeGenerator::readAndGenerate()
     StlLoader loader(filePath);
     triangles.clear();
     triangles = loader.triangles();
+    triangles_dirty = true;
+}
+
+void GCodeGenerator::clean_camera()
+{
+    camera_dirty = false;
+}
+
+void GCodeGenerator::clean_triangles()
+{
+    triangles_dirty = false;
 }

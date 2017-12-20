@@ -22,7 +22,7 @@ public:
 
 private:
 
-    void paintQtLogo();
+    void paintObject();
 //    void createGeometry();
     float max;
     QVector<QVector3D> vertices;
@@ -39,6 +39,7 @@ private:
 
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
+    void setCamera(float az, float di, float el);
 };
 
 #endif // STLRENDERER_H

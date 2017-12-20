@@ -4,7 +4,6 @@
 #include <math.h>
 #include <QtMath>
 
-
 StlRenderer::StlRenderer()
 {
 }
@@ -14,7 +13,7 @@ StlRenderer::~StlRenderer()
 }
 
 
-void StlRenderer::paintQtLogo()
+void StlRenderer::paintObject()
 {
     program1.enableAttributeArray(normalAttr1);
     program1.enableAttributeArray(vertexAttr1);
@@ -76,7 +75,6 @@ void StlRenderer::initialize()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    viewMatrix.setRotation(-90.0f, 1.0f, 0.0f, 0.0f);
 }
 void StlRenderer::render()
 {
@@ -108,20 +106,11 @@ void StlRenderer::render()
     program1.bind();
     program1.setUniformValue(u_modelToWorld, modelMatrix.toMatrix());
     program1.setUniformValue(u_worldToView, viewProjectionMatrix);
-    paintQtLogo();
+    paintObject();
     program1.release();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-
-    modelMatrix.rotate(1.0f, QVector3D(1.0f, 0.0f, 0.0f));
-//    modelMatrix.rotate(1.0f, QVector3D(0.0f, 1.0f, 0.0f));
-//    modelMatrix.rotate(1.0f, QVector3D(0.0f, 0.0f, 1.0f));
-//    modelMatrix.translate(0.01f, 0.0f, 0.0f);
-//    modelMatrix.translate(0.0f, 0.01f, 0.0f);
-//    modelMatrix.translate(0.0f, 0.0f, 0.01f);
-//    viewMatrix.translate(0.0f, 0.0f, 0.0f);
-//    viewMatrix.rotate(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
@@ -130,10 +119,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     normals.clear();
     alpha.clear();
     max = std::numeric_limits<float>::min();
-    float min = std::numeric_limits<float>::max();
 
-//    std::cout << "\nStampa dei triangoli letti in STLRENDERER:\n";
-//    int i = 1;
     for (StlLoader::Triangles::const_iterator it = tri.begin(); it != tri.end(); ++it)
     {
         StlLoader::Triangle tri = *it;
@@ -191,125 +177,14 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
         vertices << QVector3D(tri.v3.x, tri.v3.y, tri.v3.z);
         alpha << 1.0f;
         normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
-
-//            std::cout << std::endl << "Triangolo " << i << ":" << std::endl;
-//            std::cout << "Normale.x:   \t" << tri.normal.x << "\t normale.y: \t" << tri.normal.y << "\t normale.z: \t" << tri.normal.z << std::endl;
-//            std::cout << "Vertice 1.x: \t" << tri.v1.x << "\t vertice 1.y: \t" << tri.v1.y << "\t vertice 1.z: \t" << tri.v1.z << std::endl;
-//            std::cout << "Vertice 2.x: \t" << tri.v2.x << "\t vertice 2.y: \t" << tri.v2.y << "\t vertice 2.z: \t" << tri.v2.z << std::endl;
-//            std::cout << "Vertice 3.x: \t" << tri.v3.x << "\t vertice 3.y: \t" << tri.v3.y << "\t vertice 3.z: \t" << tri.v3.z << std::endl;
-//            ++i;
-
     }
-
-    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
+    GCodeGenerator::get_instance().setDistance(5);
 }
 
-//void StlRenderer::createGeometry()
-//{
-//    vertices.clear();
-//    normals.clear();
-//    float uno = 0.5f;
-//    float zero = -0.5f;
-//    float menouno = -0.5f;
-//    float menozero = -0.5f;
-
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(uno,uno,uno);
-
-//    normals << QVector3D(menozero, zero, uno);
-//    normals << QVector3D(menozero, zero, uno);
-//    normals << QVector3D(menozero, zero, uno);
-
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(zero,zero,uno);
-
-//    normals << QVector3D(zero, zero, uno);
-//    normals << QVector3D(zero, zero, uno);
-//    normals << QVector3D(zero, zero, uno);
-
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(uno, zero, zero);
-
-//    normals << QVector3D(zero, zero, menouno);
-//    normals << QVector3D(zero, zero, menouno);
-//    normals << QVector3D(zero, zero, menouno);
-
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(zero,uno,zero);
-
-//    normals << QVector3D(menozero, zero, menouno);
-//    normals << QVector3D(menozero, zero, menouno);
-//    normals << QVector3D(menozero, zero, menouno);
-
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(zero,zero,uno);
-
-//    normals << QVector3D(zero, menouno, zero);
-//    normals << QVector3D(zero, menouno, zero);
-//    normals << QVector3D(zero, menouno, zero);
-
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(uno,zero,zero);
-
-//    normals << QVector3D(zero, menouno, menozero);
-//    normals << QVector3D(zero, menouno, menozero);
-//    normals << QVector3D(zero, menouno, menozero);
-
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(uno,uno,uno);
-
-//    normals << QVector3D(uno, menozero, zero);
-//    normals << QVector3D(uno, menozero, zero);
-//    normals << QVector3D(uno, menozero, zero);
-
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(uno, zero, uno);
-//    vertices << QVector3D(uno,zero,zero);
-
-//    normals << QVector3D(uno, zero, zero);
-//    normals << QVector3D(uno, zero, zero);
-//    normals << QVector3D(uno, zero, zero);
-
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(uno,uno,uno);
-
-//    normals << QVector3D(zero, uno, menozero);
-//    normals << QVector3D(zero, uno, menozero);
-//    normals << QVector3D(zero, uno, menozero);
-
-
-
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(uno, uno, zero);
-//    vertices << QVector3D(zero,uno,zero);
-
-//    normals << QVector3D(zero, uno, zero);
-//    normals << QVector3D(zero, uno, zero);
-//    normals << QVector3D(zero, uno, zero);
-
-
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(zero,uno,zero);
-
-//    normals << QVector3D(menouno, zero, zero);
-//    normals << QVector3D(menouno, zero, zero);
-//    normals << QVector3D(menouno, zero, zero);
-
-//    vertices << QVector3D(zero, uno, uno);
-//    vertices << QVector3D(zero, zero, zero);
-//    vertices << QVector3D(zero,zero,uno);
-
-//    normals << QVector3D(menouno, menozero, zero);
-//    normals << QVector3D(menouno, menozero, zero);
-//    normals << QVector3D(menouno, menozero, zero);
-//}
+void StlRenderer::setCamera(float az, float di, float el)
+{
+    viewMatrix.setAzimuth(az);
+    viewMatrix.setElevation(el);
+    viewMatrix.setDistance(di * max);
+}
 
