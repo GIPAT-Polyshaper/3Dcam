@@ -203,14 +203,14 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     }
 
     //    viewMatrix.setTranslation(0.0f, max * 5, 0.0f);
-    GCodeGenerator::get_instance().setDistance(max * 5);
+    GCodeGenerator::get_instance().setDistance(5);
 }
 
 void StlRenderer::setCamera(float az, float di, float el)
 {
     viewMatrix.setAzimuth(az);
     viewMatrix.setElevation(el);
-    viewMatrix.setDistance(di);
+    viewMatrix.setDistance(di * max);
 }
 
 //void StlRenderer::createGeometry()
