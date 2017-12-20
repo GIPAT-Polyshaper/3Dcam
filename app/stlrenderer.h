@@ -22,7 +22,7 @@ public:
 
 private:
 
-    void paintQtLogo();
+    void paintObject();
 //    void createGeometry();
     float max;
     QVector<QVector3D> vertices;
