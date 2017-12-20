@@ -25,6 +25,7 @@
 #define GCODEGENERATOR_H
 
 #include <QObject>
+#include "stlloader.h"
 
 class GCodeGenerator : public QObject
 {
@@ -47,6 +48,13 @@ public:
         Candela
     };
 
+    //Assicuriamoci che ci sia una sola istanza di GCodeGenerator
+    static GCodeGenerator& get_instance()
+    {
+        static GCodeGenerator instance;
+        return instance;
+    }
+
     float getAltezzaUtensile() const ;
     float getDiametroUtensile() const;
     float getVelocitaUtensile() const;
@@ -56,7 +64,7 @@ public:
     float getVolumeY() const;
     float getVolumeZ() const;
     QString getPath() const;
-    GCodeGenerator();
+    const StlLoader::Triangles& getTriangles() const;
 
 signals:
     void altezzaChanged(float newAltezza);
@@ -75,18 +83,18 @@ public slots:
     void setAltezza(float a);
     void setDiametro(float d);
     void setVelocita(float v);
-    void setForma(QString& f);
+    void setForma(QString f);
     void setOverlap(float o);
     void setVolumeX(float x);
     void setVolumeY(float y);
     void setVolumeZ(float z);
-
-    //    void readAndGenerate();
     void openFile(QString path);
+
+protected:
+    GCodeGenerator();
 
 private:
     QString filePath;
-
     float altezzaUtensile;
     float diametroUtensile;
     float velocitaUtensile;
@@ -95,7 +103,9 @@ private:
     float volumeXAxis;
     float volumeYAxis;
     float volumeZAxis;
-
+    StlLoader::Triangles triangles;
+    GCodeGenerator(const GCodeGenerator&) = delete;
+    void operator= (const GCodeGenerator&) = delete;
     void readAndGenerate();
 
 };
