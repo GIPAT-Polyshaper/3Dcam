@@ -1,7 +1,16 @@
 # Script to compile the PolyShaper 3D Cam application
 
 set(POLYSHAPER_3DCAM_APP_SRCS
-	main.cpp)
+        main.cpp
+        viewer3d.h
+        viewer3d.cpp
+        stlrenderer.h
+        stlrenderer.cpp
+        transform3d.h
+        transform3d.cpp
+        camera3d.h
+        camera3d.cpp
+        )
 
 # Adding the qrc with qml scripts
 qt5_add_resources(POLYSHAPER_3DCAM_APP_SRCS ${POLYSHAPER_3DCAM_QML_QRC})

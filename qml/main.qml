@@ -1,44 +1,25 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 
-
-ApplicationWindow {
+ApplicationWindow
+{
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Antani Research")
+    width: 800
+    height: 600
+    minimumWidth: 800
+    minimumHeight: 600
+    color: "#eeeeee"
+    title: qsTr("PolyShaper 3D CAM")
 
-    SwipeView {
-        id: swipeView
+    SwipeView
+    {
+        id: container
         anchors.fill: parent
-        currentIndex: tabBar.currentIndex
 
-        Page1 {
+        Page1
+        {
 
-            Label {
-                text: qsTr("")
-                anchors.centerIn: parent
-            }
-
-        }
-
-        Page {
-            Label {
-                text: qsTr("Second page")
-                anchors.centerIn: parent
-            }
-        }
-    }
-
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-        TabButton {
-            text: qsTr("First")
-        }
-        TabButton {
-            text: qsTr("Second")
         }
     }
 }

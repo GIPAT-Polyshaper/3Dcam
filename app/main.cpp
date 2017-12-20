@@ -25,7 +25,7 @@
 #include <QQmlApplicationEngine>
 #include <QFile>
 #include <QQmlContext>
-
+#include "viewer3d.h"
 #include "gcodegenerator.h"
 
 int main(int argc, char *argv[])
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     GCodeGenerator gcodeGenerator;
 
     QQmlApplicationEngine engine;
+    qmlRegisterType<Viewer3D>("PolyShaper3Dcam", 1, 0, "Viewer3D");
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     engine.rootContext()->setContextProperty("gcodeGenerator", &gcodeGenerator);
 

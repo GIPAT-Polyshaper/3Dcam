@@ -54,19 +54,175 @@ GCodeGenerator::GCodeGenerator()
 
 }
 
+void GCodeGenerator::openFile(QString path)
+{
+    if (path.contains("file://"))
+    {
+        filePath = QString::fromStdString(path.toStdString().substr(7,path.length()));
+    }
+    else
+    {
+        filePath = path;
+    }
+    //    emit pathChanged(filePath);
+    readAndGenerate();
+}
+
+
+float GCodeGenerator::getAltezzaUtensile() const
+{
+    return altezzaUtensile;
+}
+
+float GCodeGenerator::getDiametroUtensile() const
+{
+    return diametroUtensile;
+}
+
+float GCodeGenerator::getVelocitaUtensile() const
+{
+    return velocitaUtensile;
+}
+
+QString GCodeGenerator::getFormaUtensile() const
+{
+    QString forma;
+    switch (formaUtensile)
+    {
+    case Sferica:
+        forma = "Sferica";
+        break;
+    case Candela:
+        forma = "Candela";
+    default:
+        break;
+    }
+    return forma;
+}
+
+float GCodeGenerator::getOverlapPassate() const
+{
+    return overlapPassate;
+}
+
+float GCodeGenerator::getVolumeX() const
+{
+    return volumeXAxis;
+}
+
+float GCodeGenerator::getVolumeY() const
+{
+    return volumeYAxis;
+}
+
+float GCodeGenerator::getVolumeZ() const
+{
+    return volumeZAxis;
+}
+
+QString GCodeGenerator::getPath() const
+{
+    return filePath;
+}
+
+void GCodeGenerator::setAltezza(float a)
+{
+    if (altezzaUtensile != a)
+    {
+        altezzaUtensile = a;
+        emit altezzaChanged(a);
+    }
+}
+
+void GCodeGenerator::setDiametro(float d)
+{
+    if (diametroUtensile != d)
+    {
+        diametroUtensile = d;
+        emit diametroChanged(d);
+    }
+}
+
+void GCodeGenerator::setVelocita(float v)
+{
+    if (velocitaUtensile != v)
+    {
+        velocitaUtensile = v;
+        emit velocitaChanged(v);
+    }
+}
+
+void GCodeGenerator::setForma(QString& f)
+{
+    if (getFormaUtensile().compare(f,Qt::CaseInsensitive) != 0)
+    {
+        if (f.toUpper().compare("SFERICA") == 0)
+        {
+            formaUtensile = Sferica;
+        }
+        else if (f.toUpper().compare("CANDELA") == 0)
+        {
+            formaUtensile = Candela;
+        }
+        emit formaChanged(f);
+    }
+}
+
+void GCodeGenerator::setOverlap(float o)
+{
+    if (overlapPassate != o)
+    {
+        overlapPassate = o;
+        emit overlapChanged(o);
+    }
+}
+
+void GCodeGenerator::setVolumeX(float x)
+{
+    if (volumeXAxis != x)
+    {
+        volumeXAxis = x;
+        emit volumeXChanged(x);
+    }
+}
+
+void GCodeGenerator::setVolumeY(float y)
+{
+    if(volumeYAxis != y)
+    {
+        volumeYAxis = y;
+        emit volumeYChanged(y);
+    }
+}
+
+void GCodeGenerator::setVolumeZ(float z)
+{
+    if (volumeZAxis != z)
+    {
+        volumeZAxis = z;
+        emit volumeZChanged(z);
+    }
+}
+
 void GCodeGenerator::readAndGenerate()
 {
     //std::cout << "a soreta" << std::endl;
 
     // cambiare il path assoluto per chi fa prove
-    QFile file("/Users/flavioprattico/Desktop/a.stl");
+    QFile file(filePath);
     file.open(QIODevice::ReadOnly);
 
-
+    /*
+     * aggiunta la stampa per file esistente
+     */
     if( !file.exists() )
-      {
+    {
         std::cout << "Il file non c'è" << std::endl;
-      }
+    }
+    else
+    {
+        std::cout << "il file esiste!" << std::endl;
+    }
 
     // Skip the header material
     file.read(80);
@@ -78,7 +234,7 @@ void GCodeGenerator::readAndGenerate()
     // Load the triangle count from the .stl file
     uint32_t tri_count;
     data >> tri_count;
-
+    std::cout << "conta dei triangoli: " << tri_count << std::endl;
     //std::cout << typeid(data).name() << std::endl;
 
     // Extract vertices into an array of xyz, unsigned pairs
@@ -98,6 +254,12 @@ void GCodeGenerator::readAndGenerate()
         data >> v[1].first.x >> v[1].first.y >> v[1].first.z;
         data >> v[2].first.x >> v[2].first.y >> v[2].first.z;
 
+        /*
+         * stampa dei triangoli per vedere qualcosa, DA RIMUOVERE
+         */
+        std::cout << v[0].first.x << " " << v[0].first.y << " " << v[0].first.z << std::endl;
+        std::cout << v[1].first.x << " " << v[1].first.y << " " << v[1].first.z << std::endl;
+        std::cout << v[2].first.x << " " << v[2].first.y << " " << v[2].first.z << std::endl << std::endl;
         // Skip face attribute
         data.readRawData(buffer, sizeof(uint16_t));
     }
@@ -132,14 +294,14 @@ void GCodeGenerator::readAndGenerate()
     }
 
 
-// discretization as a function of the tool dimension
+    // discretization as a function of the tool dimension
 
     float toolD = 0.2;
 
     int xxd[verts.length()];
 
-//    std::cout << *std::min_element(xx,xx+verts.length()) << '\n';
-//    std::cout << *std::max_element(xx,xx+verts.length()) << '\n';
+    //    std::cout << *std::min_element(xx,xx+verts.length()) << '\n';
+    //    std::cout << *std::max_element(xx,xx+verts.length()) << '\n';
 
     float x_min = *std::max_element(xx,xx+verts.length());
     float x_max = *std::max_element(xx,xx+verts.length());

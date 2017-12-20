@@ -1,13 +1,24 @@
 import QtQuick 2.7
 
-Page1Form {
-    button1.onClicked: {
-        console.log("Button 1 clicked.");
+Page1Form
+{
+    buttonFileDialog.onClicked:
+    {
+        fileDialog1.visible = true
     }
-    button2.onClicked: {
-        console.log("Button 2 clicked.");
+
+    fileDialog1.onAccepted:
+    {
+        gcodeGenerator.openFile(fileDialog1.fileUrl.toString())
     }
-    button3.onClicked: {
-        gcodeGenerator.readAndGenerate();
+
+    sliderYAxis.onValueChanged:
+    {
+        labelYOffset.text = Math.floor(sliderYAxis.value) + qsTr("mm")
+    }
+
+    sliderXAxis.onValueChanged:
+    {
+        labelXOffset.text = Math.floor(sliderXAxis.value) + qsTr("mm")
     }
 }
