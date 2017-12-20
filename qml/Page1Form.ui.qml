@@ -80,7 +80,7 @@ Item
             {
                 id: boxCamera
                 Layout.fillWidth: true
-                height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 24
+                height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 18
                 anchors.top: viewer3d.bottom
                 anchors.topMargin: 12
                 width: parent.width
