@@ -99,7 +99,7 @@ void StlRenderer::render()
 
     GLint viewportSize[4];
     functions->glGetIntegerv(GL_VIEWPORT, viewportSize);
-    projectionMatrix.perspective(30, float(viewportSize[2]) / viewportSize[3], 0.01, 1000);
+    projectionMatrix.perspective(30, float(viewportSize[2]) / viewportSize[3], 0.01, 11*max);
     const QMatrix4x4 viewProjectionMatrix = projectionMatrix * viewMatrix.toMatrix();
 
 
