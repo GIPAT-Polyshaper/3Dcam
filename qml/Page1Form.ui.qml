@@ -59,7 +59,7 @@ Item
             y: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
-            height: parent.height - 48 - boxCamera.height
+            height: parent.height - 48
             Layout.minimumWidth: 376
 
             color: "#eeeeee"
@@ -69,11 +69,11 @@ Item
             Viewer3D
             {
                 id: viewer3d
-                height: (parent.height < parent.width) ? (parent.height) : (parent.width)
+                height: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height - 36) : (parent.width)
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: -boxCamera.height/2
-                width: (parent.height < parent.width) ? (parent.height) : (parent.width)
+                width: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height-36) : (parent.width)
             }
 
             Frame
@@ -81,10 +81,12 @@ Item
                 id: boxCamera
                 Layout.fillWidth: true
                 height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 18
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: viewer3d.bottom
                 anchors.topMargin: 12
-                width: parent.width
-                Layout.maximumWidth:  376 < parent.width * 0.3 ? parent.width * 0.3 : 376
+                width: viewer3d.width
+                Layout.minimumWidth: 376
+
 
                 Label
                 {
