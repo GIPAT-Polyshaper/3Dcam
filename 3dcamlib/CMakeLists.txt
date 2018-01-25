@@ -7,13 +7,11 @@ include(${CGAL_USE_FILE})
 find_package(Boost REQUIRED)
 
 set(POLYSHAPER_3DCAM_LIB_SRCS
-        gcodegenerator.cpp
         stlloader.cpp
         triangularmeshgenerator.cpp
         verticesandfacesgenerator.cpp)
 set(POLYSHAPER_3DCAM_LIB_HDRS
         cgaldefs.h
-        gcodegenerator.h
         stlloader.h
         triangularmeshgenerator.h
         verticesandfacesgenerator.h)
