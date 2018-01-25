@@ -9,6 +9,7 @@ Item
     id: item1
     width: 800
     height: 600
+    property alias buttonCodeGeneration: buttonCodeGeneration
     property alias labelDistanceOffset: labelDistanceOffset
     property alias sliderDistance: sliderDistance
     property alias labelElevationOffset: labelElevationOffset
@@ -30,6 +31,7 @@ Item
     property alias sliderXAxis: sliderXAxis
     property alias sliderYAxis: sliderYAxis
     property alias fileDialog1: fileDialog
+    property alias fileWriteDialog: fileWriteDialog
     property alias buttonFileDialog: buttonFileDialog
     property alias rectangle3DModel: viewer3d
     property alias boxMovimenti: boxMovimenti
@@ -40,6 +42,15 @@ Item
         title: "Apri file"
         folder: shortcuts.home
         modality: Qt.NonModal
+    }
+
+    FileDialog
+    {
+        id: fileWriteDialog
+        title: "Salva file"
+        folder: shortcuts.home
+        modality: Qt.NonModal
+        selectExisting: false
     }
 
     GridLayout

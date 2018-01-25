@@ -27,6 +27,7 @@
 #include <QDataStream>
 #include <QVector>
 #include <typeinfo>
+#include <QTextStream>
 //#include <algorithm> per la funzione sort
 
 struct Vec3
@@ -77,6 +78,47 @@ void GCodeGenerator::openFile(QString path)
     readAndGenerate();
 }
 
+void GCodeGenerator::createFile(QString path)
+{
+
+    std::cout << path.toStdString() << std::endl;
+    if (path.contains("file://"))
+    {
+        fileWritePath = path.mid(7,path.length());
+    }
+    else
+    {
+        fileWritePath = path;
+    }
+    if (!fileWritePath.endsWith(".gcode",Qt::CaseInsensitive))
+    {
+        fileWritePath = fileWritePath.append(".gcode");
+    }
+    std::cout << fileWritePath.toStdString() << std::endl;
+
+    QFile file(fileWritePath);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if (file.isOpen())
+    {
+        file.close();
+    }
+    //insert gcode generation and call writeFile
+    writeFile();
+}
+
+void GCodeGenerator::writeFile()
+{
+    QFile file(fileWritePath);
+    if (file.open(QIODevice::Append | QIODevice::Text))
+    {
+        QTextStream out(&file);
+        out << "Placeholder" << endl;
+    }
+    if (file.isOpen())
+    {
+        file.close();
+    }
+}
 
 float GCodeGenerator::getAltezzaUtensile() const
 {
