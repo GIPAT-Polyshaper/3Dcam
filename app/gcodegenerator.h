@@ -80,6 +80,7 @@ public:
     QString getPath() const;
     const StlLoader::Triangles& getTriangles() const;
 
+
 signals:
     void altezzaChanged(float newAltezza);
     void diametroChanged(float newDiametro);
@@ -109,12 +110,14 @@ public slots:
     void setElevation(float el);
     void setDistance(float di);
     void openFile(QString path);
+    void createFile(QString path);
 
 protected:
     GCodeGenerator();
 
 private:
     QString filePath;
+    QString fileWritePath;
     float altezzaUtensile;
     float diametroUtensile;
     float velocitaUtensile;
@@ -135,6 +138,7 @@ private:
     void operator= (const GCodeGenerator&) = delete;
     void readAndGenerate();
 
+    void writeFile();
 };
 
 #endif // GCODEGENERATOR_H

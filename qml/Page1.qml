@@ -7,10 +7,20 @@ Page1Form
         fileDialog1.visible = true
     }
 
+    buttonCodeGeneration.onClicked:
+    {
+        fileWriteDialog.visible = true
+    }
+
     fileDialog1.onAccepted:
     {
         gcodeGenerator.openFile(fileDialog1.fileUrl.toString())
         viewer3d.update()
+    }
+
+    fileWriteDialog.onAccepted:
+    {
+        gcodeGenerator.createFile(fileWriteDialog.fileUrl.toString())
     }
 
     sliderYAxis.onValueChanged:
