@@ -26,6 +26,7 @@
 
 #include <QObject>
 #include "stlloader.h"
+#include "triangularmeshgenerator.h"
 
 class GCodeGenerator : public QObject
 {
@@ -81,6 +82,7 @@ public:
     const StlLoader::Triangles& getTriangles() const;
 
 
+    void getPolyhedron();
 signals:
     void altezzaChanged(float newAltezza);
     void diametroChanged(float newDiametro);
@@ -129,6 +131,7 @@ private:
     float azimuth;
     float distance;
     float elevation;
+    Polyhedron polyhedron;
 
     bool triangles_dirty;
     bool camera_dirty;

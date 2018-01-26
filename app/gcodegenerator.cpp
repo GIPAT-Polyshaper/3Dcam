@@ -28,6 +28,7 @@
 #include <QVector>
 #include <typeinfo>
 #include <QTextStream>
+#include "polyhedroncuttest.h"
 //#include <algorithm> per la funzione sort
 
 struct Vec3
@@ -332,4 +333,14 @@ void GCodeGenerator::clean_camera()
 void GCodeGenerator::clean_triangles()
 {
     triangles_dirty = false;
+}
+
+void GCodeGenerator::getPolyhedron()
+{
+    VerticesAndFacesGenerator v(getTriangles());
+    TriangularMeshGenerator t(v.vertices(), v.faces());
+    polyhedron = t.polyhedron();
+    PolyhedronCutTest p;
+//    p.getRayIntersections(1.5f, polyhedron);
+//    p.generate_ray_intersections(polyhedron);
 }
