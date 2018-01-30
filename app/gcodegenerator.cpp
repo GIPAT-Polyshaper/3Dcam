@@ -186,6 +186,13 @@ float GCodeGenerator::getDistance() const
     return distance;
 }
 
+void GCodeGenerator::setOffset(float x, float y, float z)
+{
+    offset_x = x;
+    offset_y = y;
+    offset_z = z;
+}
+
 bool GCodeGenerator::isTrianglesDirty() const
 {
     return triangles_dirty;
