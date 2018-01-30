@@ -1,7 +1,7 @@
 #include "camera3d.h"
 #include <QtMath>
 
-Camera3D::Camera3D() : m_dirty(true)
+Camera3D::Camera3D() : m_dirty(true), m_center(0, 0, 0)
 {
 
 }
@@ -12,18 +12,20 @@ const QMatrix4x4 &Camera3D::toMatrix()
     if (m_dirty)
     {
         m_dirty = false;
-        m_world.setToIdentity();
+        m_camera.setToIdentity();
         const float azimuthInRadians = qDegreesToRadians(m_azimuth);
         const float elevationInRadians = qDegreesToRadians(m_elevation);
         const QVector3D eye(std::cos(elevationInRadians) * std::cos(azimuthInRadians),
                             std::sin(azimuthInRadians) * std::cos(elevationInRadians),
                             std::sin(elevationInRadians));
 
-        QVector3D up = QVector3D(-std::cos(azimuthInRadians) * std::sin(elevationInRadians), -std::sin(elevationInRadians)*std::sin(azimuthInRadians), std::cos(elevationInRadians));
 
-        m_world.lookAt(eye * m_distance,QVector3D(0,0,0),up);
+                QVector3D up = QVector3D(-std::cos(azimuthInRadians) * std::sin(elevationInRadians), -std::sin(elevationInRadians)*std::sin(azimuthInRadians), std::cos(elevationInRadians));
+
+        m_camera.lookAt(eye * m_distance, QVector3D(0, 0, 0),up);
+        m_camera.translate(-m_center.x(), -m_center.y(), -m_center.z());
     }
-    return m_world;
+    return m_camera;
 }
 
 void Camera3D::setAzimuth(float a)
@@ -42,6 +44,12 @@ void Camera3D::setElevation(float e)
 {
     m_dirty = true;
     m_elevation = e;
+}
+
+void Camera3D::setCenter(QVector3D c)
+{
+    m_dirty = true;
+    m_center = c;
 }
 
 const float Camera3D::azimuth()

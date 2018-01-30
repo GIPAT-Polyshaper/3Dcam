@@ -24,7 +24,7 @@ private:
 
     void paintObject();
 //    void createGeometry();
-    float max;
+    float diff_max;
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
     QVector<QVector3D> normals;
@@ -37,6 +37,7 @@ private:
     Transform3D modelMatrix;
     Camera3D viewMatrix;
 
+    void setWorkingVolume(float x, float y, float z, float a);
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
     void setCamera(float az, float di, float el);

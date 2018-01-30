@@ -70,6 +70,7 @@ public:
     float getAzimuth() const;
     float getElevation() const;
     float getDistance() const;
+    void setOffset(float x, float y, float z);
 
 
     void clean_triangles();
@@ -132,6 +133,10 @@ private:
     float distance;
     float elevation;
     Polyhedron polyhedron;
+
+    float offset_x;
+    float offset_y;
+    float offset_z;
 
     bool triangles_dirty;
     bool camera_dirty;

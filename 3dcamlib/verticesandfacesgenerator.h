@@ -79,7 +79,7 @@ public:
      *
      * @param triangles the list of triangles
      */
-    VerticesAndFacesGenerator(const StlLoader::Triangles& triangles);
+    VerticesAndFacesGenerator(const StlLoader::Triangles& triangles, float x_offset = 0, float y_offset = 0, float z_offset = 0);
 
     /**
      * @brief Returns the list of vertices
