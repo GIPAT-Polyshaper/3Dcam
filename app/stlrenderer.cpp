@@ -284,11 +284,10 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
 
     modelMatrix.setOffset(-xmin, -ymin, -zmin);
 
-
-
     setWorkingVolume(diff_x, diff_y, diff_z, 0.3);
 
-    GCodeGenerator::get_instance().setDistance(5);
+    GCodeGenerator::get_instance().setDistance(3);
+    GCodeGenerator::get_instance().setOffset(-xmin, -ymin, -zmin);
 }
 
 void StlRenderer::setCamera(float az, float di, float el)
