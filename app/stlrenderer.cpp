@@ -118,7 +118,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     vertices.clear();
     normals.clear();
     alpha.clear();
-    max = std::numeric_limits<float>::min();
+    max = std::numeric_limits<float>::lowest();
 
     for (StlLoader::Triangles::const_iterator it = tri.begin(); it != tri.end(); ++it)
     {
