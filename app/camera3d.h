@@ -19,13 +19,15 @@ public:
 
   const QMatrix4x4& toMatrix();
 
+  void setCenter(QVector3D c);
 private:
   bool m_dirty;
-  QMatrix4x4 m_world;
+  QMatrix4x4 m_camera;
 
   float m_azimuth;
   float m_distance;
   float m_elevation;
+  QVector3D m_center;
 };
 
 #endif // CAMERA3D_H

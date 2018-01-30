@@ -68,7 +68,7 @@ namespace {
         v1.faces[2].insert(v1.faces[2].end(), v2.faces[2].begin(), v2.faces[2].end());
     }
 
-    VerticesAndFacesGenerator::Vertices extractVertices(const StlLoader::Triangles& triangles)
+    VerticesAndFacesGenerator::Vertices extractVertices(const StlLoader::Triangles& triangles, float x_offset = 0, float y_offset = 0, float z_offset = 0)
     {
         VerticesAndFacesGenerator::Vertices vertices;
 
@@ -76,9 +76,23 @@ namespace {
         for (auto i = 0u; i < triangles.size(); ++i) {
             const auto& t = triangles[i];
 
-            vertices.push_back(vertexFromVec3AndFaceIndex(t.v1, i, 0));
-            vertices.push_back(vertexFromVec3AndFaceIndex(t.v2, i, 1));
-            vertices.push_back(vertexFromVec3AndFaceIndex(t.v3, i, 2));
+            StlLoader::Vec3 v1, v2, v3;
+
+            v1.x = t.v1.x + x_offset;
+            v2.x = t.v2.x + x_offset;
+            v3.x = t.v3.x + x_offset;
+
+            v1.y = t.v1.y + y_offset;
+            v2.y = t.v2.y + y_offset;
+            v3.y = t.v3.y + y_offset;
+
+            v1.z = t.v1.z + z_offset;
+            v2.z = t.v2.z + z_offset;
+            v3.z = t.v3.z + z_offset;
+
+            vertices.push_back(vertexFromVec3AndFaceIndex(v1, i, 0));
+            vertices.push_back(vertexFromVec3AndFaceIndex(v2, i, 1));
+            vertices.push_back(vertexFromVec3AndFaceIndex(v3, i, 2));
         }
 
         // Sorting vertices
@@ -124,8 +138,8 @@ namespace {
     }
 }
 
-VerticesAndFacesGenerator::VerticesAndFacesGenerator(const StlLoader::Triangles& triangles)
-    : m_vertices(extractVertices(triangles))
+VerticesAndFacesGenerator::VerticesAndFacesGenerator(const StlLoader::Triangles& triangles, float x_offset, float y_offset, float z_offset)
+    : m_vertices(extractVertices(triangles, x_offset, y_offset, z_offset))
     , m_faces(generateFaces(m_vertices, triangles.size()))
 {
 }

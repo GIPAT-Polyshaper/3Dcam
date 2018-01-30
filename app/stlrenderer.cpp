@@ -99,7 +99,7 @@ void StlRenderer::render()
 
     GLint viewportSize[4];
     functions->glGetIntegerv(GL_VIEWPORT, viewportSize);
-    projectionMatrix.perspective(30, float(viewportSize[2]) / viewportSize[3], 0.01, 11*max);
+    projectionMatrix.perspective(30, float(viewportSize[2]) / viewportSize[3], 0.01, 11*diff_max);
     const QMatrix4x4 viewProjectionMatrix = projectionMatrix * viewMatrix.toMatrix();
 
 
@@ -118,55 +118,152 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     vertices.clear();
     normals.clear();
     alpha.clear();
-    max = std::numeric_limits<float>::min();
+    diff_max = std::numeric_limits<float>::lowest();
+
+    float xmax, ymax, zmax;
+    float xmin, ymin, zmin;
+
+    xmax = ymax = zmax = std::numeric_limits<float>::lowest();
+    xmin = ymin = zmin = std::numeric_limits<float>::max();
 
     for (StlLoader::Triangles::const_iterator it = tri.begin(); it != tri.end(); ++it)
     {
         StlLoader::Triangle tri = *it;
-        if (std::abs(tri.v1.x) > max)
+
+        if (tri.v1.x > xmax)
         {
-            max = std::abs(tri.v1.x);
+            xmax = tri.v1.x;
         }
 
-        if (std::abs(tri.v1.y) > max)
+        if (tri.v1.y > ymax)
         {
-            max = std::abs(tri.v1.y);
+            ymax = tri.v1.y;
         }
 
-        if (std::abs(tri.v1.z) > max)
+        if (tri.v1.z > zmax)
         {
-            max = std::abs(tri.v1.z);
+            zmax = tri.v1.z;
         }
 
-        if (std::abs(tri.v2.x) > max)
+        if (tri.v2.x > xmax)
         {
-            max = std::abs(tri.v2.x);
+            xmax = tri.v2.x;
         }
 
-        if (std::abs(tri.v2.y) > max)
+        if (tri.v2.y > ymax)
         {
-            max = std::abs(tri.v2.y);
+            ymax = tri.v2.y;
         }
 
-        if (std::abs(tri.v2.z) > max)
+        if (tri.v2.z > zmax)
         {
-            max = std::abs(tri.v2.z);
+            zmax = tri.v2.z;
         }
 
-        if (std::abs(tri.v3.x) > max)
+        if (tri.v3.x > xmax)
         {
-            max = std::abs(tri.v3.x);
+            xmax = tri.v3.x;
         }
 
-        if (std::abs(tri.v3.y) > max)
+        if (tri.v3.y > ymax)
         {
-            max = std::abs(tri.v3.y);
+            ymax = tri.v3.y;
         }
 
-        if (std::abs(tri.v3.z) > max)
+        if (tri.v3.z > zmax)
         {
-            max = std::abs(tri.v3.z);
+            zmax = tri.v3.z;
         }
+
+        if (tri.v1.x < xmin)
+        {
+            xmin = tri.v1.x;
+        }
+
+        if (tri.v1.y < ymin)
+        {
+            ymin = tri.v1.y;
+        }
+
+        if (tri.v1.z < zmin)
+        {
+            zmin = tri.v1.z;
+        }
+
+        if (tri.v2.x < xmin)
+        {
+            xmin = tri.v2.x;
+        }
+
+        if (tri.v2.y < ymin)
+        {
+            ymin = tri.v2.y;
+        }
+
+        if (tri.v2.z < zmin)
+        {
+            zmin = tri.v2.z;
+        }
+
+        if (tri.v3.x < xmin)
+        {
+            xmin = tri.v3.x;
+        }
+
+        if (tri.v3.y < ymin)
+        {
+            ymin = tri.v3.y;
+        }
+
+        if (tri.v3.z < zmin)
+        {
+            zmin = tri.v3.z;
+        }
+
+        //        if (std::abs(tri.v1.x) > max)
+        //        {
+        //            max = std::abs(tri.v1.x);
+        //        }
+
+        //        if (std::abs(tri.v1.y) > max)
+        //        {
+        //            max = std::abs(tri.v1.y);
+        //        }
+
+        //        if (std::abs(tri.v1.z) > max)
+        //        {
+        //            max = std::abs(tri.v1.z);
+        //        }
+
+        //        if (std::abs(tri.v2.x) > max)
+        //        {
+        //            max = std::abs(tri.v2.x);
+        //        }
+
+        //        if (std::abs(tri.v2.y) > max)
+        //        {
+        //            max = std::abs(tri.v2.y);
+        //        }
+
+        //        if (std::abs(tri.v2.z) > max)
+        //        {
+        //            max = std::abs(tri.v2.z);
+        //        }
+
+        //        if (std::abs(tri.v3.x) > max)
+        //        {
+        //            max = std::abs(tri.v3.x);
+        //        }
+
+        //        if (std::abs(tri.v3.y) > max)
+        //        {
+        //            max = std::abs(tri.v3.y);
+        //        }
+
+        //        if (std::abs(tri.v3.z) > max)
+        //        {
+        //            max = std::abs(tri.v3.z);
+        //        }
 
         vertices << QVector3D(tri.v1.x, tri.v1.y, tri.v1.z);
         alpha << 1.0f;
@@ -178,13 +275,154 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
         alpha << 1.0f;
         normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
     }
-    GCodeGenerator::get_instance().setDistance(5);
+    float diff_x, diff_y, diff_z, diff_yz;
+    diff_x = std::abs(xmax - xmin);
+    diff_y = std::abs(ymax - ymin);
+    diff_z = std::abs(zmax - zmin);
+    diff_yz = (diff_y > diff_z) ? diff_y : diff_z;
+    diff_max = (diff_x > diff_yz) ? diff_x : diff_yz;
+
+    modelMatrix.setOffset(-xmin, -ymin, -zmin);
+
+    setWorkingVolume(diff_x, diff_y, diff_z, 0.3);
+
+    GCodeGenerator::get_instance().setDistance(3);
+    GCodeGenerator::get_instance().setOffset(-xmin, -ymin, -zmin);
 }
 
 void StlRenderer::setCamera(float az, float di, float el)
 {
     viewMatrix.setAzimuth(az);
     viewMatrix.setElevation(el);
-    viewMatrix.setDistance(di * max);
+    viewMatrix.setDistance(di * diff_max);
+}
+
+void StlRenderer::setWorkingVolume(float x, float y, float z, float a)
+{
+    GCodeGenerator::get_instance().setVolumeX(x);
+    GCodeGenerator::get_instance().setVolumeY(y);
+    GCodeGenerator::get_instance().setVolumeZ(z);
+
+    viewMatrix.setCenter(QVector3D(x/2, y/2, z/2));
+
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(x, y, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(0, 0, 1);
+    vertices << QVector3D(0, 0, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(x, 0, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(0, 0, -1);
+    vertices << QVector3D(0, y, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(0, 0, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(0, -1, 0);
+    vertices << QVector3D(x, 0, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, y, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, 0, z);
+    normals << QVector3D(1, 0, 0);
+    vertices << QVector3D(x, 0, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(x, y, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(x, y, 0);
+    normals << QVector3D(0, 1, 0);
+    vertices << QVector3D(0, y, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, y, 0);
+    alpha << a;
+    alpha << a;
+    alpha << a;
+
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, y, z);
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, 0, 0);
+    normals << QVector3D(-1, 0, 0);
+    vertices << QVector3D(0, 0, z);
+    alpha << a;
+    alpha << a;
+    alpha << a;
 }
 
