@@ -32,6 +32,8 @@ public:
     void setRotation(const QQuaternion &r);
     void setRotation(float angle, const QVector3D &axis);
     void setRotation(float angle, float ax, float ay, float az);
+    void setOffset(const QVector3D &o);
+    void setOffset(float x, float y, float z);
 
     //getters
     const QVector3D& getTranslation() const;
@@ -39,9 +41,11 @@ public:
     const QQuaternion& getRotation() const;
     const QMatrix4x4& toMatrix();
 
+
 private:
     bool m_dirty;
     QVector3D m_translation;
+    QVector3D m_offset;
     QVector3D m_scale;
     QQuaternion m_rotation;
     QMatrix4x4 m_world;

@@ -39,6 +39,12 @@ void Transform3D::setTranslation(const QVector3D &t)
     m_translation = t;
 }
 
+void Transform3D::setOffset(const QVector3D &o)
+{
+    m_dirty = true;
+    m_offset = o;
+}
+
 void Transform3D::setScale(const QVector3D &s)
 {
     m_dirty = true;
@@ -58,6 +64,7 @@ const QMatrix4x4 &Transform3D::toMatrix()
         m_dirty = false;
         m_world.setToIdentity();
         m_world.translate(m_translation);
+        m_world.translate(m_offset);
         m_world.rotate(m_rotation);
         m_world.scale(m_scale);
     }
@@ -105,6 +112,11 @@ void Transform3D::grow(float factor)
 void Transform3D::setTranslation(float x, float y, float z)
 {
     setTranslation(QVector3D(x, y, z));
+}
+
+void Transform3D::setOffset(float x, float y, float z)
+{
+    setOffset(QVector3D(x, y, z));
 }
 
 void Transform3D::setScale(float x, float y, float z)
