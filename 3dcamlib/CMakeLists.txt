@@ -10,14 +10,14 @@ set(POLYSHAPER_3DCAM_LIB_SRCS
         stlloader.cpp
         triangularmeshgenerator.cpp
         verticesandfacesgenerator.cpp
-        polyhedroncuttest.cpp
+        toolpathgenerator.cpp
         )
 set(POLYSHAPER_3DCAM_LIB_HDRS
         cgaldefs.h
         stlloader.h
         triangularmeshgenerator.h
         verticesandfacesgenerator.h
-        polyhedroncuttest.h
+        toolpathgenerator.h
         )
 
 add_library(3dcamlib STATIC ${POLYSHAPER_3DCAM_LIB_SRCS} ${POLYSHAPER_3DCAM_LIB_HDRS})

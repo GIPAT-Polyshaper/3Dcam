@@ -1,5 +1,5 @@
-#ifndef POLYHEDRONCUTTEST_H
-#define POLYHEDRONCUTTEST_H
+#ifndef TOOLPATHGENERATOR_H
+#define TOOLPATHGENERATOR_H
 
 #include "cgaldefs.h"
 #include <CGAL/AABB_tree.h>
@@ -33,10 +33,10 @@ typedef CGAL::AABB_face_graph_triangle_primitive<Polyhedron> Primitive;
 typedef CGAL::AABB_traits<Kernel, Primitive> Traits;
 typedef CGAL::AABB_tree<Traits> Tree;
 
-class PolyhedronCutTest
+class ToolPathGenerator
 {
 public:
-    PolyhedronCutTest();
+    ToolPathGenerator();
     void generate_boundary_segments(const Polyhedron &P);
 
     std::list<Segment> orderSegments(std::list<Segment> &list);
@@ -47,4 +47,4 @@ private:
     Point getIntersection(Point r, Tree &tree);
 };
 
-#endif // POLYHEDRONCUTTEST_H
+#endif // TOOLPATHGENERATOR_H

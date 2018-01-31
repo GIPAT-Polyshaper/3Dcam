@@ -1,4 +1,4 @@
-#include "polyhedroncuttest.h"
+#include "toolpathgenerator.h"
 #include <cmath>
 
 const double EPSILON = 0.00000001;
@@ -51,12 +51,12 @@ bool isContiguous(Segment s1, Segment s2)
     return false;
 }
 
-PolyhedronCutTest::PolyhedronCutTest()
+ToolPathGenerator::ToolPathGenerator()
 {
 
 }
 
-void PolyhedronCutTest::generate_ray_intersections(const Polyhedron& P)
+void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
 {
     typedef Kernel::Ray_3 Ray;
 
@@ -177,7 +177,7 @@ void PolyhedronCutTest::generate_ray_intersections(const Polyhedron& P)
     }
 }
 
-std::list<Point3> PolyhedronCutTest::getRayIntersections(double y, const Polyhedron& P)
+std::list<Point3> ToolPathGenerator::getRayIntersections(double y, const Polyhedron& P)
 {
     y = roundDouble(y);
     std::list<Point> punti;
@@ -260,7 +260,7 @@ std::list<Point3> PolyhedronCutTest::getRayIntersections(double y, const Polyhed
     return punti;
 }
 
-Point PolyhedronCutTest::getIntersection(Point p, Tree& tree)
+Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
 {
 
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
@@ -306,7 +306,7 @@ Point PolyhedronCutTest::getIntersection(Point p, Tree& tree)
     return point;
 }
 
-std::list<Segment> PolyhedronCutTest::getBoundarySegments(double y, Tree& tree)
+std::list<Segment> ToolPathGenerator::getBoundarySegments(double y, Tree& tree)
 {
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
 
@@ -353,7 +353,7 @@ std::list<Segment> PolyhedronCutTest::getBoundarySegments(double y, Tree& tree)
     return m_segments;
 }
 
-void PolyhedronCutTest::generate_boundary_segments(const Polyhedron& P)
+void ToolPathGenerator::generate_boundary_segments(const Polyhedron& P)
 {
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
 
@@ -473,6 +473,6 @@ void PolyhedronCutTest::generate_boundary_segments(const Polyhedron& P)
 //{
 //    VerticesAndFacesGenerator v(getTriangles());
 //    TriangularMeshGenerator t(v.vertices(), v.faces());
-//    PolyhedronCutTest p;
+//    ToolPathGenerator p;
 //    p.generate_boundary_segments(t.polyhedron());
 //}

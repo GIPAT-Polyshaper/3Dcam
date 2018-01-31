@@ -28,7 +28,7 @@
 #include <QVector>
 #include <typeinfo>
 #include <QTextStream>
-#include "polyhedroncuttest.h"
+#include "toolpathgenerator.h"
 //#include <algorithm> per la funzione sort
 
 struct Vec3
@@ -347,7 +347,7 @@ void GCodeGenerator::getPolyhedron()
     VerticesAndFacesGenerator v(getTriangles());
     TriangularMeshGenerator t(v.vertices(), v.faces());
     polyhedron = t.polyhedron();
-    PolyhedronCutTest p;
+    ToolPathGenerator p;
 //    p.getRayIntersections(1.5f, polyhedron);
 //    p.generate_ray_intersections(polyhedron);
 }
