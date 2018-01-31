@@ -21,6 +21,7 @@ Page1Form
     fileWriteDialog.onAccepted:
     {
         gcodeGenerator.createFile(fileWriteDialog.fileUrl.toString())
+//        gcodeGenerator.getPolyhedron()
     }
 
     sliderYAxis.onValueChanged:

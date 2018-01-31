@@ -27,7 +27,7 @@
 #include <QDataStream>
 #include <QVector>
 #include <typeinfo>
-#include <QTextStream>
+
 #include "toolpathgenerator.h"
 //#include <algorithm> per la funzione sort
 
@@ -98,13 +98,17 @@ void GCodeGenerator::createFile(QString path)
     std::cout << fileWritePath.toStdString() << std::endl;
 
     QFile file(fileWritePath);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream out(&file);
+        getPolyhedron(out);
+    }
+    //insert gcode generation and call writeFile
+    //    writeFile();
     if (file.isOpen())
     {
         file.close();
     }
-    //insert gcode generation and call writeFile
-    writeFile();
 }
 
 void GCodeGenerator::writeFile()
@@ -342,12 +346,35 @@ void GCodeGenerator::clean_triangles()
     triangles_dirty = false;
 }
 
-void GCodeGenerator::getPolyhedron()
+void GCodeGenerator::getPolyhedron(QTextStream& ts)
 {
-    VerticesAndFacesGenerator v(getTriangles());
+    VerticesAndFacesGenerator v(getTriangles(), offset_x, offset_y, offset_z);
     TriangularMeshGenerator t(v.vertices(), v.faces());
     polyhedron = t.polyhedron();
-    ToolPathGenerator p;
-//    p.getRayIntersections(1.5f, polyhedron);
-//    p.generate_ray_intersections(polyhedron);
+    toolPathGeneration(ts);
+}
+
+void GCodeGenerator::toolPathGeneration(QTextStream& ts)
+{
+    ToolPathGenerator tg;
+    tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
+    float currentY = 0.0;
+    std::list<std::list<Point>> toolPath;
+
+    ts << "inizio le passate" << endl;
+    while(currentY <= getVolumeY())
+    {
+        toolPath.push_back(tg.getRayIntersections(currentY, polyhedron));
+        currentY += getDiametroUtensile()/100 * (1 - getOverlapPassate()/100);
+        for (std::list<Point>::iterator it = toolPath.rbegin()->begin(); it != toolPath.rbegin()->end(); it++)
+        {
+            Point p = *it;
+            ts << "punto: " << p.x() << " "  << p.y() << " " << p.z() << endl;
+
+        }
+        ts << endl;
+        ts << "passata " << toolPath.size() << " finita" << endl;
+    }
+
+    ts << "numero passate: " << toolPath.size() << endl;
 }
