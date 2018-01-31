@@ -43,8 +43,14 @@ public:
     void generate_ray_intersections(const Polyhedron &P);
     std::list<Segment> getBoundarySegments(float y, Tree &tree);
     std::list<Point> getRayIntersections(float y, const Polyhedron &P);
+
+    void setVolume(float x, float y, float z);
 private:
     Point getIntersection(Point r, Tree &tree);
+
+    float volume_x;
+    float volume_y;
+    float volume_z;
 };
 
 #endif // TOOLPATHGENERATOR_H

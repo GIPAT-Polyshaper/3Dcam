@@ -181,16 +181,16 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
 {
     y = roundFloat(y);
     std::list<Point> punti;
-    std::cout << "Construct AABB tree...";
+//    std::cout << "Construct AABB tree...";
     Tree tree(faces(P).first,faces(P).second,P);
-    std::cout << "done." << std::endl;
+//    std::cout << "done." << std::endl;
 
 //    tree.bbox();
 
     std::list<Segment> listaSegmenti = getBoundarySegments(y, tree);
 
     if (listaSegmenti.size() > 0){
-        float max_x = 2048;
+        float max_x = volume_x;
 
         //    punti.push_back(Point(0, y, 0));
         for (std::list<Segment>::iterator it = listaSegmenti.begin(); it != listaSegmenti.end(); it++)
@@ -225,12 +225,12 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
             punti.push_back(point);
         }
 
-        int i = 1;
-        for (std::list<Point>::iterator pIt = punti.begin(); pIt != punti.end(); pIt++)
-        {
-            std::cout << "punto " << i << ": " << *pIt << std::endl;
-            ++i;
-        }
+//        int i = 1;
+//        for (std::list<Point>::iterator pIt = punti.begin(); pIt != punti.end(); pIt++)
+//        {
+////            std::cout << "punto " << i << ": " << *pIt << std::endl;
+//            ++i;
+//        }
 
         punti.sort([](const Point &f, const Point &s) { return f.x() < s.x(); });
 
@@ -250,12 +250,12 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
         punti.push_back(Point(max_x, last.y(), 0));
 
         punti.unique();
-        i = 1;
-        for (std::list<Point>::iterator pIt = punti.begin(); pIt != punti.end(); pIt++)
-        {
-            std::cout << "punto " << i << ": " << *pIt << std::endl;
-            ++i;
-        }
+//        i = 1;
+//        for (std::list<Point>::iterator pIt = punti.begin(); pIt != punti.end(); pIt++)
+//        {
+////            std::cout << "punto " << i << ": " << *pIt << std::endl;
+//            ++i;
+//        }
     }
     return punti;
 }
@@ -278,7 +278,7 @@ Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
 
     if (intersections.empty())
     {
-        std::cout << "doesn't intersect" << std::endl;
+//        std::cout << "doesn't intersect" << std::endl;
         point = Point(p.x(), p.y(), 0);
     }
     else
@@ -312,7 +312,7 @@ std::list<Segment> ToolPathGenerator::getBoundarySegments(float y, Tree& tree)
 
     CGAL::Timer timer;
     timer.start();
-    std::cout << "Generate boundary segments" << std::endl;
+//    std::cout << "Generate boundary segments" << std::endl;
     Vector normal(0, 1, 0);
 
     std::list<Segment> m_segments;
@@ -325,7 +325,7 @@ std::list<Segment> ToolPathGenerator::getBoundarySegments(float y, Tree& tree)
 
     if (tree.number_of_intersected_primitives(plane) > 0)
     {
-        std::cout << "si interseca qualcosa " << std::endl;
+//        std::cout << "si interseca qualcosa " << std::endl;
         tree.all_intersections(plane,std::back_inserter(intersections));
 
 
@@ -338,19 +338,26 @@ std::list<Segment> ToolPathGenerator::getBoundarySegments(float y, Tree& tree)
             if(CGAL::assign(segment,object))
                 m_segments.push_back(segment);
         }
-        int j=1;
-        for (std::list<Segment>::iterator sit = m_segments.begin(); sit != m_segments.end(); sit++)
-        {
-            Segment s = *sit;
-            std::cout<<"Segmento numero "<<j<<":"<<std::endl<<"inizio: "<<s.source()<<std::endl<<"fine: "<<s.target()<<std::endl;
-            ++j;
-        }
+//        int j=1;
+//        for (std::list<Segment>::iterator sit = m_segments.begin(); sit != m_segments.end(); sit++)
+//        {
+//            Segment s = *sit;
+////            std::cout<<"Segmento numero "<<j<<":"<<std::endl<<"inizio: "<<s.source()<<std::endl<<"fine: "<<s.target()<<std::endl;
+//            ++j;
+//        }
     }
     else
     {
-        std::cout << "non si interseca nulla" << std::endl;
+//        std::cout << "non si interseca nulla" << std::endl;
     }
     return m_segments;
+}
+
+void ToolPathGenerator::setVolume(float x, float y, float z)
+{
+    volume_x = x;
+    volume_y = y;
+    volume_z = z;
 }
 
 void ToolPathGenerator::generate_boundary_segments(const Polyhedron& P)
