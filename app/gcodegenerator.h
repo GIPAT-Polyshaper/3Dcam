@@ -25,7 +25,9 @@
 #define GCODEGENERATOR_H
 
 #include <QObject>
+#include <QTextStream>
 #include "stlloader.h"
+#include "triangularmeshgenerator.h"
 
 class GCodeGenerator : public QObject
 {
@@ -82,6 +84,8 @@ public:
     const StlLoader::Triangles& getTriangles() const;
 
 
+
+    void toolPathGeneration(QTextStream &ts);
 signals:
     void altezzaChanged(float newAltezza);
     void diametroChanged(float newDiametro);
@@ -112,6 +116,7 @@ public slots:
     void setDistance(float di);
     void openFile(QString path);
     void createFile(QString path);
+    void getPolyhedron(QTextStream &ts);
 
 protected:
     GCodeGenerator();
@@ -130,6 +135,8 @@ private:
     float azimuth;
     float distance;
     float elevation;
+    Polyhedron polyhedron;
+
     float offset_x;
     float offset_y;
     float offset_z;
