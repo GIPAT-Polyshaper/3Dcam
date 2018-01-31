@@ -41,8 +41,8 @@ public:
 
     std::list<Segment> orderSegments(std::list<Segment> &list);
     void generate_ray_intersections(const Polyhedron &P);
-    std::list<Segment> getBoundarySegments(double y, Tree &tree);
-    std::list<Point> getRayIntersections(double y, const Polyhedron &P);
+    std::list<Segment> getBoundarySegments(float y, Tree &tree);
+    std::list<Point> getRayIntersections(float y, const Polyhedron &P);
 private:
     Point getIntersection(Point r, Tree &tree);
 };

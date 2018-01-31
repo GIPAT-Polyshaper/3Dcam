@@ -1,11 +1,11 @@
 #include "toolpathgenerator.h"
 #include <cmath>
 
-const double EPSILON = 0.00000001;
+const float EPSILON = 0.00000001;
 
-double roundDouble(double d)
+float roundFloat(float d)
 {
-    double num = d * 10000;
+    float num = d * 10000;
     num = round(num);
     return num/10000;
 }
@@ -63,7 +63,7 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
     typedef boost::optional<Tree::Intersection_and_primitive_id<Ray>::Type> Ray_intersection;
 
-    double stepSize = 0.01;
+    float stepSize = 0.01;
     int sizemm = 100;
     int steps = (int) round(sizemm / stepSize);
 
@@ -75,7 +75,7 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
     std::list<Point> punti;
     for (int i = 1; i <= steps; i++)
     {
-        double j = roundDouble(stepSize * i);
+        float j = roundFloat(stepSize * i);
         Point p(j, 0.5, 2048);
         Vector v (0, 0, -1);
         Ray ray(p, v);
@@ -102,9 +102,9 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
                 {
                     if (point.z() > temp.z())
                     {
-                        double x = roundDouble(point.x());
-                        double y = roundDouble(point.y());
-                        double z = roundDouble(point.z());
+                        float x = roundFloat(point.x());
+                        float y = roundFloat(point.y());
+                        float z = roundFloat(point.z());
                         temp = Point(x,y,z);
                     }
                 }
@@ -125,8 +125,8 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
             Point start = *rIt;
             Segment test(start, end);
             Segment temp(end, point);
-            Direction_3 dir1(roundDouble(test.direction().hdx()), roundDouble(test.direction().hdy()), roundDouble(test.direction().hdz()));
-            Direction_3 dir2(roundDouble(temp.direction().hdx()), roundDouble(temp.direction().hdy()), roundDouble(temp.direction().hdz()));
+            Direction_3 dir1(roundFloat(test.direction().hdx()), roundFloat(test.direction().hdy()), roundFloat(test.direction().hdz()));
+            Direction_3 dir2(roundFloat(temp.direction().hdx()), roundFloat(temp.direction().hdy()), roundFloat(temp.direction().hdz()));
             if (dir1 == dir2)
             {
                 std::cout << "stessa direzione" << std::endl;
@@ -177,9 +177,9 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
     }
 }
 
-std::list<Point3> ToolPathGenerator::getRayIntersections(double y, const Polyhedron& P)
+std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedron& P)
 {
-    y = roundDouble(y);
+    y = roundFloat(y);
     std::list<Point> punti;
     std::cout << "Construct AABB tree...";
     Tree tree(faces(P).first,faces(P).second,P);
@@ -190,19 +190,19 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(double y, const Polyhed
     std::list<Segment> listaSegmenti = getBoundarySegments(y, tree);
 
     if (listaSegmenti.size() > 0){
-        double max_x = 2048;
+        float max_x = 2048;
 
         //    punti.push_back(Point(0, y, 0));
         for (std::list<Segment>::iterator it = listaSegmenti.begin(); it != listaSegmenti.end(); it++)
         {
             Segment s = *it;
-            double sx = roundDouble(s.source().x());
-            double sy = roundDouble(s.source().y());
-            double sz = roundDouble(s.source().z());
+            float sx = roundFloat(s.source().x());
+            float sy = roundFloat(s.source().y());
+            float sz = roundFloat(s.source().z());
 
-            double tx = roundDouble(s.target().x());
-            double ty = roundDouble(s.target().y());
-            double tz =  roundDouble(s.target().z());
+            float tx = roundFloat(s.target().x());
+            float ty = roundFloat(s.target().y());
+            float tz =  roundFloat(s.target().z());
 
             Point p(sx, sy, 2048);
 
@@ -294,9 +294,9 @@ Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
             {
                 if (point.z() >= temp.z())
                 {
-                    double tx = roundDouble(point.x());
-                    double ty = roundDouble(point.y());
-                    double tz = roundDouble(point.z());
+                    float tx = roundFloat(point.x());
+                    float ty = roundFloat(point.y());
+                    float tz = roundFloat(point.z());
                     temp = Point(tx, ty, tz);
                 }
             }
@@ -306,7 +306,7 @@ Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
     return point;
 }
 
-std::list<Segment> ToolPathGenerator::getBoundarySegments(double y, Tree& tree)
+std::list<Segment> ToolPathGenerator::getBoundarySegments(float y, Tree& tree)
 {
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
 
@@ -368,7 +368,7 @@ void ToolPathGenerator::generate_boundary_segments(const Polyhedron& P)
     Vector normal((FT)0.0,(FT)1.0,(FT)0.0);
     unsigned int i;
 
-    const double dy = 1 - 0;
+    const float dy = 1 - 0;
     int nb_slices = 3;
     std::list<Segment> m_segments[nb_slices+1];
 
@@ -421,8 +421,8 @@ void ToolPathGenerator::generate_boundary_segments(const Polyhedron& P)
         for (std::list<Segment>::iterator sit = m_segments[i].begin(); sit != m_segments[i].end(); sit++)
         {
             Segment s3 = *sit;
-            Point_2 start (roundDouble(s3.source().x()), roundDouble(s3.source().z()));
-            Point_2 end (roundDouble(s3.target().x()), roundDouble(s3.target().z()));
+            Point_2 start (roundFloat(s3.source().x()), roundFloat(s3.source().z()));
+            Point_2 end (roundFloat(s3.target().x()), roundFloat(s3.target().z()));
             cv[j] = Segment_2 (start, end);
             std::cout << "insert segment 2: " << (j+1) << " " << cv[j] << std::endl;
             j++;
@@ -439,8 +439,8 @@ void ToolPathGenerator::generate_boundary_segments(const Polyhedron& P)
         int k=1;
         do
         {
-            Point3 source (temp->source()->point().x(), roundDouble(m_segments[i].begin()->source().y()), temp->source()->point().y());
-            Point3 target (temp->target()->point().x(), roundDouble(m_segments[i].begin()->target().y()), temp->target()->point().y());
+            Point3 source (temp->source()->point().x(), roundFloat(m_segments[i].begin()->source().y()), temp->source()->point().y());
+            Point3 target (temp->target()->point().x(), roundFloat(m_segments[i].begin()->target().y()), temp->target()->point().y());
             Segment s3 (source, target);
             //            if (isRealSegment(s3) && (m_segments2[i].size()==0 || isContiguous((*m_segments2[i].rbegin()), s3)))
             //            {
