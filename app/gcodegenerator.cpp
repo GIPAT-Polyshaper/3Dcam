@@ -356,7 +356,7 @@ void GCodeGenerator::getPolyhedron(QTextStream& ts)
 
 void GCodeGenerator::toolPathGeneration(QTextStream& ts)
 {
-    ToolPathGenerator tg;
+    ToolPathGenerator tg(polyhedron);
     tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
     float currentY = 0.0;
     std::list<std::list<Point>> toolPath;
@@ -364,7 +364,7 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     ts << "inizio le passate" << endl;
     while(currentY <= getVolumeY())
     {
-        toolPath.push_back(tg.getRayIntersections(currentY, polyhedron));
+        toolPath.push_back(tg.getRayIntersections(currentY));
         currentY += getDiametroUtensile()/100 * (1 - getOverlapPassate()/100);
         for (std::list<Point>::iterator it = toolPath.rbegin()->begin(); it != toolPath.rbegin()->end(); it++)
         {

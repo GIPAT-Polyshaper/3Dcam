@@ -36,21 +36,23 @@ typedef CGAL::AABB_tree<Traits> Tree;
 class ToolPathGenerator
 {
 public:
-    ToolPathGenerator();
+    ToolPathGenerator(Polyhedron& P);
     void generate_boundary_segments(const Polyhedron &P);
 
     std::list<Segment> orderSegments(std::list<Segment> &list);
     void generate_ray_intersections(const Polyhedron &P);
-    std::list<Segment> getBoundarySegments(float y, Tree &tree);
-    std::list<Point> getRayIntersections(float y, const Polyhedron &P);
+    std::list<Segment> getBoundarySegments(float y);
+    std::list<Point> getRayIntersections(float y);
 
     void setVolume(float x, float y, float z);
 private:
-    Point getIntersection(Point r, Tree &tree);
+    Point getIntersection(Point r);
 
     float volume_x;
     float volume_y;
     float volume_z;
+    Polyhedron polyhedron;
+    Tree tree;
 };
 
 #endif // TOOLPATHGENERATOR_H

@@ -51,7 +51,7 @@ bool isContiguous(Segment s1, Segment s2)
     return false;
 }
 
-ToolPathGenerator::ToolPathGenerator()
+ToolPathGenerator::ToolPathGenerator(Polyhedron &P) : polyhedron(P), tree(faces(polyhedron).first, faces(polyhedron).second, polyhedron)
 {
 
 }
@@ -177,17 +177,21 @@ void ToolPathGenerator::generate_ray_intersections(const Polyhedron& P)
     }
 }
 
-std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedron& P)
+std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
 {
     y = roundFloat(y);
     std::list<Point> punti;
 //    std::cout << "Construct AABB tree...";
-    Tree tree(faces(P).first,faces(P).second,P);
+//    if (tree.empty())
+//    {
+//        std::cout << "Construct AABB tree...";
+//        tree = Tree(faces(P).first,faces(P).second,P);
+//    }
 //    std::cout << "done." << std::endl;
 
 //    tree.bbox();
 
-    std::list<Segment> listaSegmenti = getBoundarySegments(y, tree);
+    std::list<Segment> listaSegmenti = getBoundarySegments(y);
 
     if (listaSegmenti.size() > 0){
         float max_x = volume_x;
@@ -207,7 +211,7 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
             Point p(sx, sy, 2048);
 
 
-            Point point = getIntersection(p, tree);
+            Point point = getIntersection(p);
 
             if (point.z() < sz)
             {
@@ -216,7 +220,7 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
             punti.push_back(point);
 
             p = Point(tx, ty, 2048);
-            point = getIntersection(p, tree);
+            point = getIntersection(p);
 
             if (point.z() < tz)
             {
@@ -260,7 +264,7 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y, const Polyhedr
     return punti;
 }
 
-Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
+Point ToolPathGenerator::getIntersection(Point p)
 {
 
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
@@ -306,7 +310,7 @@ Point ToolPathGenerator::getIntersection(Point p, Tree& tree)
     return point;
 }
 
-std::list<Segment> ToolPathGenerator::getBoundarySegments(float y, Tree& tree)
+std::list<Segment> ToolPathGenerator::getBoundarySegments(float y)
 {
     typedef Tree::Object_and_primitive_id Object_and_primitive_id;
 
