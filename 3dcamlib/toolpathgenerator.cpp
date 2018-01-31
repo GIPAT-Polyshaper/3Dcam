@@ -5,9 +5,9 @@ const float EPSILON = 0.00000001;
 
 float roundFloat(float d)
 {
-    float num = d * 10000;
+    float num = d / EPSILON;
     num = round(num);
-    return num/10000;
+    return num * EPSILON;
 }
 
 bool isRealSegment(Segment s)
