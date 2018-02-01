@@ -36,7 +36,7 @@ typedef CGAL::AABB_tree<Traits> Tree;
 class ToolPathGenerator
 {
 public:
-    ToolPathGenerator(Polyhedron& P);
+    ToolPathGenerator(const Polyhedron& P);
     void generate_boundary_segments(const Polyhedron &P);
 
     std::list<Segment> orderSegments(std::list<Segment> &list);
@@ -51,7 +51,7 @@ private:
     float volume_x;
     float volume_y;
     float volume_z;
-    Polyhedron polyhedron;
+//    Polyhedron polyhedron;
     Tree tree;
 };
 

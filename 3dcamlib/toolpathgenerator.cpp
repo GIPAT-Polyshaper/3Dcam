@@ -51,7 +51,7 @@ bool isContiguous(Segment s1, Segment s2)
     return false;
 }
 
-ToolPathGenerator::ToolPathGenerator(Polyhedron &P) : polyhedron(P), tree(faces(polyhedron).first, faces(polyhedron).second, polyhedron)
+ToolPathGenerator::ToolPathGenerator(const Polyhedron &P) : tree(faces(P).first, faces(P).second, P)
 {
 
 }
