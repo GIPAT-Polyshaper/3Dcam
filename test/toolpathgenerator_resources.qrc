@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="double_cube">toolpathgenerator_test_files/stlloader_double_cube_ascii_test.stl</file>
+        <file alias="slope">toolpathgenerator_test_files/stlloader_slope_ascii_test.stl</file>
+    </qresource>
+</RCC>
