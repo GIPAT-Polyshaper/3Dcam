@@ -101,7 +101,7 @@ void GCodeGenerator::createFile(QString path)
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
-        getPolyhedron(out);
+        generateCode(out);
     }
     //insert gcode generation and call writeFile
     //    writeFile();
@@ -346,7 +346,7 @@ void GCodeGenerator::clean_triangles()
     triangles_dirty = false;
 }
 
-void GCodeGenerator::getPolyhedron(QTextStream& ts)
+void GCodeGenerator::generateCode(QTextStream& ts)
 {
     VerticesAndFacesGenerator v(getTriangles(), offset_x, offset_y, offset_z);
     TriangularMeshGenerator t(v.vertices(), v.faces());
@@ -354,9 +354,14 @@ void GCodeGenerator::getPolyhedron(QTextStream& ts)
     toolPathGeneration(ts);
 }
 
+const Polyhedron& GCodeGenerator::getPolyhedron()
+{
+    return polyhedron;
+}
+
 void GCodeGenerator::toolPathGeneration(QTextStream& ts)
 {
-    ToolPathGenerator tg(polyhedron);
+    ToolPathGenerator tg(getPolyhedron());
     tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
     float currentY = 0.0;
     std::list<std::list<Point>> toolPath;

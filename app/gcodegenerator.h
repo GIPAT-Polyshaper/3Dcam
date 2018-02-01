@@ -86,6 +86,7 @@ public:
 
 
     void toolPathGeneration(QTextStream &ts);
+    const Polyhedron& getPolyhedron();
 signals:
     void altezzaChanged(float newAltezza);
     void diametroChanged(float newDiametro);
@@ -116,7 +117,7 @@ public slots:
     void setDistance(float di);
     void openFile(QString path);
     void createFile(QString path);
-    void getPolyhedron(QTextStream &ts);
+    void generateCode(QTextStream &ts);
 
 protected:
     GCodeGenerator();
