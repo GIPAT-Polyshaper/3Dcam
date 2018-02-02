@@ -61,6 +61,8 @@ private slots:
         bool test = true;
         int i = 0;
 
+        QEXPECT_FAIL("", "Will fix in a future release", Continue);
+        QVERIFY(listaPunti.size() == 8);
         for (std::list<Point>::iterator it = listaPunti.begin(); it != listaPunti.end(); it++)
         {
             Point p = *it;
@@ -91,6 +93,7 @@ private slots:
         bool test = true;
         int i = 0;
 
+        QVERIFY(listaPunti.size() == 4);
         for (std::list<Point>::iterator it = listaPunti.begin(); it != listaPunti.end(); it++)
         {
             Point p = *it;
