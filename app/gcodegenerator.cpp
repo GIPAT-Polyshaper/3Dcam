@@ -389,5 +389,5 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     }
     ts << "N" << j << "G01" << "Z" << 0.100 << endl;
     ++j;
-    ts << "N" << j << "X" << 0.0 << "Y" << 0.0 << endl;
+    ts << "N" << j << "G00" << "X" << 0.0 << "Y" << 0.0 << endl;
 }
