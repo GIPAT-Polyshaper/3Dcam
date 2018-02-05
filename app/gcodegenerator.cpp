@@ -349,22 +349,45 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     ToolPathGenerator tg(getPolyhedron());
     tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
     float currentY = 0.0;
-    std::list<std::list<Point>> toolPath;
-
-    ts << "inizio le passate" << endl;
+    std::list<Point> toolPath;
+    int i = 0, j = 1;
+    ts << "F" << getVelocitaUtensile() << endl;
+    ts << "N" << (j) << "G01" << "X" << 0.0 << "Y" << 0.0 << "Z" << 0.100 << endl;
+    ++j;
     while(currentY <= getVolumeY())
     {
-        toolPath.push_back(tg.getRayIntersections(currentY));
-        currentY += getDiametroUtensile() * (1 - getOverlapPassate()/100);
+        toolPath = tg.getRayIntersections(currentY);
 
-        for (auto p : *toolPath.rbegin())
+        float startx = 0, endx = getVolumeX();
+        if (i % 2 != 0)
         {
-            ts << "punto: " << p.x() << " "  << p.y() << " " << p.z() << endl;
+            toolPath.reverse();
+            startx = endx;
+            endx = 0;
         }
 
-        ts << endl;
-        ts << "passata " << toolPath.size() << " finita" << endl;
-    }
+        if (toolPath.size() > 0)
+        {
+            for (auto p : toolPath)
+            {
+                ts << "N" << j << "X"  << p.x() << "Z" << p.z() - getVolumeZ() << endl;
+                ++j;
+            }
+        }
+        else
+        {
+            ts << "N" << j << "X" << startx << "Z" << 0 - getVolumeZ() << endl;
+            ++j;
+            ts << "N" << j << "X" << endx << endl;
+            ++j;
+        }
 
-    ts << "numero passate: " << toolPath.size() << endl;
+        ++i;
+        currentY += getDiametroUtensile() * (1 - getOverlapPassate()/100);
+        ts << "N" << j << "Y" << currentY << endl;
+        ++j;
+    }
+    ts << "N" << j << "G01" << "Z" << 0.100 << endl;
+    ++j;
+    ts << "N" << j << "X" << 0.0 << "Y" << 0.0 << endl;
 }
