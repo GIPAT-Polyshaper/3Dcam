@@ -355,14 +355,13 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     while(currentY <= getVolumeY())
     {
         toolPath.push_back(tg.getRayIntersections(currentY));
-        currentY += getDiametroUtensile()/100 * (1 - getOverlapPassate()/100);
+        currentY += getDiametroUtensile() * (1 - getOverlapPassate()/100);
 
         for (auto p : *toolPath.rbegin())
         {
-//            Point p = *it;
             ts << "punto: " << p.x() << " "  << p.y() << " " << p.z() << endl;
-
         }
+
         ts << endl;
         ts << "passata " << toolPath.size() << " finita" << endl;
     }
