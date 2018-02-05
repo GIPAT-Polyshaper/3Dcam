@@ -220,51 +220,6 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
             zmin = tri.v3.z;
         }
 
-        //        if (std::abs(tri.v1.x) > max)
-        //        {
-        //            max = std::abs(tri.v1.x);
-        //        }
-
-        //        if (std::abs(tri.v1.y) > max)
-        //        {
-        //            max = std::abs(tri.v1.y);
-        //        }
-
-        //        if (std::abs(tri.v1.z) > max)
-        //        {
-        //            max = std::abs(tri.v1.z);
-        //        }
-
-        //        if (std::abs(tri.v2.x) > max)
-        //        {
-        //            max = std::abs(tri.v2.x);
-        //        }
-
-        //        if (std::abs(tri.v2.y) > max)
-        //        {
-        //            max = std::abs(tri.v2.y);
-        //        }
-
-        //        if (std::abs(tri.v2.z) > max)
-        //        {
-        //            max = std::abs(tri.v2.z);
-        //        }
-
-        //        if (std::abs(tri.v3.x) > max)
-        //        {
-        //            max = std::abs(tri.v3.x);
-        //        }
-
-        //        if (std::abs(tri.v3.y) > max)
-        //        {
-        //            max = std::abs(tri.v3.y);
-        //        }
-
-        //        if (std::abs(tri.v3.z) > max)
-        //        {
-        //            max = std::abs(tri.v3.z);
-        //        }
-
         vertices << QVector3D(tri.v1.x, tri.v1.y, tri.v1.z);
         alpha << 1.0f;
         normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
@@ -275,6 +230,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
         alpha << 1.0f;
         normals << QVector3D(tri.normal.x, tri.normal.y, tri.normal.z);
     }
+
     float diff_x, diff_y, diff_z, diff_yz;
     diff_x = std::abs(xmax - xmin);
     diff_y = std::abs(ymax - ymin);

@@ -23,7 +23,6 @@ public:
 private:
 
     void paintObject();
-//    void createGeometry();
     float diff_max;
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
