@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file alias="double_cube">toolpathgenerator_test_files/stlloader_double_cube_ascii_test.stl</file>
         <file alias="slope">toolpathgenerator_test_files/stlloader_slope_ascii_test.stl</file>
+        <file alias="undercut1">toolpathgenerator_test_files/stlloader_undercut1_ascii.stl</file>
+        <file alias="undercut2">toolpathgenerator_test_files/stlloader_undercut2_ascii.stl</file>
     </qresource>
 </RCC>

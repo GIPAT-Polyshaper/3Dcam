@@ -43,6 +43,20 @@ class ToolPathGenerator_Test : public QObject
 
 private slots:
 
+    void testNoIntersections()
+    {
+        StlLoader loader(":/slope");
+
+        VerticesAndFacesGenerator vfg(loader.triangles());
+        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
+
+        ToolPathGenerator tpg(tmg.polyhedron());
+        tpg.setVolume(1, 1, 2);
+        std::list<Point> listaPunti = tpg.getRayIntersections(2);
+
+        QVERIFY(listaPunti.size() == 0);
+    }
+
     void testDoubleCube()
     {
         StlLoader loader(":/double_cube");
@@ -61,11 +75,10 @@ private slots:
         bool test = true;
         int i = 0;
 
-        QEXPECT_FAIL("", "Will fix in a future release", Continue);
+        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(listaPunti.size() == 8);
-        for (std::list<Point>::iterator it = listaPunti.begin(); it != listaPunti.end(); it++)
+        for (auto p : listaPunti)
         {
-            Point p = *it;
             if(p != punti[i])
             {
                 test = false;
@@ -73,7 +86,7 @@ private slots:
             }
             i++;
         }
-        QEXPECT_FAIL("", "Will fix in a future release", Continue);
+        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(test);
     }
 
@@ -94,9 +107,8 @@ private slots:
         int i = 0;
 
         QVERIFY(listaPunti.size() == 4);
-        for (std::list<Point>::iterator it = listaPunti.begin(); it != listaPunti.end(); it++)
+        for (auto p : listaPunti)
         {
-            Point p = *it;
             if(p != punti[i])
             {
                 test = false;
@@ -104,7 +116,68 @@ private slots:
             }
             i++;
         }
-//        QEXPECT_FAIL("", "Will fix in a future release", Continue);
+        QVERIFY(test);
+    }
+
+    void testUndercut1()
+    {
+        StlLoader loader(":/undercut1");
+
+        Point punti[] = {Point(0, 0, 0), Point(0, 0, 1),
+                         Point(1, 0, 1), Point(1, 0, 0)};
+
+        VerticesAndFacesGenerator vfg(loader.triangles());
+        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
+
+        ToolPathGenerator tpg(tmg.polyhedron());
+        tpg.setVolume(1, 1, 1);
+        std::list<Point> listaPunti = tpg.getRayIntersections(0);
+        bool test = true;
+        int i = 0;
+
+        QEXPECT_FAIL("", "it returns 1 point more than necessary, but it follows the shape correctly avoiding the undercut. Will fix in future", Abort);
+        QVERIFY(listaPunti.size() == 4);
+        for (auto p : listaPunti)
+        {
+            if(p != punti[i])
+            {
+                test = false;
+                break;
+            }
+            i++;
+        }
+        QEXPECT_FAIL("", "Failure is expected because we have more points, but we should not get here", Abort);
+        QVERIFY(test);
+    }
+
+    void testUndercut2()
+    {
+        StlLoader loader(":/undercut2");
+
+        Point punti[] = {Point(0, 0, 0), Point(0, 0, 2),
+                         Point(1, 0, 2), Point(1, 0, 1),
+                         Point(2, 0, 1), Point(2, 0, 0)};
+
+        VerticesAndFacesGenerator vfg(loader.triangles());
+        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
+
+        ToolPathGenerator tpg(tmg.polyhedron());
+        tpg.setVolume(2, 1, 2);
+        std::list<Point> listaPunti = tpg.getRayIntersections(0);
+        bool test = true;
+        int i = 0;
+
+        QVERIFY(listaPunti.size() == 6);
+        for (auto p : listaPunti)
+        {
+            if(p != punti[i])
+            {
+                test = false;
+                break;
+            }
+            i++;
+        }
+        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(test);
     }
 };
