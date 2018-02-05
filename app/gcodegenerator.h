@@ -149,8 +149,6 @@ private:
     GCodeGenerator(const GCodeGenerator&) = delete;
     void operator= (const GCodeGenerator&) = delete;
     void readAndGenerate();
-
-    void writeFile();
 };
 
 #endif // GCODEGENERATOR_H

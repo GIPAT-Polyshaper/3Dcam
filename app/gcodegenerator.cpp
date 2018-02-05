@@ -103,22 +103,7 @@ void GCodeGenerator::createFile(QString path)
         QTextStream out(&file);
         generateCode(out);
     }
-    //insert gcode generation and call writeFile
-    //    writeFile();
-    if (file.isOpen())
-    {
-        file.close();
-    }
-}
 
-void GCodeGenerator::writeFile()
-{
-    QFile file(fileWritePath);
-    if (file.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream out(&file);
-        out << "Placeholder" << endl;
-    }
     if (file.isOpen())
     {
         file.close();
@@ -371,9 +356,10 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     {
         toolPath.push_back(tg.getRayIntersections(currentY));
         currentY += getDiametroUtensile()/100 * (1 - getOverlapPassate()/100);
-        for (std::list<Point>::iterator it = toolPath.rbegin()->begin(); it != toolPath.rbegin()->end(); it++)
+
+        for (auto p : *toolPath.rbegin())
         {
-            Point p = *it;
+//            Point p = *it;
             ts << "punto: " << p.x() << " "  << p.y() << " " << p.z() << endl;
 
         }
