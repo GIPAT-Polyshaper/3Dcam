@@ -19,6 +19,7 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
 {
     y = roundFloat(y);
     std::list<Point> punti;
+    std::list<Point> risultato;
 
     std::list<Segment> listaSegmenti = getBoundarySegments(y);
 
@@ -75,8 +76,26 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
         punti.push_back(Point(max_x, last.y(), 0));
 
         punti.unique();
+        for (auto point : punti)
+        {
+            if (risultato.size() >= 2)
+            {
+                std::list<Point>::reverse_iterator rIt = risultato.rbegin();
+                Point end = *rIt;
+                rIt++;
+                Point start = *rIt;
+                Segment test(start, end);
+                Segment temp(end, point);
+                if (test.direction() == temp.direction())
+                {
+                    risultato.pop_back();
+                }
+
+            }
+            risultato.push_back(point);
+        }
     }
-    return punti;
+    return risultato;
 }
 
 Point ToolPathGenerator::getIntersection(Point p)
