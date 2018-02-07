@@ -31,6 +31,15 @@
 #include "toolpathgenerator.h"
 //#include <algorithm> per la funzione sort
 
+const float EPSILON = 0.00000001;
+
+float roundFloat(float d)
+{
+    float num = d / EPSILON;
+    num = round(num);
+    return num * EPSILON;
+}
+
 struct Vec3
 {
     float x, y, z;
@@ -370,20 +379,20 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
         {
             for (auto p : toolPath)
             {
-                ts << "N" << j << "X"  << p.x() << "Z" << p.z() - getVolumeZ() << endl;
+                ts << "N" << j << "X"  << roundFloat(p.x()) << "Z" << roundFloat(p.z() - getVolumeZ()) << endl;
                 ++j;
             }
         }
         else
         {
-            ts << "N" << j << "X" << startx << "Z" << 0 - getVolumeZ() << endl;
+            ts << "N" << j << "X" << roundFloat(startx) << "Z" << roundFloat(0 - getVolumeZ()) << endl;
             ++j;
-            ts << "N" << j << "X" << endx << endl;
+            ts << "N" << j << "X" << roundFloat(endx) << endl;
             ++j;
         }
 
         ++i;
-        currentY += getDiametroUtensile() * (1 - getOverlapPassate()/100);
+        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100));
         ts << "N" << j << "Y" << currentY << endl;
         ++j;
     }

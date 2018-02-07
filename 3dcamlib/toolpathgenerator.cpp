@@ -1,14 +1,4 @@
 #include "toolpathgenerator.h"
-#include <cmath>
-
-const float EPSILON = 0.00000001;
-
-float roundFloat(float d)
-{
-    float num = d / EPSILON;
-    num = round(num);
-    return num * EPSILON;
-}
 
 ToolPathGenerator::ToolPathGenerator(const Polyhedron &P) : tree(faces(P).first, faces(P).second, P)
 {
@@ -17,7 +7,6 @@ ToolPathGenerator::ToolPathGenerator(const Polyhedron &P) : tree(faces(P).first,
 
 std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
 {
-    y = roundFloat(y);
     std::list<Point> punti;
     std::list<Point> risultato;
 
@@ -29,16 +18,15 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
 
         for (auto s : listaSegmenti)
         {
-            float sx = roundFloat(s.source().x());
-            float sy = roundFloat(s.source().y());
-            float sz = roundFloat(s.source().z());
+            float sx = s.source().x();
+            float sy = s.source().y();
+            float sz = s.source().z();
 
-            float tx = roundFloat(s.target().x());
-            float ty = roundFloat(s.target().y());
-            float tz = roundFloat(s.target().z());
+            float tx = s.target().x();
+            float ty = s.target().y();
+            float tz = s.target().z();
 
             Point p(sx, sy, 2048);
-
 
             Point point = getIntersection(p);
 
@@ -124,9 +112,9 @@ Point ToolPathGenerator::getIntersection(Point p)
             {
                 if (point.z() >= temp.z())
                 {
-                    float tx = roundFloat(point.x());
-                    float ty = roundFloat(point.y());
-                    float tz = roundFloat(point.z());
+                    float tx = point.x();
+                    float ty = point.y();
+                    float tz = point.z();
                     temp = Point(tx, ty, tz);
                 }
             }
