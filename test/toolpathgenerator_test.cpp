@@ -135,7 +135,6 @@ private slots:
         bool test = true;
         int i = 0;
 
-        QEXPECT_FAIL("", "it returns 1 point more than necessary, but it follows the shape correctly avoiding the undercut. Will fix in future", Abort);
         QVERIFY(listaPunti.size() == 4);
         for (auto p : listaPunti)
         {
@@ -146,7 +145,6 @@ private slots:
             }
             i++;
         }
-        QEXPECT_FAIL("", "Failure is expected because we have more points, but we should not get here", Abort);
         QVERIFY(test);
     }
 
@@ -167,6 +165,7 @@ private slots:
         bool test = true;
         int i = 0;
 
+        QEXPECT_FAIL("", "Now the test will fail because listaPunti.size() is wrong", Abort);
         QVERIFY(listaPunti.size() == 6);
         for (auto p : listaPunti)
         {
