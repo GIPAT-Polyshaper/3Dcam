@@ -75,7 +75,6 @@ private slots:
         bool test = true;
         int i = 0;
 
-        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(listaPunti.size() == 8);
         for (auto p : listaPunti)
         {
@@ -86,7 +85,6 @@ private slots:
             }
             i++;
         }
-        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(test);
     }
 

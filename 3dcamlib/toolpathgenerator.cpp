@@ -7,7 +7,7 @@ ToolPathGenerator::ToolPathGenerator(const Polyhedron &P) : tree(faces(P).first,
 
 std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
 {
-    std::list<Point> punti;
+    std::map<float, Point> punti;
     std::list<Point> risultato;
 
     std::list<Segment> listaSegmenti = getBoundarySegments(y);
@@ -34,7 +34,18 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
             {
                 point = Point(sx, sy, sz);
             }
-            punti.push_back(point);
+
+            if (punti.count(sx) > 0)
+            {
+                if (punti[sx].z() < point.z())
+                {
+                    punti[sx] = point;
+                }
+            }
+            else
+            {
+                punti[sx] = point;
+            }
 
             p = Point(tx, ty, 2048);
             point = getIntersection(p);
@@ -43,27 +54,20 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
             {
                 point = Point(tx, ty, tz);
             }
-            punti.push_back(point);
+
+            if (punti.count(tx) > 0)
+            {
+                if (punti[tx].z() < point.z())
+                {
+                    punti[tx] = point;
+                }
+            }
+            else
+            {
+                punti[tx] = point;
+            }
         }
 
-        punti.sort([](const Point &f, const Point &s) { return f.x() < s.x(); });
-
-        Point first = *punti.begin();
-        Point last = *punti.rbegin();
-
-        if (first.z() != 0)
-        {
-            punti.push_front(Point(first.x(), first.y(), 0));
-        }
-        punti.push_front(Point(0, first.y(), 0));
-
-        if (last.z() != 0)
-        {
-            punti.push_back(Point(last.x(), last.y(), 0));
-        }
-        punti.push_back(Point(max_x, last.y(), 0));
-
-        punti.unique();
         for (auto point : punti)
         {
             if (risultato.size() >= 2)
@@ -73,14 +77,49 @@ std::list<Point3> ToolPathGenerator::getRayIntersections(float y)
                 rIt++;
                 Point start = *rIt;
                 Segment test(start, end);
-                Segment temp(end, point);
+                Segment temp(end, point.second);
                 if (test.direction() == temp.direction())
                 {
                     risultato.pop_back();
                 }
 
             }
-            risultato.push_back(point);
+            Point pminus = getIntersection(Point(point.second.x()-0.0001, point.second.y(), 2048));
+            Point pplus = getIntersection(Point(point.second.x()+0.0001, point.second.y(), 2048));
+            if (pminus.z() == 0)
+            {
+                risultato.push_back(Point(point.second.x(), point.second.y(), 0));
+            }
+
+            risultato.push_back(point.second);
+
+            if (pplus.z() == 0)
+            {
+                risultato.push_back(Point(point.second.x(), point.second.y(), 0));
+            }
+        }
+
+        Point first = *risultato.begin();
+        Point last = *risultato.rbegin();
+
+        if (first.z() != 0)
+        {
+            risultato.push_front(Point(first.x(), first.y(), 0));
+        }
+
+        if (*risultato.begin() != Point(0, risultato.begin()->y(), 0))
+        {
+            risultato.push_front(Point(0, risultato.begin()->y(), 0));
+        }
+
+        if (last.z() != 0)
+        {
+            risultato.push_back(Point(last.x(), last.y(), 0));
+        }
+
+        if (*risultato.rbegin() != Point(max_x, risultato.rbegin()->y(), 0))
+        {
+            risultato.push_back(Point(max_x, risultato.rbegin()->y(), 0));
         }
     }
     return risultato;
