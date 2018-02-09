@@ -240,20 +240,20 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
 
     modelMatrix.setOffset(-xmin, -ymin, -zmin);
 
-    setWorkingVolume(diff_x, diff_y, diff_z, 0.3);
+    setWorkingVolume(ceil(diff_x), ceil(diff_y), ceil(diff_z), 0.3);
 
     GCodeGenerator::get_instance().setDistance(3);
     GCodeGenerator::get_instance().setOffset(-xmin, -ymin, -zmin);
 }
 
-void StlRenderer::setCamera(float az, float di, float el)
+void StlRenderer::setCamera(int az, float di, int el)
 {
     viewMatrix.setAzimuth(az);
     viewMatrix.setElevation(el);
     viewMatrix.setDistance(di * diff_max);
 }
 
-void StlRenderer::setWorkingVolume(float x, float y, float z, float a)
+void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
 {
     GCodeGenerator::get_instance().setVolumeX(x);
     GCodeGenerator::get_instance().setVolumeY(y);

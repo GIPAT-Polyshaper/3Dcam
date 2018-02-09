@@ -36,10 +36,10 @@ private:
     Transform3D modelMatrix;
     Camera3D viewMatrix;
 
-    void setWorkingVolume(float x, float y, float z, float a);
+    void setWorkingVolume(int x, int y, int z, float a);
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
-    void setCamera(float az, float di, float el);
+    void setCamera(int az, float di, int el);
 };
 
 #endif // STLRENDERER_H

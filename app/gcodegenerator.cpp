@@ -27,6 +27,7 @@
 #include <QDataStream>
 #include <QVector>
 #include <typeinfo>
+#include <climits>
 
 #include "toolpathgenerator.h"
 //#include <algorithm> per la funzione sort
@@ -119,17 +120,17 @@ void GCodeGenerator::createFile(QString path)
     }
 }
 
-float GCodeGenerator::getAltezzaUtensile() const
+int GCodeGenerator::getAltezzaUtensile() const
 {
     return altezzaUtensile;
 }
 
-float GCodeGenerator::getDiametroUtensile() const
+int GCodeGenerator::getDiametroUtensile() const
 {
     return diametroUtensile;
 }
 
-float GCodeGenerator::getVelocitaUtensile() const
+int GCodeGenerator::getVelocitaUtensile() const
 {
     return velocitaUtensile;
 }
@@ -150,32 +151,32 @@ QString GCodeGenerator::getFormaUtensile() const
     return forma;
 }
 
-float GCodeGenerator::getOverlapPassate() const
+int GCodeGenerator::getOverlapPassate() const
 {
     return overlapPassate;
 }
 
-float GCodeGenerator::getVolumeX() const
+int GCodeGenerator::getVolumeX() const
 {
     return volumeXAxis;
 }
 
-float GCodeGenerator::getVolumeY() const
+int GCodeGenerator::getVolumeY() const
 {
     return volumeYAxis;
 }
 
-float GCodeGenerator::getVolumeZ() const
+int GCodeGenerator::getVolumeZ() const
 {
     return volumeZAxis;
 }
 
-float GCodeGenerator::getAzimuth() const
+int GCodeGenerator::getAzimuth() const
 {
     return azimuth;
 }
 
-float GCodeGenerator::getElevation() const
+int GCodeGenerator::getElevation() const
 {
     return elevation;
 }
@@ -207,7 +208,7 @@ QString GCodeGenerator::getPath() const
     return filePath;
 }
 
-void GCodeGenerator::setAltezza(float a)
+void GCodeGenerator::setAltezza(int a)
 {
     if (altezzaUtensile != a)
     {
@@ -216,7 +217,7 @@ void GCodeGenerator::setAltezza(float a)
     }
 }
 
-void GCodeGenerator::setDiametro(float d)
+void GCodeGenerator::setDiametro(int d)
 {
     if (diametroUtensile != d)
     {
@@ -225,7 +226,7 @@ void GCodeGenerator::setDiametro(float d)
     }
 }
 
-void GCodeGenerator::setVelocita(float v)
+void GCodeGenerator::setVelocita(int v)
 {
     if (velocitaUtensile != v)
     {
@@ -250,7 +251,7 @@ void GCodeGenerator::setForma(QString f)
     }
 }
 
-void GCodeGenerator::setOverlap(float o)
+void GCodeGenerator::setOverlap(int o)
 {
     if (overlapPassate != o)
     {
@@ -259,7 +260,7 @@ void GCodeGenerator::setOverlap(float o)
     }
 }
 
-void GCodeGenerator::setVolumeX(float x)
+void GCodeGenerator::setVolumeX(int x)
 {
     if (volumeXAxis != x)
     {
@@ -268,7 +269,7 @@ void GCodeGenerator::setVolumeX(float x)
     }
 }
 
-void GCodeGenerator::setVolumeY(float y)
+void GCodeGenerator::setVolumeY(int y)
 {
     if(volumeYAxis != y)
     {
@@ -277,7 +278,7 @@ void GCodeGenerator::setVolumeY(float y)
     }
 }
 
-void GCodeGenerator::setVolumeZ(float z)
+void GCodeGenerator::setVolumeZ(int z)
 {
     if (volumeZAxis != z)
     {
@@ -286,7 +287,7 @@ void GCodeGenerator::setVolumeZ(float z)
     }
 }
 
-void GCodeGenerator::setAzimuth(float az)
+void GCodeGenerator::setAzimuth(int az)
 {
     if (azimuth != az)
     {
@@ -296,7 +297,7 @@ void GCodeGenerator::setAzimuth(float az)
     }
 }
 
-void GCodeGenerator::setElevation(float el)
+void GCodeGenerator::setElevation(int el)
 {
     if (elevation != el)
     {

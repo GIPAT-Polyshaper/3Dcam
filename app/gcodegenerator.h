@@ -34,16 +34,16 @@ class GCodeGenerator : public QObject
     Q_OBJECT
     Q_PROPERTY(QString path READ getPath NOTIFY pathChanged)
 
-    Q_PROPERTY(float altezzaUt READ getAltezzaUtensile NOTIFY altezzaChanged)
-    Q_PROPERTY(float diametroUt READ getDiametroUtensile NOTIFY diametroChanged)
-    Q_PROPERTY(float velocitaUt READ getVelocitaUtensile NOTIFY velocitaChanged)
+    Q_PROPERTY(int altezzaUt READ getAltezzaUtensile NOTIFY altezzaChanged)
+    Q_PROPERTY(int diametroUt READ getDiametroUtensile NOTIFY diametroChanged)
+    Q_PROPERTY(int velocitaUt READ getVelocitaUtensile NOTIFY velocitaChanged)
     Q_PROPERTY(QString formaUt READ getFormaUtensile  NOTIFY formaChanged)
-    Q_PROPERTY(float overlap READ getOverlapPassate NOTIFY overlapChanged)
-    Q_PROPERTY(float volumeX READ getVolumeX NOTIFY volumeXChanged)
-    Q_PROPERTY(float volumeY READ getVolumeY NOTIFY volumeYChanged)
-    Q_PROPERTY(float volumeZ READ getVolumeZ NOTIFY volumeZChanged)
-    Q_PROPERTY(float azimuthCam READ getAzimuth WRITE setAzimuth NOTIFY azimuthChanged)
-    Q_PROPERTY(float elevationCam READ getElevation WRITE setElevation NOTIFY elevationChanged)
+    Q_PROPERTY(int overlap READ getOverlapPassate NOTIFY overlapChanged)
+    Q_PROPERTY(int volumeX READ getVolumeX NOTIFY volumeXChanged)
+    Q_PROPERTY(int volumeY READ getVolumeY NOTIFY volumeYChanged)
+    Q_PROPERTY(int volumeZ READ getVolumeZ NOTIFY volumeZChanged)
+    Q_PROPERTY(int azimuthCam READ getAzimuth WRITE setAzimuth NOTIFY azimuthChanged)
+    Q_PROPERTY(int elevationCam READ getElevation WRITE setElevation NOTIFY elevationChanged)
     Q_PROPERTY(float distanceCam READ getDistance WRITE setDistance NOTIFY distanceChanged)
 
 public:
@@ -60,16 +60,16 @@ public:
         return instance;
     }
 
-    float getAltezzaUtensile() const ;
-    float getDiametroUtensile() const;
-    float getVelocitaUtensile() const;
+    int getAltezzaUtensile() const;
+    int getDiametroUtensile() const;
+    int getVelocitaUtensile() const;
     QString getFormaUtensile() const;
-    float getOverlapPassate() const;
-    float getVolumeX() const;
-    float getVolumeY() const;
-    float getVolumeZ() const;
-    float getAzimuth() const;
-    float getElevation() const;
+    int getOverlapPassate() const;
+    int getVolumeX() const;
+    int getVolumeY() const;
+    int getVolumeZ() const;
+    int getAzimuth() const;
+    int getElevation() const;
     float getDistance() const;
     void setOffset(float x, float y, float z);
 
@@ -88,32 +88,32 @@ public:
     void toolPathGeneration(QTextStream &ts);
     const Polyhedron& getPolyhedron();
 signals:
-    void altezzaChanged(float newAltezza);
-    void diametroChanged(float newDiametro);
-    void velocitaChanged(float newVelocita);
+    void altezzaChanged(int newAltezza);
+    void diametroChanged(int newDiametro);
+    void velocitaChanged(int newVelocita);
     void formaChanged(QString newForma);
-    void overlapChanged(float newOverlap);
-    void volumeXChanged(float newVolumeX);
-    void volumeYChanged(float newVolumeY);
-    void volumeZChanged(float newVolumeZ);
-    void azimuthChanged(float newAzimuth);
-    void elevationChanged(float newElevation);
+    void overlapChanged(int newOverlap);
+    void volumeXChanged(int newVolumeX);
+    void volumeYChanged(int newVolumeY);
+    void volumeZChanged(int newVolumeZ);
+    void azimuthChanged(int newAzimuth);
+    void elevationChanged(int newElevation);
     void distanceChanged(float newDistance);
 
     void textRead(QString text);
     void pathChanged(QString path);
 
 public slots:
-    void setAltezza(float a);
-    void setDiametro(float d);
-    void setVelocita(float v);
+    void setAltezza(int a);
+    void setDiametro(int d);
+    void setVelocita(int v);
     void setForma(QString f);
-    void setOverlap(float o);
-    void setVolumeX(float x);
-    void setVolumeY(float y);
-    void setVolumeZ(float z);
-    void setAzimuth(float az);
-    void setElevation(float el);
+    void setOverlap(int o);
+    void setVolumeX(int x);
+    void setVolumeY(int y);
+    void setVolumeZ(int z);
+    void setAzimuth(int az);
+    void setElevation(int el);
     void setDistance(float di);
     void openFile(QString path);
     void createFile(QString path);
@@ -125,17 +125,17 @@ protected:
 private:
     QString filePath;
     QString fileWritePath;
-    float altezzaUtensile;
-    float diametroUtensile;
-    float velocitaUtensile;
+    int altezzaUtensile;
+    int diametroUtensile;
+    int velocitaUtensile;
     Forma formaUtensile;
-    float overlapPassate;
-    float volumeXAxis;
-    float volumeYAxis;
-    float volumeZAxis;
-    float azimuth;
+    int overlapPassate;
+    int volumeXAxis;
+    int volumeYAxis;
+    int volumeZAxis;
+    int azimuth;
     float distance;
-    float elevation;
+    int elevation;
     Polyhedron polyhedron;
 
     float offset_x;

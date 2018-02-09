@@ -57,61 +57,37 @@ Page1Form
 
     textDiametroUtensile.onTextChanged:
     {
-        var parse = parseFloat(textDiametroUtensile.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textDiametroUtensile.text)
         gcodeGenerator.setDiametro(parse)
     }
 
     textAltezzaUtensile.onTextChanged:
     {
-        var parse = parseFloat(textAltezzaUtensile.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textAltezzaUtensile.text)
         gcodeGenerator.setAltezza(parse)
     }
 
     textVelocitaUtensile.onTextChanged:
     {
-        var parse = parseFloat(textVelocitaUtensile.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textVelocitaUtensile.text)
         gcodeGenerator.setVelocita(parse)
     }
 
     textVolumeX.onTextChanged:
     {
-        var parse = parseFloat(textVolumeX.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textVolumeX.text)
         gcodeGenerator.setVolumeX(parse)
     }
 
     textVolumeY.onTextChanged:
     {
-        var parse = parseFloat(textVolumeY.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textVolumeY.text)
         gcodeGenerator.setVolumeY(parse)
     }
 
     textVolumeZ.onTextChanged:
     {
-        var parse = parseFloat(textVolumeZ.text)
-        if (isNaN(parse))
-        {
-            parse = 0
-        }
+        var parse = parseInt(textVolumeZ.text)
         gcodeGenerator.setVolumeZ(parse)
     }
 

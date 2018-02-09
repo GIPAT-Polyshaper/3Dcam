@@ -383,7 +383,7 @@ Item
                     anchors.top: parent.top
                     anchors.topMargin: 0
                     renderType: Text.NativeRendering
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 TextField
@@ -398,7 +398,7 @@ Item
                     anchors.top: textDiametroUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
                     renderType: Text.NativeRendering
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 TextField {
@@ -415,7 +415,7 @@ Item
                     anchors.topMargin: boxUtensile.topPadding
                     renderType: Text.NativeRendering
                     bottomPadding: 3
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 Label
@@ -561,7 +561,7 @@ Item
                     anchors.topMargin: 0
                     renderType: Text.NativeRendering
                     height: implicitHeight - 12
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 TextField
@@ -576,7 +576,7 @@ Item
                     height: implicitHeight - 12
                     anchors.top: textVolumeX.bottom
                     anchors.topMargin: boxVolumeLavoro.topPadding
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 TextField
@@ -594,7 +594,7 @@ Item
                     height: implicitHeight - 12
                     anchors.top: textVolumeY.bottom
                     anchors.topMargin: boxVolumeLavoro.topPadding
-                    validator: DoubleValidator {bottom: 0; top: 31;}
+                    validator: IntValidator {bottom: 0; top: 1000000;}
                 }
 
                 Label {
