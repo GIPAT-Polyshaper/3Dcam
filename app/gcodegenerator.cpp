@@ -445,7 +445,7 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
         }
 
         ++i;
-        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100));
+        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100.0));
         ts << "N" << j << "Y" << currentY << endl;
         ++j;
     }
