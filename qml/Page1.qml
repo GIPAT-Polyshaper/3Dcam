@@ -36,21 +36,18 @@ Page1Form
 
     sliderAzimuth.onValueChanged:
     {
-        labelAzimuthOffset.text = Math.floor(sliderAzimuth.value) + qsTr("°")
         gcodeGenerator.setAzimuth(Math.floor(sliderAzimuth.value))
         viewer3d.update()
     }
 
     sliderElevation.onValueChanged:
     {
-        labelElevationOffset.text = Math.floor(sliderElevation.value) + qsTr("°")
         gcodeGenerator.setElevation(Math.floor(sliderElevation.value))
         viewer3d.update()
     }
 
     sliderDistance.onValueChanged:
     {
-        labelDistanceOffset.text = Math.floor(sliderDistance.value*10)/10
         gcodeGenerator.setDistance(Math.floor(sliderDistance.value*10)/10)
         viewer3d.update()
     }
