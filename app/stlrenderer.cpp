@@ -243,7 +243,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     diff_yz = (diff_y > diff_z) ? diff_y : diff_z;
     diff_max = (diff_x > diff_yz) ? diff_x : diff_yz;
 
-    modelMatrix.setOffset(-xmin, -ymin, -zmin);
+    modelMatrix.setOffset(-xmin + GCodeGenerator::get_instance().getObjectOffsetX(), -ymin + GCodeGenerator::get_instance().getObjectOffsetY(), -zmin);
 
     int volumex, volumey, volumez;
     volumex = GCodeGenerator::get_instance().getVolumeX();
@@ -251,7 +251,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     volumez = GCodeGenerator::get_instance().getVolumeZ();
 
     QVector3D color;
-    if (diff_x > volumex || diff_y > volumey || diff_z > volumez)
+    if (diff_x + GCodeGenerator::get_instance().getObjectOffsetX() > volumex || diff_y + GCodeGenerator::get_instance().getObjectOffsetY() > volumey || diff_z > volumez)
     {
         color = QVector3D(1.0, 0.0, 0.0);
     }
@@ -264,9 +264,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     {
         colors << color;
     }
-
-    GCodeGenerator::get_instance().setDistance(3);
-    GCodeGenerator::get_instance().setOffset(-xmin, -ymin, -zmin);
+    GCodeGenerator::get_instance().setStartingOffset(-xmin, -ymin, -zmin);
 }
 
 void StlRenderer::setCamera(int az, float di, int el)

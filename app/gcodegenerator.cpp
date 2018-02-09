@@ -76,6 +76,12 @@ GCodeGenerator::GCodeGenerator()
     volumeZAxis = 100;
     setAzimuth(0);
     setElevation(20);
+    setDistance(3);
+    starting_offset_x = 0;
+    starting_offset_y = 0;
+    starting_offset_z = 0;
+    object_offset_x = 0;
+    object_offset_y = 0;
 }
 
 void GCodeGenerator::openFile(QString path)
@@ -189,11 +195,21 @@ float GCodeGenerator::getDistance() const
     return distance;
 }
 
-void GCodeGenerator::setOffset(float x, float y, float z)
+int GCodeGenerator::getObjectOffsetX() const
 {
-    offset_x = x;
-    offset_y = y;
-    offset_z = z;
+    return object_offset_x;
+}
+
+int GCodeGenerator::getObjectOffsetY() const
+{
+    return object_offset_y;
+}
+
+void GCodeGenerator::setStartingOffset(float x, float y, float z)
+{
+    starting_offset_x = x;
+    starting_offset_y = y;
+    starting_offset_z = z;
 }
 
 bool GCodeGenerator::isTrianglesDirty() const
@@ -298,6 +314,26 @@ void GCodeGenerator::setVolumeZ(int z)
     }
 }
 
+void GCodeGenerator::setObjectOffsetX(int x)
+{
+    if (object_offset_x != x)
+    {
+        object_offset_x = x;
+        emit objectOffsetXChanged(x);
+        triangles_dirty = true;
+    }
+}
+
+void GCodeGenerator::setObjectOffsetY(int y)
+{
+    if (object_offset_y != y)
+    {
+        object_offset_y = y;
+        emit objectOffsetYChanged(y);
+        triangles_dirty = true;
+    }
+}
+
 void GCodeGenerator::setAzimuth(int az)
 {
     if (azimuth != az)
@@ -359,7 +395,7 @@ void GCodeGenerator::clean_volume()
 
 void GCodeGenerator::generateCode(QTextStream& ts)
 {
-    VerticesAndFacesGenerator v(getTriangles(), offset_x, offset_y, offset_z);
+    VerticesAndFacesGenerator v(getTriangles(), starting_offset_x + object_offset_x, starting_offset_y + object_offset_y, starting_offset_z);
     TriangularMeshGenerator t(v.vertices(), v.faces());
     polyhedron = t.polyhedron();
     toolPathGeneration(ts);

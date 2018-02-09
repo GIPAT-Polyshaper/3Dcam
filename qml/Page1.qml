@@ -26,12 +26,14 @@ Page1Form
 
     sliderYAxis.onValueChanged:
     {
-        labelYOffset.text = Math.floor(sliderYAxis.value) + qsTr("mm")
+        gcodeGenerator.setObjectOffsetY(Math.floor(sliderYAxis.value))
+        viewer3d.update()
     }
 
     sliderXAxis.onValueChanged:
     {
-        labelXOffset.text = Math.floor(sliderXAxis.value) + qsTr("mm")
+        gcodeGenerator.setObjectOffsetX(Math.floor(sliderXAxis.value))
+        viewer3d.update()
     }
 
     sliderAzimuth.onValueChanged:

@@ -45,6 +45,9 @@ class GCodeGenerator : public QObject
     Q_PROPERTY(int azimuthCam READ getAzimuth WRITE setAzimuth NOTIFY azimuthChanged)
     Q_PROPERTY(int elevationCam READ getElevation WRITE setElevation NOTIFY elevationChanged)
     Q_PROPERTY(float distanceCam READ getDistance WRITE setDistance NOTIFY distanceChanged)
+    Q_PROPERTY(int objectOffsetX READ getObjectOffsetX NOTIFY objectOffsetXChanged)
+    Q_PROPERTY(int objectOffsetY READ getObjectOffsetY NOTIFY objectOffsetYChanged)
+
 
 public:
     enum Forma
@@ -70,8 +73,10 @@ public:
     int getVolumeZ() const;
     int getAzimuth() const;
     int getElevation() const;
+    int getObjectOffsetX() const;
+    int getObjectOffsetY() const;
     float getDistance() const;
-    void setOffset(float x, float y, float z);
+    void setStartingOffset(float x, float y, float z);
 
 
     void clean_triangles();
@@ -99,6 +104,8 @@ signals:
     void volumeYChanged(int newVolumeY);
     void volumeZChanged(int newVolumeZ);
     void azimuthChanged(int newAzimuth);
+    void objectOffsetXChanged(int newObjectOffX);
+    void objectOffsetYChanged(int newObjectOffY);
     void elevationChanged(int newElevation);
     void distanceChanged(float newDistance);
 
@@ -117,6 +124,8 @@ public slots:
     void setAzimuth(int az);
     void setElevation(int el);
     void setDistance(float di);
+    void setObjectOffsetX(int x);
+    void setObjectOffsetY(int y);
     void openFile(QString path);
     void createFile(QString path);
     void generateCode(QTextStream &ts);
@@ -140,9 +149,12 @@ private:
     int elevation;
     Polyhedron polyhedron;
 
-    float offset_x;
-    float offset_y;
-    float offset_z;
+    float starting_offset_x;
+    float starting_offset_y;
+    float starting_offset_z;
+
+    int object_offset_x;
+    int object_offset_y;
 
     bool triangles_dirty;
     bool camera_dirty;

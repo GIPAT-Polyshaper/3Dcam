@@ -785,7 +785,7 @@ Item
                 Label
                 {
                     id: labelYOffset
-                    text: qsTr("0mm")
+                    text: gcodeGenerator.objectOffsetY + qsTr("mm")
                     anchors.top: sliderYAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderYAxis.horizontalCenter
@@ -795,7 +795,7 @@ Item
                 {
                     id: labelXOffset
                     x: 130
-                    text: qsTr("0mm")
+                    text: gcodeGenerator.objectOffsetX + qsTr("mm")
                     anchors.top: sliderXAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderXAxis.horizontalCenter
