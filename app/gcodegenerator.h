@@ -76,9 +76,11 @@ public:
 
     void clean_triangles();
     void clean_camera();
+    void clean_volume();
 
     bool isTrianglesDirty() const;
     bool isCameraDirty() const;
+    bool isVolumeDirty() const;
 
     QString getPath() const;
     const StlLoader::Triangles& getTriangles() const;
@@ -144,6 +146,7 @@ private:
 
     bool triangles_dirty;
     bool camera_dirty;
+    bool volume_dirty;
 
     StlLoader::Triangles triangles;
     GCodeGenerator(const GCodeGenerator&) = delete;

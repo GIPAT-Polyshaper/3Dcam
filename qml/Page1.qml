@@ -74,18 +74,21 @@ Page1Form
     {
         var parse = parseInt(textVolumeX.text)
         gcodeGenerator.setVolumeX(parse)
+        viewer3d.update()
     }
 
     textVolumeY.onTextChanged:
     {
         var parse = parseInt(textVolumeY.text)
         gcodeGenerator.setVolumeY(parse)
+        viewer3d.update()
     }
 
     textVolumeZ.onTextChanged:
     {
         var parse = parseInt(textVolumeZ.text)
         gcodeGenerator.setVolumeZ(parse)
+        viewer3d.update()
     }
 
     spinBoxOverlap.onValueChanged:

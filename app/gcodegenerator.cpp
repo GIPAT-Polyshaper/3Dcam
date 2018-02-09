@@ -68,6 +68,9 @@ GCodeGenerator::GCodeGenerator()
     velocitaUtensile = 1000;
     formaUtensile = Sferica;
     overlapPassate = 50;
+    triangles_dirty = false;
+    camera_dirty = false;
+    volume_dirty = true;
     volumeXAxis = 100;
     volumeYAxis = 100;
     volumeZAxis = 100;
@@ -203,6 +206,11 @@ bool GCodeGenerator::isCameraDirty() const
     return camera_dirty;
 }
 
+bool GCodeGenerator::isVolumeDirty() const
+{
+    return volume_dirty;
+}
+
 QString GCodeGenerator::getPath() const
 {
     return filePath;
@@ -266,6 +274,7 @@ void GCodeGenerator::setVolumeX(int x)
     {
         volumeXAxis = x;
         emit volumeXChanged(x);
+        volume_dirty = true;
     }
 }
 
@@ -275,6 +284,7 @@ void GCodeGenerator::setVolumeY(int y)
     {
         volumeYAxis = y;
         emit volumeYChanged(y);
+        volume_dirty = true;
     }
 }
 
@@ -284,6 +294,7 @@ void GCodeGenerator::setVolumeZ(int z)
     {
         volumeZAxis = z;
         emit volumeZChanged(z);
+        volume_dirty = true;
     }
 }
 
@@ -339,6 +350,11 @@ void GCodeGenerator::clean_camera()
 void GCodeGenerator::clean_triangles()
 {
     triangles_dirty = false;
+}
+
+void GCodeGenerator::clean_volume()
+{
+    volume_dirty = false;
 }
 
 void GCodeGenerator::generateCode(QTextStream& ts)
