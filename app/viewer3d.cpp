@@ -21,19 +21,21 @@ public:
     {
         bool camera_dirty = GCodeGenerator::get_instance().isCameraDirty();
         bool triangles_dirty = GCodeGenerator::get_instance().isTrianglesDirty();
-        if (camera_dirty)
-        {
-            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
-            GCodeGenerator::get_instance().clean_camera();
-        }
-        if (triangles_dirty)
+        bool volume_dirty = GCodeGenerator::get_instance().isVolumeDirty();
+        if (triangles_dirty || volume_dirty)
         {
             obj.setGeometry(GCodeGenerator::get_instance().getTriangles());
             obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
-            GCodeGenerator::get_instance().clean_camera();
-            GCodeGenerator::get_instance().clean_triangles();
+            obj.setVolume(GCodeGenerator::get_instance().getVolumeX(), GCodeGenerator::get_instance().getVolumeY(), GCodeGenerator::get_instance().getVolumeZ());
+            GCodeGenerator::get_instance().cleanVolume();
+            GCodeGenerator::get_instance().cleanCamera();
+            GCodeGenerator::get_instance().cleanTriangles();
         }
-
+        if (camera_dirty)
+        {
+            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
+            GCodeGenerator::get_instance().cleanCamera();
+        }
     }
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {

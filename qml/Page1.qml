@@ -26,31 +26,30 @@ Page1Form
 
     sliderYAxis.onValueChanged:
     {
-        labelYOffset.text = Math.floor(sliderYAxis.value) + qsTr("mm")
+        gcodeGenerator.setObjectOffsetY(Math.floor(sliderYAxis.value))
+        viewer3d.update()
     }
 
     sliderXAxis.onValueChanged:
     {
-        labelXOffset.text = Math.floor(sliderXAxis.value) + qsTr("mm")
+        gcodeGenerator.setObjectOffsetX(Math.floor(sliderXAxis.value))
+        viewer3d.update()
     }
 
     sliderAzimuth.onValueChanged:
     {
-        labelAzimuthOffset.text = Math.floor(sliderAzimuth.value) + qsTr("°")
         gcodeGenerator.setAzimuth(Math.floor(sliderAzimuth.value))
         viewer3d.update()
     }
 
     sliderElevation.onValueChanged:
     {
-        labelElevationOffset.text = Math.floor(sliderElevation.value) + qsTr("°")
         gcodeGenerator.setElevation(Math.floor(sliderElevation.value))
         viewer3d.update()
     }
 
     sliderDistance.onValueChanged:
     {
-        labelDistanceOffset.text = Math.floor(sliderDistance.value*10)/10
         gcodeGenerator.setDistance(Math.floor(sliderDistance.value*10)/10)
         viewer3d.update()
     }
@@ -77,18 +76,21 @@ Page1Form
     {
         var parse = parseInt(textVolumeX.text)
         gcodeGenerator.setVolumeX(parse)
+        viewer3d.update()
     }
 
     textVolumeY.onTextChanged:
     {
         var parse = parseInt(textVolumeY.text)
         gcodeGenerator.setVolumeY(parse)
+        viewer3d.update()
     }
 
     textVolumeZ.onTextChanged:
     {
         var parse = parseInt(textVolumeZ.text)
         gcodeGenerator.setVolumeZ(parse)
+        viewer3d.update()
     }
 
     spinBoxOverlap.onValueChanged:

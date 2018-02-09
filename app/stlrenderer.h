@@ -23,23 +23,29 @@ public:
 private:
 
     void paintObject();
-    float diff_max;
+    void setWorkingVolume(int x, int y, int z, float a);
+    float diffMax;
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
     QVector<QVector3D> normals;
+    QVector<QVector3D> colors;
     QOpenGLShaderProgram program1;
+
     int alphaAttr1;
     int vertexAttr1;
     int normalAttr1;
-    int u_modelToWorld;
-    int u_worldToView;
+    int colorAttr1;
+
+    int uModeltoworld;
+    int uWorldtoview;
+
     Transform3D modelMatrix;
     Camera3D viewMatrix;
 
-    void setWorkingVolume(int x, int y, int z, float a);
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
     void setCamera(int az, float di, int el);
+    void setVolume(int x, int y, int z);
 };
 
 #endif // STLRENDERER_H

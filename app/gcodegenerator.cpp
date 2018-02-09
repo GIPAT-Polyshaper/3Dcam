@@ -68,11 +68,20 @@ GCodeGenerator::GCodeGenerator()
     velocitaUtensile = 1000;
     formaUtensile = Sferica;
     overlapPassate = 50;
+    trianglesDirty = false;
+    cameraDirty = false;
+    volumeDirty = true;
     volumeXAxis = 100;
     volumeYAxis = 100;
     volumeZAxis = 100;
     setAzimuth(0);
     setElevation(20);
+    setDistance(3);
+    startingOffsetX = 0;
+    startingOffsetY = 0;
+    startingOffsetZ = 0;
+    objectOffsetX = 0;
+    objectOffsetY = 0;
 }
 
 void GCodeGenerator::openFile(QString path)
@@ -85,8 +94,7 @@ void GCodeGenerator::openFile(QString path)
     {
         filePath = path;
     }
-    //    emit pathChanged(filePath);
-    readAndGenerate();
+    readAndGenerate3DModel();
 }
 
 void GCodeGenerator::createFile(QString path)
@@ -186,21 +194,36 @@ float GCodeGenerator::getDistance() const
     return distance;
 }
 
-void GCodeGenerator::setOffset(float x, float y, float z)
+int GCodeGenerator::getObjectOffsetX() const
 {
-    offset_x = x;
-    offset_y = y;
-    offset_z = z;
+    return objectOffsetX;
+}
+
+int GCodeGenerator::getObjectOffsetY() const
+{
+    return objectOffsetY;
+}
+
+void GCodeGenerator::setStartingOffset(float x, float y, float z)
+{
+    startingOffsetX = x;
+    startingOffsetY = y;
+    startingOffsetZ = z;
 }
 
 bool GCodeGenerator::isTrianglesDirty() const
 {
-    return triangles_dirty;
+    return trianglesDirty;
 }
 
 bool GCodeGenerator::isCameraDirty() const
 {
-    return camera_dirty;
+    return cameraDirty;
+}
+
+bool GCodeGenerator::isVolumeDirty() const
+{
+    return volumeDirty;
 }
 
 QString GCodeGenerator::getPath() const
@@ -266,6 +289,7 @@ void GCodeGenerator::setVolumeX(int x)
     {
         volumeXAxis = x;
         emit volumeXChanged(x);
+        volumeDirty = true;
     }
 }
 
@@ -275,6 +299,7 @@ void GCodeGenerator::setVolumeY(int y)
     {
         volumeYAxis = y;
         emit volumeYChanged(y);
+        volumeDirty = true;
     }
 }
 
@@ -284,6 +309,27 @@ void GCodeGenerator::setVolumeZ(int z)
     {
         volumeZAxis = z;
         emit volumeZChanged(z);
+        volumeDirty = true;
+    }
+}
+
+void GCodeGenerator::setObjectOffsetX(int x)
+{
+    if (objectOffsetX != x)
+    {
+        objectOffsetX = x;
+        emit objectOffsetXChanged(x);
+        trianglesDirty = true;
+    }
+}
+
+void GCodeGenerator::setObjectOffsetY(int y)
+{
+    if (objectOffsetY != y)
+    {
+        objectOffsetY = y;
+        emit objectOffsetYChanged(y);
+        trianglesDirty = true;
     }
 }
 
@@ -293,7 +339,7 @@ void GCodeGenerator::setAzimuth(int az)
     {
         azimuth = az;
         emit azimuthChanged(az);
-        camera_dirty = true;
+        cameraDirty = true;
     }
 }
 
@@ -303,7 +349,7 @@ void GCodeGenerator::setElevation(int el)
     {
         elevation = el;
         emit elevationChanged(el);
-        camera_dirty = true;
+        cameraDirty = true;
     }
 }
 
@@ -313,7 +359,7 @@ void GCodeGenerator::setDistance(float di)
     {
         distance = di;
         emit distanceChanged(di);
-        camera_dirty = true;
+        cameraDirty = true;
     }
 }
 
@@ -323,27 +369,32 @@ const StlLoader::Triangles& GCodeGenerator::getTriangles() const
     return triangles;
 }
 
-void GCodeGenerator::readAndGenerate()
+void GCodeGenerator::readAndGenerate3DModel()
 {
     StlLoader loader(filePath);
     triangles.clear();
     triangles = loader.triangles();
-    triangles_dirty = true;
+    trianglesDirty = true;
 }
 
-void GCodeGenerator::clean_camera()
+void GCodeGenerator::cleanCamera()
 {
-    camera_dirty = false;
+    cameraDirty = false;
 }
 
-void GCodeGenerator::clean_triangles()
+void GCodeGenerator::cleanTriangles()
 {
-    triangles_dirty = false;
+    trianglesDirty = false;
+}
+
+void GCodeGenerator::cleanVolume()
+{
+    volumeDirty = false;
 }
 
 void GCodeGenerator::generateCode(QTextStream& ts)
 {
-    VerticesAndFacesGenerator v(getTriangles(), offset_x, offset_y, offset_z);
+    VerticesAndFacesGenerator v(getTriangles(), startingOffsetX + objectOffsetX, startingOffsetY + objectOffsetY, startingOffsetZ);
     TriangularMeshGenerator t(v.vertices(), v.faces());
     polyhedron = t.polyhedron();
     toolPathGeneration(ts);
@@ -393,7 +444,7 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
         }
 
         ++i;
-        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100));
+        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100.0));
         ts << "N" << j << "Y" << currentY << endl;
         ++j;
     }

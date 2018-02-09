@@ -32,7 +32,6 @@
 class GCodeGenerator : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString path READ getPath NOTIFY pathChanged)
 
     Q_PROPERTY(int altezzaUt READ getAltezzaUtensile NOTIFY altezzaChanged)
     Q_PROPERTY(int diametroUt READ getDiametroUtensile NOTIFY diametroChanged)
@@ -45,6 +44,8 @@ class GCodeGenerator : public QObject
     Q_PROPERTY(int azimuthCam READ getAzimuth WRITE setAzimuth NOTIFY azimuthChanged)
     Q_PROPERTY(int elevationCam READ getElevation WRITE setElevation NOTIFY elevationChanged)
     Q_PROPERTY(float distanceCam READ getDistance WRITE setDistance NOTIFY distanceChanged)
+    Q_PROPERTY(int objectOffsetX READ getObjectOffsetX NOTIFY objectOffsetXChanged)
+    Q_PROPERTY(int objectOffsetY READ getObjectOffsetY NOTIFY objectOffsetYChanged)
 
 public:
     enum Forma
@@ -70,23 +71,25 @@ public:
     int getVolumeZ() const;
     int getAzimuth() const;
     int getElevation() const;
+    int getObjectOffsetX() const;
+    int getObjectOffsetY() const;
     float getDistance() const;
-    void setOffset(float x, float y, float z);
+    void setStartingOffset(float x, float y, float z);
 
-
-    void clean_triangles();
-    void clean_camera();
+    void cleanTriangles();
+    void cleanCamera();
+    void cleanVolume();
 
     bool isTrianglesDirty() const;
     bool isCameraDirty() const;
+    bool isVolumeDirty() const;
 
     QString getPath() const;
     const StlLoader::Triangles& getTriangles() const;
 
-
-
     void toolPathGeneration(QTextStream &ts);
     const Polyhedron& getPolyhedron();
+
 signals:
     void altezzaChanged(int newAltezza);
     void diametroChanged(int newDiametro);
@@ -97,11 +100,10 @@ signals:
     void volumeYChanged(int newVolumeY);
     void volumeZChanged(int newVolumeZ);
     void azimuthChanged(int newAzimuth);
+    void objectOffsetXChanged(int newObjectOffX);
+    void objectOffsetYChanged(int newObjectOffY);
     void elevationChanged(int newElevation);
     void distanceChanged(float newDistance);
-
-    void textRead(QString text);
-    void pathChanged(QString path);
 
 public slots:
     void setAltezza(int a);
@@ -115,6 +117,8 @@ public slots:
     void setAzimuth(int az);
     void setElevation(int el);
     void setDistance(float di);
+    void setObjectOffsetX(int x);
+    void setObjectOffsetY(int y);
     void openFile(QString path);
     void createFile(QString path);
     void generateCode(QTextStream &ts);
@@ -123,6 +127,7 @@ protected:
     GCodeGenerator();
 
 private:
+    void readAndGenerate3DModel();
     QString filePath;
     QString fileWritePath;
     int altezzaUtensile;
@@ -138,17 +143,20 @@ private:
     int elevation;
     Polyhedron polyhedron;
 
-    float offset_x;
-    float offset_y;
-    float offset_z;
+    float startingOffsetX;
+    float startingOffsetY;
+    float startingOffsetZ;
 
-    bool triangles_dirty;
-    bool camera_dirty;
+    int objectOffsetX;
+    int objectOffsetY;
+
+    bool trianglesDirty;
+    bool cameraDirty;
+    bool volumeDirty;
 
     StlLoader::Triangles triangles;
     GCodeGenerator(const GCodeGenerator&) = delete;
     void operator= (const GCodeGenerator&) = delete;
-    void readAndGenerate();
 };
 
 #endif // GCODEGENERATOR_H
