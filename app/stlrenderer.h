@@ -27,10 +27,12 @@ private:
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
     QVector<QVector3D> normals;
+    QVector<QVector3D> colors;
     QOpenGLShaderProgram program1;
     int alphaAttr1;
     int vertexAttr1;
     int normalAttr1;
+    int colorAttr1;
     int u_modelToWorld;
     int u_worldToView;
     Transform3D modelMatrix;

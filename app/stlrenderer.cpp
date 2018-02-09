@@ -18,13 +18,16 @@ void StlRenderer::paintObject()
     program1.enableAttributeArray(normalAttr1);
     program1.enableAttributeArray(vertexAttr1);
     program1.enableAttributeArray(alphaAttr1);
+    program1.enableAttributeArray(colorAttr1);
     program1.setAttributeArray(vertexAttr1, vertices.constData());
     program1.setAttributeArray(normalAttr1, normals.constData());
     program1.setAttributeArray(alphaAttr1, alpha.constData(), 1);
+    program1.setAttributeArray(colorAttr1, colors.constData());
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     program1.disableAttributeArray(normalAttr1);
     program1.disableAttributeArray(vertexAttr1);
     program1.disableAttributeArray(alphaAttr1);
+    program1.disableAttributeArray(colorAttr1);
 }
 
 
@@ -38,6 +41,7 @@ void StlRenderer::initialize()
             "attribute highp vec4 vertex;\n"
             "attribute mediump vec3 normal;\n"
             "attribute highp float alpha_channel;\n"
+            "attribute mediump vec3 col;\n"
             "uniform mediump mat4 worldToView;\n"
             "uniform mediump mat4 modelToWorld;\n"
             "varying mediump vec4 color;\n"
@@ -45,7 +49,6 @@ void StlRenderer::initialize()
             "{\n"
             "    vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));\n"
             "    float angle = max(dot(normal, toLight), 0.0);\n"
-            "    vec3 col = vec3(0.40, 1.0, 0.0);\n"
             "    color = vec4(col * 0.2 + col * 0.8 * angle, alpha_channel);\n"
             "    color = clamp(color, 0.0, 1.0);\n"
             "    if (alpha_channel == 1.0)\n"
@@ -68,6 +71,7 @@ void StlRenderer::initialize()
     alphaAttr1 = program1.attributeLocation("alpha_channel");
     vertexAttr1 = program1.attributeLocation("vertex");
     normalAttr1 = program1.attributeLocation("normal");
+    colorAttr1 = program1.attributeLocation("col");
     u_modelToWorld = program1.uniformLocation("modelToWorld");
     u_worldToView = program1.uniformLocation("worldToView");
 
@@ -117,6 +121,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
 {
     vertices.clear();
     normals.clear();
+    colors.clear();
     alpha.clear();
     diff_max = std::numeric_limits<float>::lowest();
 
@@ -240,6 +245,26 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
 
     modelMatrix.setOffset(-xmin, -ymin, -zmin);
 
+    int volumex, volumey, volumez;
+    volumex = GCodeGenerator::get_instance().getVolumeX();
+    volumey = GCodeGenerator::get_instance().getVolumeY();
+    volumez = GCodeGenerator::get_instance().getVolumeZ();
+
+    QVector3D color;
+    if (diff_x > volumex || diff_y > volumey || diff_z > volumez)
+    {
+        color = QVector3D(1.0, 0.0, 0.0);
+    }
+    else
+    {
+        color = QVector3D(0.4, 1.0, 0.0);
+    }
+
+    for (int i = 0; i < vertices.size(); ++i)
+    {
+        colors << color;
+    }
+
     GCodeGenerator::get_instance().setDistance(3);
     GCodeGenerator::get_instance().setOffset(-xmin, -ymin, -zmin);
 }
@@ -260,6 +285,8 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
 {
     viewMatrix.setCenter(QVector3D(x/2, y/2, z/2));
 
+    QVector3D color = QVector3D(0.4, 1.0, 0.0);
+
     normals << QVector3D(0, 0, 1);
     vertices << QVector3D(0, y, z);
     normals << QVector3D(0, 0, 1);
@@ -269,6 +296,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 
     normals << QVector3D(0, 0, 1);
     vertices << QVector3D(x, 0, z);
@@ -280,6 +311,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(0, 0, -1);
     vertices << QVector3D(0, 0, 0);
     normals << QVector3D(0, 0, -1);
@@ -290,6 +325,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(0, 0, -1);
     vertices << QVector3D(x, y, 0);
     normals << QVector3D(0, 0, -1);
@@ -299,6 +338,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 
     normals << QVector3D(0, -1, 0);
     vertices << QVector3D(0, 0, 0);
@@ -310,6 +353,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(0, -1, 0);
     vertices << QVector3D(x, 0, z);
     normals << QVector3D(0, -1, 0);
@@ -319,6 +366,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 
     normals << QVector3D(1, 0, 0);
     vertices << QVector3D(x, 0, z);
@@ -330,6 +381,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(1, 0, 0);
     vertices << QVector3D(x, y, 0);
     normals << QVector3D(1, 0, 0);
@@ -339,6 +394,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 
     normals << QVector3D(0, 1, 0);
     vertices << QVector3D(x, y, 0);
@@ -350,6 +409,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(0, 1, 0);
     vertices << QVector3D(0, y, z);
     normals << QVector3D(0, 1, 0);
@@ -360,6 +423,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
 
+    colors << color;
+    colors << color;
+    colors << color;
+
     normals << QVector3D(-1, 0, 0);
     vertices << QVector3D(0, 0, 0);
     normals << QVector3D(-1, 0, 0);
@@ -369,6 +436,10 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 
     normals << QVector3D(-1, 0, 0);
     vertices << QVector3D(0, y, z);
@@ -379,5 +450,9 @@ void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
     alpha << a;
     alpha << a;
     alpha << a;
+
+    colors << color;
+    colors << color;
+    colors << color;
 }
 
