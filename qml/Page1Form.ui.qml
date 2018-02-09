@@ -129,12 +129,12 @@ Item
                 Slider {
                     id: sliderAzimuth
                     height: 30
-                    from: -90
+                    from: -180
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelAzimuth.verticalCenter
                     stepSize: 1
-                    to: 90
+                    to: 180
                     anchors.left: labelAzimuth.right
                     anchors.leftMargin: 6
                     value: gcodeGenerator.azimuthCam
@@ -176,12 +176,12 @@ Item
                 Slider
                 {
                     height: 30
-                    from: -90
+                    from: -180
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelElevation.verticalCenter
                     stepSize: 1
-                    to: 90
+                    to: 180
                     anchors.left: labelAzimuth.right
                     anchors.leftMargin: 6
                     id: sliderElevation

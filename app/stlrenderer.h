@@ -25,6 +25,8 @@ private:
     void paintObject();
     void setWorkingVolume(int x, int y, int z, float a);
     float diffMax;
+    QVector3D center;
+
     QVector<QVector3D> vertices;
     QVector<GLfloat> alpha;
     QVector<QVector3D> normals;
