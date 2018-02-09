@@ -235,6 +235,8 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
                           -ymin + GCodeGenerator::get_instance().getObjectOffsetY(),
                           -zmin);
 
+    center = QVector3D((diff_x + GCodeGenerator::get_instance().getObjectOffsetX())/2, (diff_y + GCodeGenerator::get_instance().getObjectOffsetY())/2, diff_z/2);
+
     int volumex = GCodeGenerator::get_instance().getVolumeX();
     int volumey = GCodeGenerator::get_instance().getVolumeY();
     int volumez = GCodeGenerator::get_instance().getVolumeZ();
@@ -273,7 +275,7 @@ void StlRenderer::setVolume(int x, int y, int z)
 
 void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
 {
-    viewMatrix.setCenter(QVector3D(x/2, y/2, z/2));
+    viewMatrix.setCenter(center);
 
     QVector3D color = QVector3D(0.4, 1.0, 0.0);
 
