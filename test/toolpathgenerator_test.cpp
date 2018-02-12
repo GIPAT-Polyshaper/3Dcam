@@ -28,10 +28,6 @@
 #include "stlloader.h"
 #include "triangularmeshgenerator.h"
 
-// NOTES AND TODOS
-//
-// This is just an empty file, created as template for unit tests
-
 /**
  * \brief The class to perform unit tests
  *
@@ -45,37 +41,20 @@ private slots:
 
     void testNoIntersections()
     {
-        StlLoader loader(":/slope");
+        StlLoader loader(":/cube");
 
         VerticesAndFacesGenerator vfg(loader.triangles());
         TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
 
-        ToolPathGenerator tpg(tmg.polyhedron());
-        tpg.setVolume(1, 1, 2);
-        std::list<Point> listaPunti = tpg.getRayIntersections(2);
+        Point punti[] = {Point(0, 2, 0), Point(1, 2, 0)};
 
-        QVERIFY(listaPunti.size() == 0);
-    }
-
-    void testDoubleCube()
-    {
-        StlLoader loader(":/double_cube");
-
-        Point punti[] = {Point(0, 0, 0), Point(0, 0, 1),
-                         Point(1, 0, 2), Point(1, 0, 0),
-                         Point(2, 0, 0), Point(2, 0, 1),
-                         Point(3, 0, 1), Point(3, 0, 0)};
-
-        VerticesAndFacesGenerator vfg(loader.triangles());
-        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
-
-        ToolPathGenerator tpg(tmg.polyhedron());
-        tpg.setVolume(3, 1, 2);
-        std::list<Point> listaPunti = tpg.getRayIntersections(0);
+        ToolPathGenerator tpg(tmg.polyhedron(), 0.1, 0);
+        tpg.setVolume(1, 2, 2);
+        std::list<Point> listaPunti = tpg.getToolPath(2);
         bool test = true;
         int i = 0;
 
-        QVERIFY(listaPunti.size() == 8);
+        QVERIFY(listaPunti.size() == 2);
         for (auto p : listaPunti)
         {
             if(p != punti[i])
@@ -88,38 +67,9 @@ private slots:
         QVERIFY(test);
     }
 
-    void testSlope()
+    void testBorder()
     {
-        StlLoader loader(":/slope");
-
-        Point punti[] = {Point(0, 0, 0), Point(0, 0, 1),
-                         Point(1, 0, 2), Point(1, 0, 0)};
-
-        VerticesAndFacesGenerator vfg(loader.triangles());
-        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
-
-        ToolPathGenerator tpg(tmg.polyhedron());
-        tpg.setVolume(1, 1, 2);
-        std::list<Point> listaPunti = tpg.getRayIntersections(0);
-        bool test = true;
-        int i = 0;
-
-        QVERIFY(listaPunti.size() == 4);
-        for (auto p : listaPunti)
-        {
-            if(p != punti[i])
-            {
-                test = false;
-                break;
-            }
-            i++;
-        }
-        QVERIFY(test);
-    }
-
-    void testUndercut1()
-    {
-        StlLoader loader(":/undercut1");
+        StlLoader loader(":/cube");
 
         Point punti[] = {Point(0, 0, 0), Point(0, 0, 1),
                          Point(1, 0, 1), Point(1, 0, 0)};
@@ -127,9 +77,9 @@ private slots:
         VerticesAndFacesGenerator vfg(loader.triangles());
         TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
 
-        ToolPathGenerator tpg(tmg.polyhedron());
-        tpg.setVolume(1, 1, 1);
-        std::list<Point> listaPunti = tpg.getRayIntersections(0);
+        ToolPathGenerator tpg(tmg.polyhedron(), 1, 0);
+        tpg.setVolume(1, 1, 2);
+        std::list<Point> listaPunti = tpg.getToolPath(0);
         bool test = true;
         int i = 0;
 
@@ -146,24 +96,81 @@ private slots:
         QVERIFY(test);
     }
 
-    void testUndercut2()
+    void testToolThicknessBefore()
     {
-        StlLoader loader(":/undercut2");
+        StlLoader loader(":/cube");
 
-        Point punti[] = {Point(0, 0, 0), Point(0, 0, 2),
-                         Point(1, 0, 2), Point(1, 0, 1),
-                         Point(2, 0, 1), Point(2, 0, 0)};
+        Point punti[] = {Point(0, 0, 0), Point(0, 0, 1),
+                         Point(1, 0, 1), Point(1, 0, 0)};
+
+        VerticesAndFacesGenerator vfg(loader.triangles(), 0, 1, 0);
+        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
+
+        ToolPathGenerator tpg(tmg.polyhedron(), 1, 2);
+        tpg.setVolume(1, 4, 2);
+        std::list<Point> listaPunti = tpg.getToolPath(0);
+        bool test = true;
+        int i = 0;
+
+        QVERIFY(listaPunti.size() == 4);
+        for (auto p : listaPunti)
+        {
+            if(p != punti[i])
+            {
+                test = false;
+                break;
+            }
+            i++;
+        }
+        QVERIFY(test);
+    }
+
+    void testToolThicknessAfter()
+    {
+        StlLoader loader(":/cube");
+
+        Point punti[] = {Point(0, 2, 0), Point(0, 2, 1),
+                         Point(1, 2, 1), Point(1, 2, 0)};
 
         VerticesAndFacesGenerator vfg(loader.triangles());
         TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
 
-        ToolPathGenerator tpg(tmg.polyhedron());
-        tpg.setVolume(2, 1, 2);
-        std::list<Point> listaPunti = tpg.getRayIntersections(0);
+        ToolPathGenerator tpg(tmg.polyhedron(), 1, 2);
+        tpg.setVolume(1, 4, 2);
+        std::list<Point> listaPunti = tpg.getToolPath(2);
         bool test = true;
         int i = 0;
 
-        QEXPECT_FAIL("", "Now the test will fail because listaPunti.size() is wrong", Abort);
+        QVERIFY(listaPunti.size() == 4);
+        for (auto p : listaPunti)
+        {
+            if(p != punti[i])
+            {
+                test = false;
+                break;
+            }
+            i++;
+        }
+        QVERIFY(test);
+    }
+
+    void testWorkingVolume()
+    {
+        StlLoader loader(":/cube");
+
+        Point punti[] = {Point(0, 1, 0), Point(0.9, 1, 0),
+                         Point(1, 1, 1), Point(2, 1, 1),
+                         Point(2.1, 1, 0), Point(3, 1, 0)};
+
+        VerticesAndFacesGenerator vfg(loader.triangles(), 1, 1, 0);
+        TriangularMeshGenerator tmg(vfg.vertices(), vfg.faces());
+
+        ToolPathGenerator tpg(tmg.polyhedron(), 0.1, 0);
+        tpg.setVolume(3, 2, 2);
+        std::list<Point> listaPunti = tpg.getToolPath(1);
+        bool test = true;
+        int i = 0;
+
         QVERIFY(listaPunti.size() == 6);
         for (auto p : listaPunti)
         {
@@ -174,7 +181,6 @@ private slots:
             }
             i++;
         }
-        QEXPECT_FAIL("", "Will fix in a future release", Abort);
         QVERIFY(test);
     }
 };

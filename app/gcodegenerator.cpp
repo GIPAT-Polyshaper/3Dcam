@@ -28,15 +28,13 @@
 #include <QVector>
 #include <typeinfo>
 #include <climits>
-
 #include "toolpathgenerator.h"
-//#include <algorithm> per la funzione sort
 
-const float EPSILON = 0.00000001;
+const double EPSILON = 0.001;
 
-float roundFloat(float d)
+double roundDouble(double d)
 {
-    float num = d / EPSILON;
+    double num = d / EPSILON;
     num = round(num);
     return num * EPSILON;
 }
@@ -99,8 +97,6 @@ void GCodeGenerator::openFile(QString path)
 
 void GCodeGenerator::createFile(QString path)
 {
-
-    std::cout << path.toStdString() << std::endl;
     if (path.contains("file://"))
     {
         fileWritePath = path.mid(7,path.length());
@@ -113,19 +109,7 @@ void GCodeGenerator::createFile(QString path)
     {
         fileWritePath = fileWritePath.append(".gcode");
     }
-    std::cout << fileWritePath.toStdString() << std::endl;
-
-    QFile file(fileWritePath);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QTextStream out(&file);
-        generateCode(out);
-    }
-
-    if (file.isOpen())
-    {
-        file.close();
-    }
+    QtConcurrent::run(this, &GCodeGenerator::generateCode);
 }
 
 int GCodeGenerator::getAltezzaUtensile() const
@@ -392,12 +376,21 @@ void GCodeGenerator::cleanVolume()
     volumeDirty = false;
 }
 
-void GCodeGenerator::generateCode(QTextStream& ts)
+void GCodeGenerator::generateCode()
 {
-    VerticesAndFacesGenerator v(getTriangles(), startingOffsetX + objectOffsetX, startingOffsetY + objectOffsetY, startingOffsetZ);
-    TriangularMeshGenerator t(v.vertices(), v.faces());
-    polyhedron = t.polyhedron();
-    toolPathGeneration(ts);
+    QFile file(fileWritePath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream out(&file);
+        VerticesAndFacesGenerator v(getTriangles(), startingOffsetX + objectOffsetX, startingOffsetY + objectOffsetY, startingOffsetZ);
+        TriangularMeshGenerator t(v.vertices(), v.faces());
+        polyhedron = t.polyhedron();
+        toolPathGeneration(out);
+    }
+    if (file.isOpen())
+    {
+        file.close();
+    }
 }
 
 const Polyhedron& GCodeGenerator::getPolyhedron()
@@ -407,9 +400,9 @@ const Polyhedron& GCodeGenerator::getPolyhedron()
 
 void GCodeGenerator::toolPathGeneration(QTextStream& ts)
 {
-    ToolPathGenerator tg(getPolyhedron());
+    ToolPathGenerator tg(getPolyhedron(), 0.25, getDiametroUtensile());
     tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
-    float currentY = 0.0;
+    double currentY = 0.0;
     std::list<Point> toolPath;
     int i = 0, j = 1;
     ts << "F" << getVelocitaUtensile() << endl;
@@ -417,9 +410,9 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
     ++j;
     while(currentY <= getVolumeY())
     {
-        toolPath = tg.getRayIntersections(currentY);
+        toolPath = tg.getToolPath(currentY);
 
-        float startx = 0, endx = getVolumeX();
+        double startx = 0, endx = getVolumeX();
         if (i % 2 != 0)
         {
             toolPath.reverse();
@@ -431,20 +424,20 @@ void GCodeGenerator::toolPathGeneration(QTextStream& ts)
         {
             for (auto p : toolPath)
             {
-                ts << "N" << j << "X"  << roundFloat(p.x()) << "Z" << roundFloat(p.z() - getVolumeZ()) << endl;
+                ts << "N" << j << "X"  << roundDouble(p.x()) << "Z" << roundDouble(p.z() - getVolumeZ()) << endl;
                 ++j;
             }
         }
         else
         {
-            ts << "N" << j << "X" << roundFloat(startx) << "Z" << roundFloat(0 - getVolumeZ()) << endl;
+            ts << "N" << j << "X" << roundDouble(startx) << "Z" << roundDouble(0 - getVolumeZ()) << endl;
             ++j;
-            ts << "N" << j << "X" << roundFloat(endx) << endl;
+            ts << "N" << j << "X" << roundDouble(endx) << endl;
             ++j;
         }
 
         ++i;
-        currentY += roundFloat(getDiametroUtensile() * (1 - getOverlapPassate()/100.0));
+        currentY += roundDouble(getDiametroUtensile() * (1 - getOverlapPassate()/100.0));
         ts << "N" << j << "Y" << currentY << endl;
         ++j;
     }
