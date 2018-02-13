@@ -9,7 +9,6 @@
 #include <QtConcurrent>
 
 using Point = Kernel::Point_3;
-using Plane = Kernel::Plane_3;
 using Vector = Kernel::Vector_3;
 using Segment = Kernel::Segment_3;
 using Ray = Kernel::Ray_3;
