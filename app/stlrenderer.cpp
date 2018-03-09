@@ -235,7 +235,7 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
                           -ymin + GCodeGenerator::get_instance().getObjectOffsetY(),
                           -zmin);
 
-    center = QVector3D((diff_x + GCodeGenerator::get_instance().getObjectOffsetX())/2, (diff_y + GCodeGenerator::get_instance().getObjectOffsetY())/2, diff_z/2);
+    center = QVector3D((diff_x/2 + GCodeGenerator::get_instance().getObjectOffsetX()), (diff_y/2 + GCodeGenerator::get_instance().getObjectOffsetY()), diff_z/2);
 
     int volumex = GCodeGenerator::get_instance().getVolumeX();
     int volumey = GCodeGenerator::get_instance().getVolumeY();

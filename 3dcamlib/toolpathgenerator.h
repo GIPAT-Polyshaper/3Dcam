@@ -5,9 +5,10 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
+#include <QFuture>
+#include <QtConcurrent>
 
 using Point = Kernel::Point_3;
-using Plane = Kernel::Plane_3;
 using Vector = Kernel::Vector_3;
 using Segment = Kernel::Segment_3;
 using Ray = Kernel::Ray_3;
@@ -20,18 +21,19 @@ using Object_and_primitive_id = Tree::Object_and_primitive_id;
 class ToolPathGenerator
 {
 public:
-    ToolPathGenerator(const Polyhedron& P);
-    std::list<Segment> getBoundarySegments(float y);
-    std::list<Point> getRayIntersections(float y);
-    void setVolume(float x, float y, float z);
+    ToolPathGenerator(const Polyhedron& P, double step, int diam);
+    void setVolume(int x, int y, int z);
+    std::list<Point> getToolPath(double y);
 
 private:
-    float volume_x;
-    float volume_y;
-    float volume_z;
+    int volume_x;
+    int volume_y;
+    int volume_z;
+    double stepSize;
+    int diameter;
 
     Tree tree;
-
+    std::vector<Point> getRayIntersections(double y);
     Point getIntersection(Point r);
 };
 

@@ -121,7 +121,7 @@ public slots:
     void setObjectOffsetY(int y);
     void openFile(QString path);
     void createFile(QString path);
-    void generateCode(QTextStream &ts);
+    void generateCode();
 
 protected:
     GCodeGenerator();
