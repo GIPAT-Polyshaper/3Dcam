@@ -24,11 +24,8 @@ public:
     ToolPathGenerator(const Polyhedron& P, double step, int diam);
     void setVolume(int x, int y, int z);
     std::list<Point> getToolPath(double y);
-    std::vector<Point> getRayIntersections(double y);
 
 private:
-
-
     int volume_x;
     int volume_y;
     int volume_z;
@@ -36,7 +33,7 @@ private:
     int diameter;
 
     Tree tree;
-
+    std::vector<Point> getRayIntersections(double y);
     Point getIntersection(Point r);
 };
 

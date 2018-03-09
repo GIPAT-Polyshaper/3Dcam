@@ -11,35 +11,28 @@ std::list<Point> ToolPathGenerator::getToolPath(double y)
 {
     std::list<Point> result;
 
-    QFuture<std::vector<Point>> futureMinus = QtConcurrent::run(this, &ToolPathGenerator::getRayIntersections, y - (diameter / 2.0));
-    QFuture<std::vector<Point>> futureMinusmed = QtConcurrent::run(this, &ToolPathGenerator::getRayIntersections, y - (diameter / 4.0));
-    QFuture<std::vector<Point>> futurePlusmed = QtConcurrent::run(this, &ToolPathGenerator::getRayIntersections, y + (diameter / 4.0));
-    QFuture<std::vector<Point>> futurePlus = QtConcurrent::run(this, &ToolPathGenerator::getRayIntersections, y + (diameter / 2.0));
-    QFuture<std::vector<Point>> futurePath = QtConcurrent::run(this, &ToolPathGenerator::getRayIntersections, y);
+    QFuture<std::vector<Point>> futureMinus = QtConcurrent::run(this,
+                                                                &ToolPathGenerator::getRayIntersections,
+                                                                y - (diameter / 2.0));
 
-    futureMinus.waitForFinished();
-    futureMinusmed.waitForFinished();
-    futurePlusmed.waitForFinished();
-    futurePlus.waitForFinished();
-    futurePath.waitForFinished();
+    QFuture<std::vector<Point>> futurePlus = QtConcurrent::run(this,
+                                                               &ToolPathGenerator::getRayIntersections,
+                                                               y + (diameter / 2.0));
+    QFuture<std::vector<Point>> futurePath = QtConcurrent::run(this,
+                                                               &ToolPathGenerator::getRayIntersections,
+                                                               y);
 
-    std::vector<Point> pathMinusmed = futureMinusmed.result();
-    std::vector<Point> pathPlusmed = futurePlusmed.result();
     std::vector<Point> pathPlus = futurePlus.result();
     std::vector<Point> pathMinus = futureMinus.result();
     std::vector<Point> path = futurePath.result();
 
     for (int i = 0; i< path.size(); ++i)
     {
-        //        std::cout << "Y is " << y << std::endl;
-        Point compare1 = (pathMinus[i].z() > pathPlus[i].z()) ? pathMinus[i] : pathPlus[i];
-        //        std::cout << "compare " << pathMinus[i] << " and " << pathPlus[i] << " winner is " << compare1 << std::endl;
-        Point compare2 = (pathMinusmed[i].z() > pathPlusmed[i].z()) ? pathMinusmed[i] : pathPlusmed[i];
-        //        std::cout << "compare " << pathMinusmed[i] << " and " << pathPlusmed[i] << " winner is " << compare2 << std::endl;
-        Point compare = (compare1.z() > compare2.z()) ? compare1 : compare2;
-        //        std::cout << "compare " << compare1 << " and " <<compare2 << " winner is " << compare << std::endl;
-        Point right = (compare.z() > path[i].z()) ? Point(compare.x(), y, compare.z()) : Point(path[i].x(), y, path[i].z());
-        //        std::cout << "compare " << compare << " and " << path[i] << " winner is " << right << std::endl;
+        Point compare = (pathMinus[i].z() > pathPlus[i].z()) ? pathMinus[i] : pathPlus[i];
+        Point right = (compare.z() > path[i].z()) ?
+                    Point(compare.x(), y, compare.z()) :
+                    Point(path[i].x(), y, path[i].z());
+
         if(result.size() < 2)
         {
             result.push_back(right);
@@ -76,7 +69,7 @@ std::list<Point> ToolPathGenerator::getToolPath(double y)
 std::vector<Point> ToolPathGenerator::getRayIntersections(double Y)
 {
     int sizemm = volume_x;
-    int steps = (int) round(sizemm / stepSize);
+    int steps = (int) ceil(sizemm / stepSize);
 
 
     std::vector<Point> punti;
@@ -96,37 +89,42 @@ Point ToolPathGenerator::getIntersection(Point p)
     Vector v (0, 0, -1);
     Ray ray(p, v);
 
-    std::list<Object_and_primitive_id> intersections;
-
     Point point;
+    double tx, ty, tz;
+
+    std::list<Object_and_primitive_id> intersections;
 
     tree.all_intersections(ray,std::back_inserter(intersections));
 
     if (intersections.empty())
     {
-        point = Point(p.x(), p.y(), 0);
+        tx = p.x();
+        ty = p.y();
+        tz = 0;
     }
     else
     {
-        Point temp(0, 0, 0);
+        tx = ty = tz = 0;
         for(auto op : intersections)
         {
             CGAL::Object object = op.first;
 
             if(CGAL::assign(point,object))
             {
-                if (point.z() >= temp.z())
+                if (point.z() >= tz)
                 {
-                    double tx = point.x();
-                    double ty = point.y();
-                    double tz = point.z();
-                    temp = Point(tx, ty, tz);
+                    tx = point.x();
+                    ty = point.y();
+                    tz = point.z();
                 }
             }
         }
-        point = temp;
     }
-    return point;
+    if (tx > volume_x)
+    {
+        tx = volume_x;
+    }
+    return Point(tx, ty, tz);
 }
 
 void ToolPathGenerator::setVolume(int x, int y, int z)
