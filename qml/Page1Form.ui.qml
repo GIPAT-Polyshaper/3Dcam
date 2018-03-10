@@ -53,6 +53,14 @@ Item
         selectExisting: false
     }
 
+    MessageDialog
+    {
+        icon: StandardIcon.Critical
+        id: dialogError
+        title: "Errore nella lettura del file"
+        modality: Qt.NonModal
+    }
+
     GridLayout
     {
         rowSpacing: 16
@@ -82,8 +90,7 @@ Item
                 id: viewer3d
                 height: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height - 36) : (parent.width)
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: -boxCamera.height/2
+                anchors.top: parent.top
                 width: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height-36) : (parent.width)
             }
 
@@ -94,7 +101,7 @@ Item
                 height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 18
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: viewer3d.bottom
-                anchors.topMargin: 12
+                anchors.topMargin: 18
                 width: viewer3d.width
                 Layout.minimumWidth: 376
 
@@ -267,7 +274,7 @@ Item
                 {
                     height: 30
                     anchors.left: labelAzimuth.right
-                    anchors.leftMargin: 0
+                    anchors.leftMargin: 6
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelDistance.verticalCenter
@@ -354,7 +361,8 @@ Item
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 width: parent.width
-
+                topPadding: 14
+                bottomPadding: 14
                 Label
                 {
                     width: implicitWidth + 4
@@ -463,7 +471,7 @@ Item
                     width: textVelocitaUtensile.width
                     anchors.top: textVelocitaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
-                    model: ["Sferica", "Candela"]
+                    model: ["Candela"]
                     currentIndex: 0
                 }
 
@@ -521,8 +529,10 @@ Item
 
                 height: boxVolumeLavoro.topPadding * 4 + textVolumeX.height * 3
                 anchors.top: boxUtensile.bottom
-                anchors.topMargin: 16
+                anchors.topMargin: 14
                 width: parent.width
+                bottomPadding: 14
+                topPadding: 14
 
                 background: Rectangle
                 {
@@ -632,7 +642,10 @@ Item
             Frame
             {
                 id: boxMovimenti
-                y: 380
+                topPadding: 14
+                bottomPadding: 1
+                anchors.top: boxVolumeLavoro.bottom
+                anchors.topMargin: 14
                 height: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
                 width: parent.width
                 Layout.minimumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
@@ -673,7 +686,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelYAxis.verticalCenter
                     stepSize: 1
-                    to: 20
+                    to: gcodeGenerator.volumeY
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     value: 0
@@ -719,7 +732,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelXAxis.verticalCenter
                     stepSize: 1
-                    to: 20
+                    to: gcodeGenerator.volumeX
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     id: sliderXAxis
@@ -819,7 +832,6 @@ Item
                 text: qsTr("Apri file")
                 anchors.left: parent.left
                 anchors.leftMargin: 48
-                anchors.topMargin: 12
                 padding: 8
                 bottomPadding: 10
                 topPadding: 10
@@ -848,7 +860,6 @@ Item
                 anchors.rightMargin: 48
                 anchors.verticalCenter: buttonFileDialog.verticalCenter
                 clip: false
-                anchors.topMargin: 16
 
                 topPadding: 10
                 bottomPadding: 10
