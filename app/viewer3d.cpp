@@ -98,16 +98,19 @@ bool Viewer3D::isVolumeDirty() const
 void Viewer3D::setCameraDirty(bool c)
 {
     cameraDirty = c;
+    update();
 }
 
 void Viewer3D::setTrianglesDirty(bool t)
 {
     trianglesDirty = t;
+    update();
 }
 
 void Viewer3D::setVolumeDirty(bool v)
 {
     volumeDirty = v;
+    update();
 }
 
 void Viewer3D::setAzimuth(int az)

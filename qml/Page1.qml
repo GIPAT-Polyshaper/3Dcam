@@ -14,51 +14,42 @@ Page1Form
 
     fileDialog1.onAccepted:
     {
-        if (applicationControl.openFile(fileDialog1.fileUrl.toString()))
-        {
-            viewer3d.update()
-        }
-        else
-        {
-            dialogError.text = applicationControl.getLastError();
-            dialogError.visible = true
-        }
+       applicationControl.openFile(fileDialog1.fileUrl.toString())
+    }
+
+    dialogError.onAccepted:
+    {
+        applicationControl.setError(false)
     }
 
     fileWriteDialog.onAccepted:
     {
         applicationControl.createFile(fileWriteDialog.fileUrl.toString())
-//        gcodeGenerator.getPolyhedron()
     }
 
     sliderYAxis.onValueChanged:
     {
         applicationControl.setObjectOffsetY(Math.floor(sliderYAxis.value))
-        viewer3d.update()
     }
 
     sliderXAxis.onValueChanged:
     {
         applicationControl.setObjectOffsetX(Math.floor(sliderXAxis.value))
-        viewer3d.update()
     }
 
     sliderAzimuth.onValueChanged:
     {
         applicationControl.setAzimuth(Math.floor(sliderAzimuth.value))
-        viewer3d.update()
     }
 
     sliderElevation.onValueChanged:
     {
         applicationControl.setElevation(Math.floor(sliderElevation.value))
-        viewer3d.update()
     }
 
     sliderDistance.onValueChanged:
     {
         applicationControl.setDistance(Math.floor(sliderDistance.value*10)/10)
-        viewer3d.update()
     }
 
     textDiametroUtensile.onTextChanged:
@@ -83,21 +74,18 @@ Page1Form
     {
         var parse = parseInt(textVolumeX.text)
         applicationControl.setVolumeX(parse)
-        viewer3d.update()
     }
 
     textVolumeY.onTextChanged:
     {
         var parse = parseInt(textVolumeY.text)
         applicationControl.setVolumeY(parse)
-        viewer3d.update()
     }
 
     textVolumeZ.onTextChanged:
     {
         var parse = parseInt(textVolumeZ.text)
         applicationControl.setVolumeZ(parse)
-        viewer3d.update()
     }
 
     spinBoxOverlap.onValueChanged:

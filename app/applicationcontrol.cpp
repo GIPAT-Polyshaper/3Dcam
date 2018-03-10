@@ -11,6 +11,8 @@ double roundDouble(double d, int precision)
 
 ApplicationControl::ApplicationControl()
 {
+    error = false;
+    emit errorChanged(false);
 }
 
 void ApplicationControl::setViewer3D(Viewer3D *v)
@@ -39,6 +41,11 @@ int ApplicationControl::getObjectOffsetX() const
 int ApplicationControl::getObjectOffsetY() const
 {
     return gcodeGenerator->getObjectOffsetY();
+}
+
+bool ApplicationControl::getError() const
+{
+    return error;
 }
 
 void ApplicationControl::setAltezza(int a)
@@ -108,7 +115,7 @@ void ApplicationControl::setElevation(int el)
     viewer3D->setElevation(el);
 }
 
-bool ApplicationControl::openFile(QString path)
+void ApplicationControl::openFile(QString path)
 {
     if (path.contains("file://"))
     {
@@ -124,11 +131,9 @@ bool ApplicationControl::openFile(QString path)
     }
     catch (StlLoaderExceptions e)
     {
-        lastError = e.what();
-        return false;
+        setLastError(e.what());
+        setError(true);
     }
-    return true;
-
 }
 
 void ApplicationControl::readAndGenerate3DModel()
@@ -154,9 +159,27 @@ void ApplicationControl::createFile(QString path)
     QtConcurrent::run(this, &ApplicationControl::generateCode);
 }
 
-QString ApplicationControl::getLastError()
+QString ApplicationControl::getLastError() const
 {
     return lastError;
+}
+
+void ApplicationControl::setError(bool e)
+{
+    if (error != e)
+    {
+        error = e;
+        emit errorChanged(e);
+    }
+}
+
+void ApplicationControl::setLastError(QString e)
+{
+    if (lastError.compare(e) != 0)
+    {
+        lastError = e;
+        emit lastErrorChanged(e);
+    }
 }
 
 void ApplicationControl::generateCode()
@@ -164,22 +187,34 @@ void ApplicationControl::generateCode()
     QFile file(fileWritePath);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        QTextStream out(&file);
-        VerticesAndFacesGenerator v(viewer3D->getTriangles(), gcodeGenerator->getStartingoffsetX() + gcodeGenerator->getObjectOffsetX(), gcodeGenerator->getStartingOffsetY() + gcodeGenerator->getObjectOffsetY(), gcodeGenerator->getStartingOffsetZ());
-        TriangularMeshGenerator t(v.vertices(), v.faces());
-
-        ToolPathGenerator tg(t.polyhedron(),0.1,gcodeGenerator->getDiametroUtensile());
-        tg.setVolume(gcodeGenerator->getVolumeX(), gcodeGenerator->getVolumeY(), gcodeGenerator->getVolumeZ());
-        double currentY = 0.0;
-
-        std::vector<std::list<Point>> toolPath;
-        while(currentY <= gcodeGenerator->getVolumeY())
+        try
         {
-            toolPath.push_back(tg.getToolPath(currentY));
-            currentY += roundDouble(gcodeGenerator->getDiametroUtensile() * (1 - gcodeGenerator->getOverlapPassate()/100.0), 3);
-        }
+            QTextStream out(&file);
+            VerticesAndFacesGenerator v(viewer3D->getTriangles(), gcodeGenerator->getStartingoffsetX() + gcodeGenerator->getObjectOffsetX(), gcodeGenerator->getStartingOffsetY() + gcodeGenerator->getObjectOffsetY(), gcodeGenerator->getStartingOffsetZ());
+            TriangularMeshGenerator t(v.vertices(), v.faces());
 
-        out << gcodeGenerator->gCodeGeneration(toolPath);
+            ToolPathGenerator tg(t.polyhedron(),0.1,gcodeGenerator->getDiametroUtensile());
+            tg.setVolume(gcodeGenerator->getVolumeX(), gcodeGenerator->getVolumeY(), gcodeGenerator->getVolumeZ());
+            double currentY = 0.0;
+
+            std::vector<std::list<Point>> toolPath;
+            while(currentY <= gcodeGenerator->getVolumeY())
+            {
+                toolPath.push_back(tg.getToolPath(currentY));
+                currentY += roundDouble(gcodeGenerator->getDiametroUtensile() * (1 - gcodeGenerator->getOverlapPassate()/100.0), 3);
+            }
+
+            out << gcodeGenerator->gCodeGeneration(toolPath);
+        }
+        catch (std::exception e)
+        {
+            setLastError("An error occurred while generating G-Code, your model may be incorrect");
+            setError(true);
+            if (file.isOpen())
+            {
+                file.close();
+            }
+        }
     }
     if (file.isOpen())
     {

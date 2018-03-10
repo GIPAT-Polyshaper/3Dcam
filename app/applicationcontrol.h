@@ -14,6 +14,9 @@ class ApplicationControl: public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool error READ getError NOTIFY errorChanged)
+    Q_PROPERTY(QString lastError READ getLastError NOTIFY lastErrorChanged)
+
 public:
 
     //Assicuriamoci che ci sia una sola istanza di ApplicationControl
@@ -30,6 +33,8 @@ public:
     int getObjectOffsetX() const;
     int getObjectOffsetY() const;
 
+    QString getLastError() const;
+    bool getError() const;
     void generateCode();
 
 public slots:
@@ -46,9 +51,15 @@ public slots:
     void setDistance(float di);
     void setObjectOffsetX(int x);
     void setObjectOffsetY(int y);
-    bool openFile(QString path);
+    void openFile(QString path);
     void createFile(QString path);
-    QString getLastError();
+    void setError(bool e);
+    void setLastError(QString e);
+
+signals:
+    void errorChanged(bool e);
+    void lastErrorChanged(QString e);
+
 protected:
     ApplicationControl();
 
@@ -61,6 +72,7 @@ private:
     QString filePath;
     QString fileWritePath;
     QString lastError;
+    bool error;
 };
 
 #endif // APPLICATIONCONTROL_H

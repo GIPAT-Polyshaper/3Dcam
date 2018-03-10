@@ -58,8 +58,10 @@ Item
     {
         icon: StandardIcon.Critical
         id: dialogError
-        title: "Errore nella lettura del file"
+        title: "Errore"
         modality: Qt.NonModal
+        visible: applicationControl.error
+        text: applicationControl.lastError
     }
 
     GridLayout
