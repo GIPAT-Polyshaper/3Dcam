@@ -108,7 +108,7 @@ void ApplicationControl::setElevation(int el)
     viewer3D->setElevation(el);
 }
 
-void ApplicationControl::openFile(QString path)
+bool ApplicationControl::openFile(QString path)
 {
     if (path.contains("file://"))
     {
@@ -118,7 +118,17 @@ void ApplicationControl::openFile(QString path)
     {
         filePath = path;
     }
-    readAndGenerate3DModel();
+    try
+    {
+        readAndGenerate3DModel();
+    }
+    catch (StlLoaderExceptions e)
+    {
+        lastError = e.what();
+        return false;
+    }
+    return true;
+
 }
 
 void ApplicationControl::readAndGenerate3DModel()
@@ -142,6 +152,11 @@ void ApplicationControl::createFile(QString path)
         fileWritePath = fileWritePath.append(".gcode");
     }
     QtConcurrent::run(this, &ApplicationControl::generateCode);
+}
+
+QString ApplicationControl::getLastError()
+{
+    return lastError;
 }
 
 void ApplicationControl::generateCode()

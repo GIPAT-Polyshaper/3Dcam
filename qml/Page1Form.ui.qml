@@ -35,6 +35,7 @@ Item
     property alias buttonFileDialog: buttonFileDialog
     property alias rectangle3DModel: viewer3d
     property alias boxMovimenti: boxMovimenti
+    property alias dialogError: dialogError
 
     FileDialog
     {

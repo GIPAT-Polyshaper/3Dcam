@@ -14,8 +14,15 @@ Page1Form
 
     fileDialog1.onAccepted:
     {
-        applicationControl.openFile(fileDialog1.fileUrl.toString())
-        viewer3d.update()
+        if (applicationControl.openFile(fileDialog1.fileUrl.toString()))
+        {
+            viewer3d.update()
+        }
+        else
+        {
+            dialogError.text = applicationControl.getLastError();
+            dialogError.visible = true
+        }
     }
 
     fileWriteDialog.onAccepted:

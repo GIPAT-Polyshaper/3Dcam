@@ -46,9 +46,9 @@ public slots:
     void setDistance(float di);
     void setObjectOffsetX(int x);
     void setObjectOffsetY(int y);
-    void openFile(QString path);
+    bool openFile(QString path);
     void createFile(QString path);
-
+    QString getLastError();
 protected:
     ApplicationControl();
 
@@ -60,6 +60,7 @@ private:
 
     QString filePath;
     QString fileWritePath;
+    QString lastError;
 };
 
 #endif // APPLICATIONCONTROL_H
