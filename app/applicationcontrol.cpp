@@ -208,7 +208,7 @@ void ApplicationControl::generateCode()
         }
         catch (std::exception e)
         {
-            setLastError("An error occurred while generating G-Code, your model may be incorrect");
+            setLastError("An error occurred while generating G-Code, the model may contain some errors");
             setError(true);
             if (file.isOpen())
             {
