@@ -10,8 +10,8 @@ set(POLYSHAPER_3DCAM_APP_SRCS
         transform3d.cpp
         camera3d.h
         camera3d.cpp
-        gcodegenerator.h
-        gcodegenerator.cpp
+        applicationcontrol.h
+        applicationcontrol.cpp
         )
 
 # Adding the qrc with qml scripts

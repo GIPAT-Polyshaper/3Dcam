@@ -137,7 +137,7 @@ Item
                     to: 180
                     anchors.left: labelAzimuth.right
                     anchors.leftMargin: 6
-                    value: gcodeGenerator.azimuthCam
+                    value: 0
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -186,7 +186,7 @@ Item
                     anchors.leftMargin: 6
                     id: sliderElevation
                     y: 121
-                    value: gcodeGenerator.elevationCam
+                    value: 20
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -247,7 +247,7 @@ Item
                 Label
                 {
                     id: labelAzimuthOffset
-                    text: gcodeGenerator.azimuthCam + qsTr("°")
+                    text: viewer3d.azimuthCam + qsTr("°")
                     anchors.top: sliderAzimuth.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderAzimuth.horizontalCenter
@@ -257,7 +257,7 @@ Item
                 {
                     id: labelElevationOffset
                     x: 130
-                    text: gcodeGenerator.elevationCam + qsTr("°")
+                    text: viewer3d.elevationCam + qsTr("°")
                     anchors.top: sliderElevation.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderElevation.horizontalCenter
@@ -276,7 +276,7 @@ Item
                     to: 10
                     id: sliderDistance
                     y: 121
-                    value: gcodeGenerator.distanceCam
+                    value: 3
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -326,7 +326,7 @@ Item
                 Label
                 {
                     id: labelDistanceOffset
-                    text: gcodeGenerator.distanceCam
+                    text: viewer3d.distanceCam
                     anchors.top: sliderDistance.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderDistance.horizontalCenter

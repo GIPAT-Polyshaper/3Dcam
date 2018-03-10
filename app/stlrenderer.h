@@ -9,6 +9,7 @@
 #include "transform3d.h"
 #include "camera3d.h"
 #include "gcodegenerator.h"
+#include "stlloader.h"
 #include <QVector>
 
 class StlRenderer : protected QOpenGLFunctions
@@ -43,6 +44,10 @@ private:
 
     Transform3D modelMatrix;
     Camera3D viewMatrix;
+
+    int volume_x;
+    int volume_y;
+    int volume_z;
 
 public slots:
     void setGeometry(const StlLoader::Triangles &t);
