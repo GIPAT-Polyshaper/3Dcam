@@ -56,11 +56,6 @@ public:
         format.setSamples(4);
         return new QOpenGLFramebufferObject(size, format);
     }
-
-    void setGeometry(StlLoader::Triangles triangles)
-    {
-        obj.setGeometry(triangles);
-    }
 };
 
 QQuickFramebufferObject::Renderer *Viewer3D::createRenderer() const
