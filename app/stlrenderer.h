@@ -20,7 +20,9 @@ public:
 
     void render();
     void initialize();
-
+    void setGeometry(const StlLoader::Triangles &t);
+    void setCamera(int az, float di, int el);
+    void setVolume(int x, int y, int z);
 private:
 
     void paintObject();
@@ -49,10 +51,7 @@ private:
     int volume_y;
     int volume_z;
 
-public slots:
-    void setGeometry(const StlLoader::Triangles &t);
-    void setCamera(int az, float di, int el);
-    void setVolume(int x, int y, int z);
+
 };
 
 #endif // STLRENDERER_H
