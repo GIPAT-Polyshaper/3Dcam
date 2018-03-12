@@ -1,7 +1,7 @@
 #include "camera3d.h"
 #include <QtMath>
 
-Camera3D::Camera3D() : m_dirty(true), m_center(0, 0, 0)
+Camera3D::Camera3D() : dirty(true), center(0, 0, 0)
 {
 
 }
@@ -9,12 +9,12 @@ Camera3D::Camera3D() : m_dirty(true), m_center(0, 0, 0)
 //getters
 const QMatrix4x4 &Camera3D::toMatrix()
 {
-    if (m_dirty)
+    if (dirty)
     {
-        m_dirty = false;
-        m_camera.setToIdentity();
-        const float azimuthInRadians = qDegreesToRadians(m_azimuth);
-        const float elevationInRadians = qDegreesToRadians(m_elevation);
+        dirty = false;
+        camera.setToIdentity();
+        const float azimuthInRadians = qDegreesToRadians(azimuth);
+        const float elevationInRadians = qDegreesToRadians(elevation);
         const QVector3D eye(std::cos(elevationInRadians) * std::cos(azimuthInRadians),
                             std::sin(azimuthInRadians) * std::cos(elevationInRadians),
                             std::sin(elevationInRadians));
@@ -22,47 +22,47 @@ const QMatrix4x4 &Camera3D::toMatrix()
 
                 QVector3D up = QVector3D(-std::cos(azimuthInRadians) * std::sin(elevationInRadians), -std::sin(elevationInRadians)*std::sin(azimuthInRadians), std::cos(elevationInRadians));
 
-        m_camera.lookAt(eye * m_distance, QVector3D(0, 0, 0),up);
-        m_camera.translate(-m_center.x(), -m_center.y(), -m_center.z());
+        camera.lookAt(eye * distance, QVector3D(0, 0, 0),up);
+        camera.translate(-center.x(), -center.y(), -center.z());
     }
-    return m_camera;
+    return camera;
 }
 
 void Camera3D::setAzimuth(float a)
 {
-    m_dirty = true;
-    m_azimuth = a;
+    dirty = true;
+    azimuth = a;
 }
 
 void Camera3D::setDistance(float d)
 {
-    m_dirty = true;
-    m_distance = d;
+    dirty = true;
+    distance = d;
 }
 
 void Camera3D::setElevation(float e)
 {
-    m_dirty = true;
-    m_elevation = e;
+    dirty = true;
+    elevation = e;
 }
 
 void Camera3D::setCenter(QVector3D c)
 {
-    m_dirty = true;
-    m_center = c;
+    dirty = true;
+    center = c;
 }
 
-const float Camera3D::azimuth()
+const float Camera3D::getAzimuth()
 {
-    return m_azimuth;
+    return azimuth;
 }
 
-const float Camera3D::elevation()
+const float Camera3D::getElevation()
 {
-    return m_elevation;
+    return elevation;
 }
 
-const float Camera3D::distance()
+const float Camera3D::getDistance()
 {
-    return m_distance;
+    return distance;
 }
