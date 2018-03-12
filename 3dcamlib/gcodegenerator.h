@@ -26,90 +26,43 @@
 
 #include <QObject>
 #include <QTextStream>
-//#include "stlloader.h"
-//#include "triangularmeshgenerator.h"
 #include "toolpathgenerator.h"
 
 class GCodeGenerator : public QObject
 {
-    Q_OBJECT
-
-    Q_PROPERTY(int altezzaUt READ getAltezzaUtensile NOTIFY altezzaChanged)
-    Q_PROPERTY(int diametroUt READ getDiametroUtensile NOTIFY diametroChanged)
-    Q_PROPERTY(int velocitaUt READ getVelocitaUtensile NOTIFY velocitaChanged)
-    Q_PROPERTY(QString formaUt READ getFormaUtensile  NOTIFY formaChanged)
-    Q_PROPERTY(int overlap READ getOverlapPassate NOTIFY overlapChanged)
-    Q_PROPERTY(int volumeX READ getVolumeX NOTIFY volumeXChanged)
-    Q_PROPERTY(int volumeY READ getVolumeY NOTIFY volumeYChanged)
-    Q_PROPERTY(int volumeZ READ getVolumeZ NOTIFY volumeZChanged)
-    Q_PROPERTY(int objectOffsetX READ getObjectOffsetX NOTIFY objectOffsetXChanged)
-    Q_PROPERTY(int objectOffsetY READ getObjectOffsetY NOTIFY objectOffsetYChanged)
 
 public:
 
     GCodeGenerator();
-    enum Forma
+    GCodeGenerator(int tHeight, int tWidth, int tSpeed, int x, int y, int z);
+    enum Shape
     {
         Candela
     };
 
-    int getAltezzaUtensile() const;
-    int getDiametroUtensile() const;
-    int getVelocitaUtensile() const;
-    QString getFormaUtensile() const;
-    int getOverlapPassate() const;
+    int getToolHeight() const;
+    int getToolWidth() const;
+    int getToolSpeed() const;
+    QString getToolShape() const;
     int getVolumeX() const;
     int getVolumeY() const;
     int getVolumeZ() const;
-    int getObjectOffsetX() const;
-    int getObjectOffsetY() const;
-    float getStartingoffsetX() const;
-    float getStartingOffsetY() const;
-    float getStartingOffsetZ() const;
-    void setStartingOffset(float x, float y, float z);
+
+    void setToolHeight(int a);
+    void setToolWidth(int d);
+    void setToolSpeed(int v);
+    void setToolShape(QString f);
 
     QString gCodeGeneration(std::vector<std::list<Point>> p);
 
-signals:
-    void altezzaChanged(int newAltezza);
-    void diametroChanged(int newDiametro);
-    void velocitaChanged(int newVelocita);
-    void formaChanged(QString newForma);
-    void overlapChanged(int newOverlap);
-    void volumeXChanged(int newVolumeX);
-    void volumeYChanged(int newVolumeY);
-    void volumeZChanged(int newVolumeZ);
-    void objectOffsetXChanged(int newObjectOffX);
-    void objectOffsetYChanged(int newObjectOffY);
-
-public slots:
-    void setAltezza(int a);
-    void setDiametro(int d);
-    void setVelocita(int v);
-    void setForma(QString f);
-    void setOverlap(int o);
-    void setVolumeX(int x);
-    void setVolumeY(int y);
-    void setVolumeZ(int z);
-    void setObjectOffsetX(int x);
-    void setObjectOffsetY(int y);
-
 private:
-    int altezzaUtensile;
-    int diametroUtensile;
-    int velocitaUtensile;
-    Forma formaUtensile;
-    int overlapPassate;
+    int toolHeight;
+    int toolWidth;
+    int toolSpeed;
+    Shape toolShape;
     int volumeXAxis;
     int volumeYAxis;
     int volumeZAxis;
-
-    float startingOffsetX;
-    float startingOffsetY;
-    float startingOffsetZ;
-
-    int objectOffsetX;
-    int objectOffsetY;
 };
 
 #endif // GCODEGENERATOR_H

@@ -55,19 +55,19 @@ Page1Form
     textDiametroUtensile.onTextChanged:
     {
         var parse = parseInt(textDiametroUtensile.text)
-        applicationControl.setDiametro(parse)
+        applicationControl.setToolWidth(parse)
     }
 
     textAltezzaUtensile.onTextChanged:
     {
         var parse = parseInt(textAltezzaUtensile.text)
-        applicationControl.setAltezza(parse)
+        applicationControl.setToolHeight(parse)
     }
 
     textVelocitaUtensile.onTextChanged:
     {
         var parse = parseInt(textVelocitaUtensile.text)
-        applicationControl.setVelocita(parse)
+        applicationControl.setToolSpeed(parse)
     }
 
     textVolumeX.onTextChanged:
@@ -95,6 +95,6 @@ Page1Form
 
     comboFormaUtensile.onCurrentTextChanged:
     {
-        applicationControl.setForma(comboFormaUtensile.currentText)
+        applicationControl.setToolShape(comboFormaUtensile.currentText)
     }
 }

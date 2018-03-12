@@ -388,7 +388,7 @@ Item
                     id: textDiametroUtensile
                     x: 128
                     height: implicitHeight - 12
-                    text: gcodeGenerator.diametroUt
+                    text: applicationControl.toolW
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
@@ -403,7 +403,7 @@ Item
                     x: 128
                     y: 46
                     height: implicitHeight - 12
-                    text: gcodeGenerator.altezzaUt
+                    text: applicationControl.toolH
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: textDiametroUtensile.bottom
@@ -417,7 +417,7 @@ Item
                     x: 128
                     y: 92
                     height: implicitHeight - 12
-                    text: gcodeGenerator.velocitaUt
+                    text: applicationControl.toolSp
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     font.pointSize: 9
@@ -484,7 +484,7 @@ Item
                     x: 41
                     y: 27
                     height: textDiametroUtensile.height
-                    value: gcodeGenerator.overlap
+                    value: applicationControl.overlap
                     to: 100
                     anchors.top: comboFormaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
@@ -567,7 +567,7 @@ Item
                 {
                     id: textVolumeX
                     x: 128
-                    text: gcodeGenerator.volumeX
+                    text: applicationControl.volumeX
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
@@ -582,7 +582,7 @@ Item
                     id: textVolumeY
                     x: 128
                     y: 46
-                    text: gcodeGenerator.volumeY
+                    text: applicationControl.volumeY
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     renderType: Text.NativeRendering
@@ -597,7 +597,7 @@ Item
                     id: textVolumeZ
                     x: 128
                     y: 92
-                    text: gcodeGenerator.volumeZ
+                    text: applicationControl.volumeZ
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     bottomPadding: 3
@@ -689,7 +689,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelYAxis.verticalCenter
                     stepSize: 1
-                    to: gcodeGenerator.volumeY
+                    to: applicationControl.volumeY
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     value: 0
@@ -735,7 +735,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelXAxis.verticalCenter
                     stepSize: 1
-                    to: gcodeGenerator.volumeX
+                    to: applicationControl.volumeX
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     id: sliderXAxis
@@ -801,7 +801,7 @@ Item
                 Label
                 {
                     id: labelYOffset
-                    text: gcodeGenerator.objectOffsetY + qsTr("mm")
+                    text: applicationControl.objectOffsetY + qsTr("mm")
                     anchors.top: sliderYAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderYAxis.horizontalCenter
@@ -811,7 +811,7 @@ Item
                 {
                     id: labelXOffset
                     x: 130
-                    text: gcodeGenerator.objectOffsetX + qsTr("mm")
+                    text: applicationControl.objectOffsetX + qsTr("mm")
                     anchors.top: sliderXAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderXAxis.horizontalCenter

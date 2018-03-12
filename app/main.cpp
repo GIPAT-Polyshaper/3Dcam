@@ -26,18 +26,14 @@
 #include <QFile>
 #include <QQmlContext>
 #include "viewer3d.h"
-#include "gcodegenerator.h"
 #include "applicationcontrol.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-    GCodeGenerator gcodeGenerator;
-    ApplicationControl::get_instance().setGCodeGenerator(&gcodeGenerator);
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("applicationControl", &ApplicationControl::get_instance());
-    engine.rootContext()->setContextProperty("gcodeGenerator", &gcodeGenerator);
     qmlRegisterType<Viewer3D>("PolyShaper3Dcam", 1, 0, "Viewer3D");
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 

@@ -36,12 +36,7 @@ class GCodeGenerator_Test : public QObject
 private slots:
     void getEmptyGcode()
     {
-        GCodeGenerator g;
-        g.setAltezza(4);
-        g.setVolumeX(10);
-        g.setVolumeY(10);
-        g.setVolumeZ(4);
-        g.setVelocita(300);
+        GCodeGenerator g(4, 4, 300, 10, 10, 4);
         QString verify;
         verify.append("N1 G01 F300\n")
                 .append("N2 G01 Z0\n")
@@ -56,12 +51,7 @@ private slots:
 
     void testReverse()
     {
-        GCodeGenerator g;
-        g.setAltezza(4);
-        g.setVolumeX(10);
-        g.setVolumeY(10);
-        g.setVolumeZ(4);
-        g.setVelocita(300);
+        GCodeGenerator g(4, 4, 300, 10, 10, 4);
         QString verify;
 
         verify.append("N1 G01 F300\n")
@@ -90,12 +80,7 @@ private slots:
 
     void testMaxPenetration()
     {
-        GCodeGenerator g;
-        g.setAltezza(3);
-        g.setVolumeX(10);
-        g.setVolumeY(10);
-        g.setVolumeZ(5);
-        g.setVelocita(300);
+        GCodeGenerator g(3, 4, 300, 10, 10, 5);
         QString verify;
 
         verify.append("N1 G01 F300\n")
