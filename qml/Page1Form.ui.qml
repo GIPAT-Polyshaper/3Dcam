@@ -434,7 +434,7 @@ Item
                     id: label3
                     x: 90
                     y: 7
-                    text: qsTr("Diametro:")
+                    text: qsTr("Diametro (mm):")
                     anchors.right: textDiametroUtensile.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textDiametroUtensile.verticalCenter
@@ -445,7 +445,7 @@ Item
                     id: label4
                     x: 79
                     y: 47
-                    text: qsTr("Altezza:")
+                    text: qsTr("Altezza (mm):")
                     anchors.right: textAltezzaUtensile.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textAltezzaUtensile.verticalCenter
@@ -614,7 +614,7 @@ Item
                     id: label
                     x: 90
                     y: 7
-                    text: qsTr("Asse x:")
+                    text: qsTr("Asse X (mm):")
                     anchors.verticalCenter: textVolumeX.verticalCenter
                     anchors.right: textVolumeX.left
                     anchors.rightMargin: 6
@@ -624,7 +624,7 @@ Item
                     id: label1
                     x: 79
                     y: 47
-                    text: qsTr("Asse y:")
+                    text: qsTr("Asse Y (mm):")
                     anchors.right: textVolumeY.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textVolumeY.verticalCenter
@@ -635,7 +635,7 @@ Item
                     id: label2
                     x: 79
                     y: 80
-                    text: qsTr("Asse z:")
+                    text: qsTr("Asse Z (mm):")
                     anchors.verticalCenter: textVolumeZ.verticalCenter
                     anchors.right: textVolumeZ.left
                     anchors.rightMargin: 6
