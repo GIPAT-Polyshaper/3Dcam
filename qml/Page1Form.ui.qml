@@ -240,13 +240,13 @@ Item
                     anchors.topMargin: 6
                     renderType: Text.NativeRendering
                     anchors.left: parent.left
-                    anchors.leftMargin: 0
+                    anchors.leftMargin: 10
                 }
 
                 Label
                 {
                     id: labelElevation
-                    text: qsTr("Elevation")
+                    text: qsTr("Elevazione")
                     anchors.right: labelAzimuth.right
                     anchors.rightMargin: 0
                     anchors.top: labelAzimuthOffset.bottom
@@ -325,7 +325,7 @@ Item
                 Label
                 {
                     id: labelDistance
-                    text: qsTr("Distance")
+                    text: qsTr("Zoom")
                     anchors.right: labelAzimuth.right
                     anchors.rightMargin: 0
                     anchors.top: labelElevationOffset.bottom
