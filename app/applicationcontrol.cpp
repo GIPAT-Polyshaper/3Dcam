@@ -306,7 +306,6 @@ void ApplicationControl::generateCode()
             TriangularMeshGenerator t(v.vertices(), v.faces());
 
             ToolPathGenerator tg(t.polyhedron(), 0.1, getToolWidth());
-            GCodeGenerator gcodeGenerator(toolHeight, toolWidth, toolSpeed, volumeXAxis, volumeYAxis, volumeZAxis);
             tg.setVolume(getVolumeX(), getVolumeY(), getVolumeZ());
             double currentY = 0.0;
 
@@ -316,7 +315,7 @@ void ApplicationControl::generateCode()
                 toolPath.push_back(tg.getToolPath(currentY));
                 currentY += roundDouble(getToolWidth() * (1 - getOverlap()/100.0), 3);
             }
-
+            GCodeGenerator gcodeGenerator(toolHeight, toolWidth, toolSpeed, volumeXAxis, volumeYAxis, volumeZAxis);
             out << gcodeGenerator.gCodeGeneration(toolPath);
         }
         catch (std::exception e)
