@@ -29,6 +29,14 @@
 #include <typeinfo>
 #include <climits>
 
+double roundDouble(double d, int precision)
+{
+    double EPSILON = 1.0/pow(10, precision);
+    double num = d / EPSILON;
+    num = round(num);
+    return num * EPSILON;
+}
+
 GCodeGenerator::GCodeGenerator()
 {
     toolHeight = 40;
@@ -124,7 +132,6 @@ QString GCodeGenerator::gCodeGeneration(std::vector<std::list<Point>> p)
 {
     QString result;
     QTextStream ts(&result);
-    ts.setRealNumberPrecision(3);
     int j = 1;
     ts << "N" << (j) << " G01" << " F" << getToolSpeed() << endl;
     ++j;
@@ -147,15 +154,15 @@ QString GCodeGenerator::gCodeGeneration(std::vector<std::list<Point>> p)
             QString ycoordinate = "";
             if (first)
             {
-                ycoordinate = " Y" + QString::number(point.y(), 'g', 3);
+                ycoordinate = " Y" + QString::number(roundDouble(point.y(), 3));
             }
             if (point.z() - getVolumeZ() > 0 - getToolHeight())
             {
-                ts << "N" << j << " G01" << " X" << point.x() << ycoordinate << " Z" << point.z() - getVolumeZ() << endl;
+                ts << "N" << j << " G01" << " X" << roundDouble(point.x(), 3) << ycoordinate << " Z" << roundDouble(point.z() - getVolumeZ(), 3) << endl;
             }
             else
             {
-                ts << "N" << j << " G01" << " X"  << point.x() << ycoordinate << " Z" << 0 - getToolHeight() << endl;
+                ts << "N" << j << " G01" << " X"  << roundDouble(point.x(), 3) << ycoordinate << " Z" << roundDouble(0 - getToolHeight(), 3) << endl;
             }
             first = false;
             ++j;

@@ -1,13 +1,7 @@
 #include "applicationcontrol.h"
 #include "toolpathgenerator.h"
 
-double roundDouble(double d, int precision)
-{
-    double EPSILON = 1.0/pow(10, precision);
-    double num = d / EPSILON;
-    num = round(num);
-    return num * EPSILON;
-}
+double roundDouble(double d, int precision);
 
 ApplicationControl::ApplicationControl()
 {
