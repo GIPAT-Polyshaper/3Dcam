@@ -35,6 +35,7 @@ Item
     property alias buttonFileDialog: buttonFileDialog
     property alias rectangle3DModel: viewer3d
     property alias boxMovimenti: boxMovimenti
+    property alias dialogError: dialogError
 
     FileDialog
     {
@@ -51,6 +52,16 @@ Item
         folder: shortcuts.home
         modality: Qt.NonModal
         selectExisting: false
+    }
+
+    MessageDialog
+    {
+        icon: StandardIcon.Critical
+        id: dialogError
+        title: "Errore"
+        modality: Qt.NonModal
+        visible: applicationControl.error
+        text: applicationControl.lastError
     }
 
     GridLayout
@@ -82,8 +93,7 @@ Item
                 id: viewer3d
                 height: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height - 36) : (parent.width)
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: -boxCamera.height/2
+                anchors.top: parent.top
                 width: (parent.height - boxCamera.height -36 < parent.width) ? (parent.height - boxCamera.height-36) : (parent.width)
             }
 
@@ -94,7 +104,7 @@ Item
                 height: sliderXAxis.height * 3 + labelYOffset.height * 3 + 18
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: viewer3d.bottom
-                anchors.topMargin: 12
+                anchors.topMargin: 18
                 width: viewer3d.width
                 Layout.minimumWidth: 376
 
@@ -137,7 +147,7 @@ Item
                     to: 180
                     anchors.left: labelAzimuth.right
                     anchors.leftMargin: 6
-                    value: gcodeGenerator.azimuthCam
+                    value: 0
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -186,7 +196,7 @@ Item
                     anchors.leftMargin: 6
                     id: sliderElevation
                     y: 121
-                    value: gcodeGenerator.elevationCam
+                    value: 20
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -230,13 +240,13 @@ Item
                     anchors.topMargin: 6
                     renderType: Text.NativeRendering
                     anchors.left: parent.left
-                    anchors.leftMargin: 0
+                    anchors.leftMargin: 10
                 }
 
                 Label
                 {
                     id: labelElevation
-                    text: qsTr("Elevation")
+                    text: qsTr("Elevazione")
                     anchors.right: labelAzimuth.right
                     anchors.rightMargin: 0
                     anchors.top: labelAzimuthOffset.bottom
@@ -247,7 +257,7 @@ Item
                 Label
                 {
                     id: labelAzimuthOffset
-                    text: gcodeGenerator.azimuthCam + qsTr("°")
+                    text: viewer3d.azimuthCam + qsTr("°")
                     anchors.top: sliderAzimuth.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderAzimuth.horizontalCenter
@@ -257,7 +267,7 @@ Item
                 {
                     id: labelElevationOffset
                     x: 130
-                    text: gcodeGenerator.elevationCam + qsTr("°")
+                    text: viewer3d.elevationCam + qsTr("°")
                     anchors.top: sliderElevation.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderElevation.horizontalCenter
@@ -267,7 +277,7 @@ Item
                 {
                     height: 30
                     anchors.left: labelAzimuth.right
-                    anchors.leftMargin: 0
+                    anchors.leftMargin: 6
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelDistance.verticalCenter
@@ -276,7 +286,7 @@ Item
                     to: 10
                     id: sliderDistance
                     y: 121
-                    value: gcodeGenerator.distanceCam
+                    value: 3
                     snapMode: Slider.SnapAlways
 
                     background: Rectangle
@@ -315,7 +325,7 @@ Item
                 Label
                 {
                     id: labelDistance
-                    text: qsTr("Distance")
+                    text: qsTr("Zoom")
                     anchors.right: labelAzimuth.right
                     anchors.rightMargin: 0
                     anchors.top: labelElevationOffset.bottom
@@ -326,7 +336,7 @@ Item
                 Label
                 {
                     id: labelDistanceOffset
-                    text: gcodeGenerator.distanceCam
+                    text: viewer3d.distanceCam
                     anchors.top: sliderDistance.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderDistance.horizontalCenter
@@ -354,7 +364,8 @@ Item
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 width: parent.width
-
+                topPadding: 14
+                bottomPadding: 14
                 Label
                 {
                     width: implicitWidth + 4
@@ -377,7 +388,7 @@ Item
                     id: textDiametroUtensile
                     x: 128
                     height: implicitHeight - 12
-                    text: gcodeGenerator.diametroUt
+                    text: applicationControl.toolW
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
@@ -392,7 +403,7 @@ Item
                     x: 128
                     y: 46
                     height: implicitHeight - 12
-                    text: gcodeGenerator.altezzaUt
+                    text: applicationControl.toolH
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: textDiametroUtensile.bottom
@@ -406,7 +417,7 @@ Item
                     x: 128
                     y: 92
                     height: implicitHeight - 12
-                    text: gcodeGenerator.velocitaUt
+                    text: applicationControl.toolSp
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     font.pointSize: 9
@@ -423,7 +434,7 @@ Item
                     id: label3
                     x: 90
                     y: 7
-                    text: qsTr("Diametro:")
+                    text: qsTr("Diametro (mm):")
                     anchors.right: textDiametroUtensile.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textDiametroUtensile.verticalCenter
@@ -434,7 +445,7 @@ Item
                     id: label4
                     x: 79
                     y: 47
-                    text: qsTr("Altezza:")
+                    text: qsTr("Altezza (mm):")
                     anchors.right: textAltezzaUtensile.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textAltezzaUtensile.verticalCenter
@@ -463,7 +474,7 @@ Item
                     width: textVelocitaUtensile.width
                     anchors.top: textVelocitaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
-                    model: ["Sferica", "Candela"]
+                    model: ["Candela"]
                     currentIndex: 0
                 }
 
@@ -473,7 +484,7 @@ Item
                     x: 41
                     y: 27
                     height: textDiametroUtensile.height
-                    value: gcodeGenerator.overlap
+                    value: applicationControl.overlap
                     to: 100
                     anchors.top: comboFormaUtensile.bottom
                     anchors.topMargin: boxUtensile.topPadding
@@ -521,8 +532,10 @@ Item
 
                 height: boxVolumeLavoro.topPadding * 4 + textVolumeX.height * 3
                 anchors.top: boxUtensile.bottom
-                anchors.topMargin: 16
+                anchors.topMargin: 14
                 width: parent.width
+                bottomPadding: 14
+                topPadding: 14
 
                 background: Rectangle
                 {
@@ -554,7 +567,7 @@ Item
                 {
                     id: textVolumeX
                     x: 128
-                    text: gcodeGenerator.volumeX
+                    text: applicationControl.volumeX
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     anchors.top: parent.top
@@ -569,7 +582,7 @@ Item
                     id: textVolumeY
                     x: 128
                     y: 46
-                    text: gcodeGenerator.volumeY
+                    text: applicationControl.volumeY
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     renderType: Text.NativeRendering
@@ -584,7 +597,7 @@ Item
                     id: textVolumeZ
                     x: 128
                     y: 92
-                    text: gcodeGenerator.volumeZ
+                    text: applicationControl.volumeZ
                     anchors.right: parent.right
                     anchors.rightMargin: 0
                     bottomPadding: 3
@@ -601,7 +614,7 @@ Item
                     id: label
                     x: 90
                     y: 7
-                    text: qsTr("Asse x:")
+                    text: qsTr("Asse X (mm):")
                     anchors.verticalCenter: textVolumeX.verticalCenter
                     anchors.right: textVolumeX.left
                     anchors.rightMargin: 6
@@ -611,7 +624,7 @@ Item
                     id: label1
                     x: 79
                     y: 47
-                    text: qsTr("Asse y:")
+                    text: qsTr("Asse Y (mm):")
                     anchors.right: textVolumeY.left
                     anchors.rightMargin: 6
                     anchors.verticalCenter: textVolumeY.verticalCenter
@@ -622,7 +635,7 @@ Item
                     id: label2
                     x: 79
                     y: 80
-                    text: qsTr("Asse z:")
+                    text: qsTr("Asse Z (mm):")
                     anchors.verticalCenter: textVolumeZ.verticalCenter
                     anchors.right: textVolumeZ.left
                     anchors.rightMargin: 6
@@ -632,7 +645,10 @@ Item
             Frame
             {
                 id: boxMovimenti
-                y: 380
+                topPadding: 14
+                bottomPadding: 1
+                anchors.top: boxVolumeLavoro.bottom
+                anchors.topMargin: 14
                 height: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
                 width: parent.width
                 Layout.minimumHeight: sliderXAxis.height * 2 + labelYOffset.height * 2 + 18
@@ -673,7 +689,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelYAxis.verticalCenter
                     stepSize: 1
-                    to: 20
+                    to: applicationControl.volumeY
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     value: 0
@@ -719,7 +735,7 @@ Item
                     anchors.rightMargin: 0
                     anchors.verticalCenter: labelXAxis.verticalCenter
                     stepSize: 1
-                    to: 20
+                    to: applicationControl.volumeX
                     anchors.left: labelYAxis.right
                     anchors.leftMargin: 6
                     id: sliderXAxis
@@ -785,7 +801,7 @@ Item
                 Label
                 {
                     id: labelYOffset
-                    text: gcodeGenerator.objectOffsetY + qsTr("mm")
+                    text: applicationControl.objectOffsetY + qsTr("mm")
                     anchors.top: sliderYAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderYAxis.horizontalCenter
@@ -795,7 +811,7 @@ Item
                 {
                     id: labelXOffset
                     x: 130
-                    text: gcodeGenerator.objectOffsetX + qsTr("mm")
+                    text: applicationControl.objectOffsetX + qsTr("mm")
                     anchors.top: sliderXAxis.bottom
                     anchors.topMargin: 0
                     anchors.horizontalCenter: sliderXAxis.horizontalCenter
@@ -819,7 +835,6 @@ Item
                 text: qsTr("Apri file")
                 anchors.left: parent.left
                 anchors.leftMargin: 48
-                anchors.topMargin: 12
                 padding: 8
                 bottomPadding: 10
                 topPadding: 10
@@ -848,7 +863,6 @@ Item
                 anchors.rightMargin: 48
                 anchors.verticalCenter: buttonFileDialog.verticalCenter
                 clip: false
-                anchors.topMargin: 16
 
                 topPadding: 10
                 bottomPadding: 10

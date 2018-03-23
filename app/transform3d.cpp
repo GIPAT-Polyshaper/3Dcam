@@ -1,8 +1,8 @@
 #include "transform3d.h"
 
 Transform3D::Transform3D() :
-    m_dirty(true),
-    m_scale(1.0f, 1.0f, 1.0f)
+    dirty(true),
+    scale(1.0f, 1.0f, 1.0f)
 {
 
 }
@@ -10,66 +10,66 @@ Transform3D::Transform3D() :
 //transformations
 void Transform3D::translate(const QVector3D &dt)
 {
-    m_dirty = true;
-    m_translation += dt;
+    dirty = true;
+    translation += dt;
 }
 
 void Transform3D::getScale(const QVector3D &ds)
 {
-    m_dirty = true;
-    m_scale *= ds;
+    dirty = true;
+    scale *= ds;
 }
 
 void Transform3D::rotate(const QQuaternion &dr)
 {
-    m_dirty = true;
-    m_rotation = dr * m_rotation;
+    dirty = true;
+    rotation = dr * rotation;
 }
 
 void Transform3D::grow(const QVector3D &ds)
 {
-    m_dirty = true;
-    m_scale += ds;
+    dirty = true;
+    scale += ds;
 }
 
 //setters
 void Transform3D::setTranslation(const QVector3D &t)
 {
-    m_dirty = true;
-    m_translation = t;
+    dirty = true;
+    translation = t;
 }
 
 void Transform3D::setOffset(const QVector3D &o)
 {
-    m_dirty = true;
-    m_offset = o;
+    dirty = true;
+    offset = o;
 }
 
 void Transform3D::setScale(const QVector3D &s)
 {
-    m_dirty = true;
-    m_scale = s;
+    dirty = true;
+    scale = s;
 }
 
 void Transform3D::setRotation(const QQuaternion &r)
 {
-    m_dirty = true;
-    m_rotation = r;
+    dirty = true;
+    rotation = r;
 }
 
 const QMatrix4x4 &Transform3D::toMatrix()
 {
-    if (m_dirty)
+    if (dirty)
     {
-        m_dirty = false;
-        m_world.setToIdentity();
-        m_world.translate(m_translation);
-        m_world.translate(m_offset);
-        m_world.rotate(m_rotation);
-        m_world.scale(m_scale);
+        dirty = false;
+        world.setToIdentity();
+        world.translate(translation);
+        world.translate(offset);
+        world.rotate(rotation);
+        world.scale(scale);
     }
 
-    return m_world;
+    return world;
 }
 
 //overloading for transformation methods
@@ -142,15 +142,15 @@ void Transform3D::setRotation(float angle, float ax, float ay, float az)
 //getters
 const QVector3D& Transform3D::getTranslation() const
 {
-    return m_translation;
+    return translation;
 }
 
 const QVector3D& Transform3D::getScale() const
 {
-    return m_scale;
+    return scale;
 }
 
 const QQuaternion& Transform3D::getRotation() const
 {
-    return m_rotation;
+    return rotation;
 }

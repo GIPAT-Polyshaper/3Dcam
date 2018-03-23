@@ -14,92 +14,87 @@ Page1Form
 
     fileDialog1.onAccepted:
     {
-        gcodeGenerator.openFile(fileDialog1.fileUrl.toString())
-        viewer3d.update()
+       applicationControl.openFile(fileDialog1.fileUrl.toString())
+    }
+
+    dialogError.onAccepted:
+    {
+        applicationControl.setError(false)
     }
 
     fileWriteDialog.onAccepted:
     {
-        gcodeGenerator.createFile(fileWriteDialog.fileUrl.toString())
-//        gcodeGenerator.getPolyhedron()
+        applicationControl.createFile(fileWriteDialog.fileUrl.toString())
     }
 
     sliderYAxis.onValueChanged:
     {
-        gcodeGenerator.setObjectOffsetY(Math.floor(sliderYAxis.value))
-        viewer3d.update()
+        applicationControl.setObjectOffsetY(Math.floor(sliderYAxis.value))
     }
 
     sliderXAxis.onValueChanged:
     {
-        gcodeGenerator.setObjectOffsetX(Math.floor(sliderXAxis.value))
-        viewer3d.update()
+        applicationControl.setObjectOffsetX(Math.floor(sliderXAxis.value))
     }
 
     sliderAzimuth.onValueChanged:
     {
-        gcodeGenerator.setAzimuth(Math.floor(sliderAzimuth.value))
-        viewer3d.update()
+        applicationControl.setAzimuth(Math.floor(sliderAzimuth.value))
     }
 
     sliderElevation.onValueChanged:
     {
-        gcodeGenerator.setElevation(Math.floor(sliderElevation.value))
-        viewer3d.update()
+        applicationControl.setElevation(Math.floor(sliderElevation.value))
     }
 
     sliderDistance.onValueChanged:
     {
-        gcodeGenerator.setDistance(Math.floor(sliderDistance.value*10)/10)
-        viewer3d.update()
+        applicationControl.setDistance(Math.floor(sliderDistance.value*10)/10)
     }
 
     textDiametroUtensile.onTextChanged:
     {
         var parse = parseInt(textDiametroUtensile.text)
-        gcodeGenerator.setDiametro(parse)
+        applicationControl.setToolWidth(parse)
     }
 
     textAltezzaUtensile.onTextChanged:
     {
         var parse = parseInt(textAltezzaUtensile.text)
-        gcodeGenerator.setAltezza(parse)
+        applicationControl.setToolHeight(parse)
     }
 
     textVelocitaUtensile.onTextChanged:
     {
         var parse = parseInt(textVelocitaUtensile.text)
-        gcodeGenerator.setVelocita(parse)
+        applicationControl.setToolSpeed(parse)
     }
 
     textVolumeX.onTextChanged:
     {
         var parse = parseInt(textVolumeX.text)
-        gcodeGenerator.setVolumeX(parse)
-        viewer3d.update()
+        applicationControl.setVolumeX(parse)
     }
 
     textVolumeY.onTextChanged:
     {
         var parse = parseInt(textVolumeY.text)
-        gcodeGenerator.setVolumeY(parse)
-        viewer3d.update()
+        applicationControl.setVolumeY(parse)
     }
 
     textVolumeZ.onTextChanged:
     {
         var parse = parseInt(textVolumeZ.text)
-        gcodeGenerator.setVolumeZ(parse)
-        viewer3d.update()
+        applicationControl.setVolumeZ(parse)
     }
 
     spinBoxOverlap.onValueChanged:
     {
-        gcodeGenerator.setOverlap(spinBoxOverlap.value)
+        applicationControl.setOverlap(spinBoxOverlap.value)
     }
 
     comboFormaUtensile.onCurrentTextChanged:
     {
-        gcodeGenerator.setForma(comboFormaUtensile.currentText)
+        applicationControl.setToolShape(comboFormaUtensile.currentText)
     }
 }

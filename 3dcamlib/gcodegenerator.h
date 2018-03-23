@@ -21,22 +21,48 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.              *
  **************************************************************************/
 
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QFile>
-#include <QQmlContext>
-#include "viewer3d.h"
-#include "applicationcontrol.h"
+#ifndef GCODEGENERATOR_H
+#define GCODEGENERATOR_H
 
-int main(int argc, char *argv[])
+#include <QObject>
+#include <QTextStream>
+#include "toolpathgenerator.h"
+
+class GCodeGenerator : public QObject
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("applicationControl", &ApplicationControl::get_instance());
-    qmlRegisterType<Viewer3D>("PolyShaper3Dcam", 1, 0, "Viewer3D");
-    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
-    return app.exec();
+public:
 
-}
+    GCodeGenerator();
+    GCodeGenerator(int tHeight, int tWidth, int tSpeed, int x, int y, int z);
+    enum Shape
+    {
+        Candela
+    };
+
+    int getToolHeight() const;
+    int getToolWidth() const;
+    int getToolSpeed() const;
+    QString getToolShape() const;
+    int getVolumeX() const;
+    int getVolumeY() const;
+    int getVolumeZ() const;
+
+    void setToolHeight(int a);
+    void setToolWidth(int d);
+    void setToolSpeed(int v);
+    void setToolShape(QString f);
+
+    QString gCodeGeneration(std::vector<std::list<Point>> p);
+
+private:
+    int toolHeight;
+    int toolWidth;
+    int toolSpeed;
+    Shape toolShape;
+    int volumeXAxis;
+    int volumeYAxis;
+    int volumeZAxis;
+};
+
+#endif // GCODEGENERATOR_H

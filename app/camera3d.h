@@ -13,21 +13,21 @@ public:
   void setDistance(float d);
   void setElevation(float e);
 
-  const float azimuth();
-  const float distance();
-  const float elevation();
+  const float getAzimuth();
+  const float getDistance();
+  const float getElevation();
 
   const QMatrix4x4& toMatrix();
 
   void setCenter(QVector3D c);
 private:
-  bool m_dirty;
-  QMatrix4x4 m_camera;
+  bool dirty;
+  QMatrix4x4 camera;
 
-  float m_azimuth;
-  float m_distance;
-  float m_elevation;
-  QVector3D m_center;
+  float azimuth;
+  float distance;
+  float elevation;
+  QVector3D center;
 };
 
 #endif // CAMERA3D_H

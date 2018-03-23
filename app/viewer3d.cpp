@@ -7,6 +7,8 @@
 class Model3DRenderer : public QQuickFramebufferObject::Renderer
 {
 public:
+    StlRenderer obj;
+
     Model3DRenderer()
     {
         obj.initialize();
@@ -19,22 +21,32 @@ public:
 
     void synchronize(QQuickFramebufferObject *item)
     {
-        bool camera_dirty = GCodeGenerator::get_instance().isCameraDirty();
-        bool triangles_dirty = GCodeGenerator::get_instance().isTrianglesDirty();
-        bool volume_dirty = GCodeGenerator::get_instance().isVolumeDirty();
-        if (triangles_dirty || volume_dirty)
+        Viewer3D* v = static_cast<Viewer3D*>(item);
+
+        //if we have a new model to render, or working volume has changed
+        if (v->isTriangleDirty() || v->isVolumeDirty())
         {
-            obj.setGeometry(GCodeGenerator::get_instance().getTriangles());
-            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
-            obj.setVolume(GCodeGenerator::get_instance().getVolumeX(), GCodeGenerator::get_instance().getVolumeY(), GCodeGenerator::get_instance().getVolumeZ());
-            GCodeGenerator::get_instance().cleanVolume();
-            GCodeGenerator::get_instance().cleanCamera();
-            GCodeGenerator::get_instance().cleanTriangles();
+            obj.setVolume(v->getVolumeX(),
+                          v->getVolumeY(),
+                          v->getVolumeZ());
+
+            obj.setGeometry(v->getTriangles());
+            obj.setCamera(v->getAzimuth(),
+                          v->getDistance(),
+                          v->getElevation());
+
+            v->setCameraDirty(false);
+            v->setTrianglesDirty(false);
+            v->setVolumeDirty(false);
         }
-        if (camera_dirty)
+        //if camera position has changed
+        if (v->isCameraDirty())
         {
-            obj.setCamera(GCodeGenerator::get_instance().getAzimuth(), GCodeGenerator::get_instance().getDistance(), GCodeGenerator::get_instance().getElevation());
-            GCodeGenerator::get_instance().cleanCamera();
+            obj.setCamera(v->getAzimuth(),
+                          v->getDistance(),
+                          v->getElevation());
+
+            v->setCameraDirty(false);
         }
     }
 
@@ -44,7 +56,6 @@ public:
         format.setSamples(4);
         return new QOpenGLFramebufferObject(size, format);
     }
-    StlRenderer obj;
 };
 
 QQuickFramebufferObject::Renderer *Viewer3D::createRenderer() const
@@ -55,5 +66,134 @@ QQuickFramebufferObject::Renderer *Viewer3D::createRenderer() const
 Viewer3D::Viewer3D()
 {
     setMirrorVertically(true);
+    ApplicationControl::get_instance().setViewer3D(this);
+    volumeX = 100;
+    volumeY = 100;
+    volumeZ = 100;
+    elevation = 20;
+    azimuth = 0;
+    distance = 3;
 }
 
+bool Viewer3D::isCameraDirty() const
+{
+    return cameraDirty;
+}
+
+bool Viewer3D::isTriangleDirty() const
+{
+    return trianglesDirty;
+}
+
+bool Viewer3D::isVolumeDirty() const
+{
+    return volumeDirty;
+}
+
+void Viewer3D::setCameraDirty(bool c)
+{
+    cameraDirty = c;
+    if (c)
+    {
+        update();
+    }
+}
+
+void Viewer3D::setTrianglesDirty(bool t)
+{
+    trianglesDirty = t;
+    if (t)
+    {
+        update();
+    }
+}
+
+void Viewer3D::setVolumeDirty(bool v)
+{
+    volumeDirty = v;
+    if (v)
+    {
+        update();
+    }
+}
+
+void Viewer3D::setAzimuth(int az)
+{
+    azimuth = az;
+    setCameraDirty(true);
+    emit azimuthChanged(az);
+}
+
+void Viewer3D::setDistance(float d)
+{
+    distance = d;
+    setCameraDirty(true);
+    emit distanceChanged(d);
+}
+
+void Viewer3D::setElevation(int e)
+{
+    elevation = e;
+    setCameraDirty(true);
+    emit elevationChanged(e);
+}
+
+int Viewer3D::getAzimuth() const
+{
+    return azimuth;
+}
+
+float Viewer3D::getDistance() const
+{
+    return distance;
+}
+
+int Viewer3D::getElevation() const
+{
+    return elevation;
+}
+
+int Viewer3D::getVolumeX() const
+{
+    return volumeX;
+}
+
+int Viewer3D::getVolumeY() const
+{
+    return volumeY;
+}
+
+int Viewer3D::getVolumeZ() const
+{
+    return volumeZ;
+}
+
+const StlLoader::Triangles &Viewer3D::getTriangles() const
+{
+    return triangles;
+}
+
+void Viewer3D::setGeometry(const StlLoader::Triangles &triangles)
+{
+    this->triangles.clear();
+    this->triangles = triangles;
+    setTrianglesDirty(true);
+}
+
+void Viewer3D::setVolumeX(int x)
+{
+    volumeX = x;
+    setVolumeDirty(true);
+}
+
+void Viewer3D::setVolumeY(int y)
+{
+    volumeY = y;
+    setVolumeDirty(true);
+}
+
+void Viewer3D::setVolumeZ(int z)
+{
+    volumeZ = z;
+    setVolumeDirty(true);
+}

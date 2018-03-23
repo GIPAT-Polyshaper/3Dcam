@@ -11,6 +11,7 @@ set(POLYSHAPER_3DCAM_LIB_SRCS
         triangularmeshgenerator.cpp
         verticesandfacesgenerator.cpp
         toolpathgenerator.cpp
+        gcodegenerator.cpp
         )
 set(POLYSHAPER_3DCAM_LIB_HDRS
         cgaldefs.h
@@ -18,6 +19,7 @@ set(POLYSHAPER_3DCAM_LIB_HDRS
         triangularmeshgenerator.h
         verticesandfacesgenerator.h
         toolpathgenerator.h
+        gcodegenerator.h
         )
 
 add_library(3dcamlib STATIC ${POLYSHAPER_3DCAM_LIB_SRCS} ${POLYSHAPER_3DCAM_LIB_HDRS})

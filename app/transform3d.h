@@ -43,12 +43,12 @@ public:
 
 
 private:
-    bool m_dirty;
-    QVector3D m_translation;
-    QVector3D m_offset;
-    QVector3D m_scale;
-    QQuaternion m_rotation;
-    QMatrix4x4 m_world;
+    bool dirty;
+    QVector3D translation;
+    QVector3D offset;
+    QVector3D scale;
+    QQuaternion rotation;
+    QMatrix4x4 world;
 };
 
 #endif // TRANSFORM3D_H

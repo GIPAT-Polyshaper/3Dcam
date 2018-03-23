@@ -3,6 +3,7 @@
 #include <QPaintEngine>
 #include <math.h>
 #include <QtMath>
+#include "applicationcontrol.h"
 
 StlRenderer::StlRenderer()
 {
@@ -231,20 +232,16 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
     diff_yz = (diff_y > diff_z) ? diff_y : diff_z;
     diffMax = (diff_x > diff_yz) ? diff_x : diff_yz;
 
-    modelMatrix.setOffset(-xmin + GCodeGenerator::get_instance().getObjectOffsetX(),
-                          -ymin + GCodeGenerator::get_instance().getObjectOffsetY(),
+    modelMatrix.setOffset(-xmin + ApplicationControl::get_instance().getObjectOffsetX(),
+                          -ymin + ApplicationControl::get_instance().getObjectOffsetY(),
                           -zmin);
 
-    center = QVector3D((diff_x/2 + GCodeGenerator::get_instance().getObjectOffsetX()), (diff_y/2 + GCodeGenerator::get_instance().getObjectOffsetY()), diff_z/2);
-
-    int volumex = GCodeGenerator::get_instance().getVolumeX();
-    int volumey = GCodeGenerator::get_instance().getVolumeY();
-    int volumez = GCodeGenerator::get_instance().getVolumeZ();
+    center = QVector3D((diff_x/2 + ApplicationControl::get_instance().getObjectOffsetX()), (diff_y/2 + ApplicationControl::get_instance().getObjectOffsetY()), diff_z/2);
 
     QVector3D color;
-    if (diff_x + GCodeGenerator::get_instance().getObjectOffsetX() > volumex ||
-        diff_y + GCodeGenerator::get_instance().getObjectOffsetY() > volumey ||
-        diff_z > volumez)
+    if (diff_x + ApplicationControl::get_instance().getObjectOffsetX() > volume_x ||
+        diff_y + ApplicationControl::get_instance().getObjectOffsetY() > volume_y ||
+        diff_z > volume_z)
     {
         color = QVector3D(1.0, 0.0, 0.0);
     }
@@ -258,7 +255,8 @@ void StlRenderer::setGeometry(const StlLoader::Triangles &tri)
         colors << color;
     }
 
-    GCodeGenerator::get_instance().setStartingOffset(-xmin, -ymin, -zmin);
+    ApplicationControl::get_instance().setStartingOffset(-xmin, -ymin, -zmin);
+    setWorkingVolume(volume_x, volume_y, volume_z, 0.3);
 }
 
 void StlRenderer::setCamera(int az, float di, int el)
@@ -270,7 +268,9 @@ void StlRenderer::setCamera(int az, float di, int el)
 
 void StlRenderer::setVolume(int x, int y, int z)
 {
-    setWorkingVolume(x, y, z, 0.3);
+    volume_x = x;
+    volume_y = y;
+    volume_z = z;
 }
 
 void StlRenderer::setWorkingVolume(int x, int y, int z, float a)
